@@ -23,6 +23,7 @@ const db = new Pool({
 // --------------------------------------------------
 
 app.use(express.json());
+app.use(express.static("."));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
