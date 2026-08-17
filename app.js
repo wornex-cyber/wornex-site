@@ -54,7 +54,15 @@ let currentOrder = null;
 // ----------------------------------------------------
 
 async function apiFetch(path) {
-  const response = await fetch(`${API_BASE}${path}`);
+  const token = sessionStorage.getItem("vornexToken");
+
+  const response = await fetch(`${API_BASE}${path}`, {
+    headers: token
+      ? {
+          Authorization: `Bearer ${token}`,
+        }
+      : {},
+  });
 
   const text = await response.text();
 
@@ -774,6 +782,7 @@ function openAuthModal(mode) {
           "vornexUser",
           JSON.stringify(data.user)
         );
+        sessionStorage.setItem("vornexToken", data.token);
 
         message.textContent =
           isLogin
