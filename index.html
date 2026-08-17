@@ -1,1 +1,26 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VORNEX — Global Numara Platformu</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><a class="logo" href="#">V<span>ORNEX</span></a><nav><a href="#services">Servisler</a><a href="#orders">Siparişler</a><a href="#support">Destek</a></nav><button>Giriş Yap</button></header>
+<main>
+<section class="hero"><div><small>● GLOBAL NUMARA PLATFORMU</small><h1>İhtiyacın olan numara,<br><em>tek panelde.</em></h1><p>Ülkeni ve servisini seç, stok durumunu gör ve siparişini tek ekrandan takip et.</p><a class="cta" href="#services">Numara Seç →</a></div><aside><small>CANLI STOK</small><strong>100+</strong><p>ülke / servis seçeneği</p><div class="stats"><span>⚡ Hızlı işlem</span><span>🔒 Güvenli</span><span>24/7 Panel</span></div></aside></section>
 
+<section id="services"><small>NUMARA SEÇ</small><h2>Ülke ve servis</h2>
+<div class="selectors"><label>Ülke<select id="country"><option value="">Ülke seçin</option><option value="TR">🇹🇷 Türkiye</option><option value="US">🇺🇸 ABD</option><option value="GB">🇬🇧 İngiltere</option><option value="DE">🇩🇪 Almanya</option><option value="FR">🇫🇷 Fransa</option><option value="CA">🇨🇦 Kanada</option><option value="IT">🇮🇹 İtalya</option><option value="ES">🇪🇸 İspanya</option><option value="AU">🇦🇺 Avustralya</option></select></label>
+<label>Servis<select id="service"><option>Önce ülke seçin</option></select></label><div class="stock">STOK<strong id="stock">—</strong><span id="price">Fiyat bekleniyor</span></div></div>
+<div class="cards" id="cards"></div></section>
+
+<section id="orders"><small>SİPARİŞLER</small><h2>Son işlemler</h2><div class="table"><table><thead><tr><th>Sipariş</th><th>Servis</th><th>Numara</th><th>Durum</th></tr></thead><tbody id="ordersBody"><tr><td colspan="4">Henüz sipariş yok.</td></tr></tbody></table></div></section>
+
+<section id="support" class="support"><div><small>DESTEK</small><h2>Bir sorun mu var?</h2><p>Sipariş numaranla destek ekibine ulaş.</p></div><button class="cta">Destek Talebi</button></section>
+</main>
+<footer><b>VORNEX</b><span>© 2026 VORNEX</span><span>Gizlilik · Kullanım · İade</span></footer>
+
+<div class="modal hidden" id="modal"><div class="box"><button id="x">×</button><small>SİPARİŞ ÖNİZLEME</small><h2>Numara siparişi</h2><div id="summary"></div><p class="notice">Demo arayüzü. Gerçek ödeme ve tedarikçi API bağlantısı sunucu tarafında yapılmalıdır.</p><button class="cta" id="confirm">Demo Siparişi Oluştur</button></div></div>
+<script src="app.js"></script>
+</body></html>
