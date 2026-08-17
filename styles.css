@@ -1850,3 +1850,429 @@ footer p {
     grid-template-columns:1fr;
   }
 }
+/* =========================================================
+   VORNEX PANEL
+   ========================================================= */
+
+.panel-body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 80% 0%,rgba(18,93,190,.12),transparent 32%),
+    #06111f;
+  color:#f5f8ff;
+  font-family:Inter,Arial,sans-serif;
+}
+
+.panel-shell{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:250px 1fr;
+}
+
+/* SOL MENÜ */
+
+.panel-sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:250px;
+  padding:28px 18px;
+  background:#081421;
+  border-right:1px solid rgba(255,255,255,.07);
+  z-index:20;
+}
+
+.panel-logo{
+  display:block;
+  padding:0 12px 30px;
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:#fff;
+}
+
+.panel-logo span{
+  color:#2388ff;
+}
+
+.panel-menu-title{
+  margin:24px 12px 10px;
+  color:#687b93;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.12em;
+}
+
+.panel-menu-item{
+  width:100%;
+  min-height:46px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 14px;
+  margin:4px 0;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:#aebed1;
+  font-size:14px;
+  font-weight:600;
+  text-align:left;
+  text-decoration:none;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.panel-menu-item:hover{
+  color:#fff;
+  background:#0e2135;
+}
+
+.panel-menu-item.active{
+  color:#42a0ff;
+  background:#10263e;
+  box-shadow:inset 3px 0 #258cff;
+}
+
+.panel-menu-item span{
+  width:20px;
+  text-align:center;
+}
+
+.panel-logout{
+  font-family:inherit;
+}
+
+/* SAĞ TARAF */
+
+.panel-content{
+  grid-column:2;
+  min-width:0;
+}
+
+.panel-topbar{
+  min-height:110px;
+  position:static;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:24px 34px;
+  background:#071320;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.panel-topbar h1{
+  margin:0 0 7px;
+  font-size:25px;
+  letter-spacing:-.03em;
+}
+
+.panel-topbar p{
+  margin:0;
+  color:#8295ad;
+  font-size:13px;
+}
+
+.panel-user-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:9px 15px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  background:#0a1929;
+}
+
+.panel-avatar{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:linear-gradient(135deg,#177cff,#3aa6ff);
+  color:#fff;
+  font-weight:900;
+}
+
+.panel-user-box strong,
+.panel-user-box span{
+  display:block;
+}
+
+.panel-user-box strong{
+  max-width:230px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:13px;
+}
+
+.panel-user-box span{
+  margin-top:4px;
+  color:#73869e;
+  font-size:11px;
+}
+
+/* ANA PANEL */
+
+.panel-main{
+  max-width:1450px;
+  margin:0 auto;
+  padding:32px;
+}
+
+/* ÜST İSTATİSTİK KARTLARI */
+
+.panel-stats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:22px;
+}
+
+.panel-stat-card{
+  min-height:150px;
+  position:relative;
+  overflow:hidden;
+  padding:22px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  background:
+    linear-gradient(145deg,rgba(18,42,68,.95),rgba(8,24,40,.95));
+  box-shadow:0 12px 35px rgba(0,0,0,.15);
+}
+
+.panel-stat-card::after{
+  content:"";
+  position:absolute;
+  width:100px;
+  height:100px;
+  right:-35px;
+  top:-35px;
+  border-radius:50%;
+  background:rgba(37,137,255,.09);
+}
+
+.panel-stat-card span{
+  display:block;
+  color:#8ca0b8;
+  font-size:12px;
+  font-weight:600;
+}
+
+.panel-stat-card strong{
+  display:block;
+  margin:13px 0 8px;
+  color:#fff;
+  font-size:29px;
+  line-height:1;
+}
+
+.panel-stat-card small{
+  color:#6f849c;
+  font-size:11px;
+}
+
+/* ALT GRID */
+
+.panel-grid{
+  display:grid;
+  grid-template-columns:minmax(0,2fr) minmax(290px,.8fr);
+  gap:18px;
+}
+
+.panel-card{
+  padding:22px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  background:#0a1929;
+  box-shadow:0 14px 40px rgba(0,0,0,.13);
+}
+
+.panel-card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.panel-card-head h2{
+  margin:0 0 6px;
+  font-size:18px;
+}
+
+.panel-card-head p{
+  margin:0;
+  color:#7589a2;
+  font-size:12px;
+}
+
+.panel-card-head a{
+  padding:8px 11px;
+  border:1px solid rgba(36,137,255,.2);
+  border-radius:7px;
+  background:#0c2035;
+  color:#3998ff;
+  font-size:11px;
+  font-weight:700;
+}
+
+/* TABLO */
+
+.panel-table-wrap{
+  width:100%;
+  overflow-x:auto;
+}
+
+.panel-table{
+  width:100%;
+  min-width:600px;
+  border-collapse:collapse;
+}
+
+.panel-table th{
+  padding:13px 12px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  color:#72869d;
+  font-size:10px;
+  font-weight:700;
+  text-align:left;
+}
+
+.panel-table td{
+  padding:16px 12px;
+  border-bottom:1px solid rgba(255,255,255,.055);
+  color:#d8e1ec;
+  font-size:12px;
+  text-align:left;
+}
+
+.panel-table tbody tr:hover{
+  background:rgba(255,255,255,.025);
+}
+
+/* HIZLI İŞLEMLER */
+
+.panel-actions-card{
+  align-self:start;
+}
+
+.panel-action-button{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  margin-top:10px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:9px;
+  background:#0d2033;
+  color:#fff;
+  text-align:left;
+  text-decoration:none;
+  cursor:pointer;
+  transition:.2s ease;
+  font-family:inherit;
+}
+
+.panel-action-button:hover{
+  border-color:rgba(38,145,255,.45);
+  background:#102943;
+  transform:translateY(-1px);
+}
+
+.panel-action-button > span{
+  width:39px;
+  height:39px;
+  flex:0 0 39px;
+  display:grid;
+  place-items:center;
+  border-radius:8px;
+  background:#102d4c;
+  font-size:18px;
+}
+
+.panel-action-button div{
+  flex:1;
+}
+
+.panel-action-button strong{
+  display:block;
+  font-size:13px;
+}
+
+.panel-action-button small{
+  display:block;
+  margin-top:4px;
+  color:#70859e;
+  font-size:10px;
+}
+
+.panel-action-button b{
+  color:#758ba3;
+  font-size:20px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+  .panel-stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .panel-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:760px){
+  .panel-shell{
+    display:block;
+  }
+
+  .panel-sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+    padding:16px;
+  }
+
+  .panel-logo{
+    padding-bottom:15px;
+  }
+
+  .panel-menu-title{
+    display:none;
+  }
+
+  .panel-menu-item{
+    display:inline-flex;
+    width:auto;
+    margin-right:4px;
+  }
+
+  .panel-content{
+    width:100%;
+  }
+
+  .panel-topbar{
+    padding:20px;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:15px;
+  }
+
+  .panel-main{
+    padding:20px;
+  }
+
+  .panel-stats{
+    grid-template-columns:1fr;
+  }
+
+  .panel-user-box{
+    width:100%;
+  }
+}
