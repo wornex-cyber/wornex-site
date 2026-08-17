@@ -343,33 +343,32 @@ function openOrderModal() {
     return;
   }
 
+  const salePrice = getSalePrice(currentDetails.price);
+
   summaryEl.innerHTML = `
     <div>
       <span>Servis</span>
-      <strong>
-        ${selectedCategory.name}
-      </strong>
+      <strong>${selectedCategory.name}</strong>
     </div>
 
     <div>
       <span>Ülke</span>
-      <strong>
-        ${selectedService.name}
-      </strong>
+      <strong>${selectedService.name}</strong>
     </div>
 
     <div>
       <span>Stok</span>
-      <strong>
-        ${currentDetails.stock}
-      </strong>
+      <strong>${currentDetails.stock}</strong>
     </div>
 
-   
+    <div>
+      <span>Fiyat</span>
+      <strong>${formatPrice(salePrice)}</strong>
+    </div>
+  `;
 
   modal.classList.remove("hidden");
 }
-
 // Ülke seçildiğinde otomatik modal açma yerine
 // karttan seçildikten sonra kullanıcı tekrar seçebilsin.
 // Modal açmak için fiyat bölümüne tıklamayı da destekliyoruz.
