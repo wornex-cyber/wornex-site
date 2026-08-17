@@ -681,6 +681,7 @@ app.get(
 
 app.get(
   "/api/order/:serviceId",
+  requireAuth,
   async (req, res) => {
     if (!API_KEY) {
       return res.status(500).json({
@@ -728,6 +729,7 @@ app.get(
 
 app.get(
   "/api/message/:numberId",
+  requireAuth,
   async (req, res) => {
     if (!API_KEY) {
       return res.status(500).json({
