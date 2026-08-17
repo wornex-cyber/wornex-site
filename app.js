@@ -572,10 +572,239 @@ function startMessagePolling(numberId) {
 // ----------------------------------------------------
 
 loadCategories();
-document.querySelector("#loginBtn")?.addEventListener("click", () => {
-  alert("Giriş ekranı hazırlanıyor.");
-});
 
-document.querySelector("#registerBtn")?.addEventListener("click", () => {
-  alert("Kayıt ekranı hazırlanıyor.");
-});
+function openAuthModal(mode) {
+  const oldModal = document.querySelector("#authModal");
+
+  if (oldModal) {
+    oldModal.remove();
+  }
+
+  const isLogin = mode === "login";
+
+  const modal = document.createElement("div");
+
+  modal.id = "authModal";
+
+  modal.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+  `;
+
+  modal.innerHTML = `
+    <div style="
+      width:100%;
+      max-width:420px;
+      background:#111;
+      border:1px solid #333;
+      border-radius:18px;
+      padding:28px;
+      color:white;
+    ">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+      ">
+        <h2 style="margin:0">
+          ${isLogin ? "Giriş Yap" : "Kayıt Ol"}
+        </h2>
+
+        <button
+          id="authClose"
+          type="button"
+          style="
+            background:none;
+            border:0;
+            color:#aaa;
+            font-size:24px;
+            cursor:pointer;
+          "
+        >×</button>
+      </div>
+
+      <input
+        id="authEmail"
+        type="email"
+        placeholder="E-posta"
+        autocomplete="email"
+        style="
+          width:100%;
+          box-sizing:border-box;
+          margin-bottom:12px;
+          padding:13px;
+          border-radius:10px;
+          border:1px solid #333;
+          background:#181818;
+          color:white;
+        "
+      >
+
+      <input
+        id="authPassword"
+        type="password"
+        placeholder="Şifre"
+        autocomplete="${isLogin ? "current-password" : "new-password"}"
+        style="
+          width:100%;
+          box-sizing:border-box;
+          margin-bottom:16px;
+          padding:13px;
+          border-radius:10px;
+          border:1px solid #333;
+          background:#181818;
+          color:white;
+        "
+      >
+
+      <button
+        id="authSubmit"
+        type="button"
+        style="
+          width:100%;
+          padding:13px;
+          border:0;
+          border-radius:10px;
+          cursor:pointer;
+          font-weight:600;
+        "
+      >
+        ${isLogin ? "Giriş Yap" : "Hesap Oluştur"}
+      </button>
+
+      <p
+        id="authMessage"
+        style="
+          margin:14px 0 0;
+          text-align:center;
+          min-height:20px;
+          color:#aaa;
+        "
+      ></p>
+
+      <button
+        id="authSwitch"
+        type="button"
+        style="
+          width:100%;
+          margin-top:10px;
+          background:none;
+          border:0;
+          color:#aaa;
+          cursor:pointer;
+        "
+      >
+        ${
+          isLogin
+            ? "Hesabın yok mu? Kayıt Ol"
+            : "Zaten hesabın var mı? Giriş Yap"
+        }
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.querySelector("#authClose").onclick = () => {
+    modal.remove();
+  };
+
+  document.querySelector("#authSwitch").onclick = () => {
+    modal.remove();
+    openAuthModal(isLogin ? "register" : "login");
+  };
+
+  document.querySelector("#authSubmit").onclick =
+    async () => {
+
+      const email =
+        document.querySelector("#authEmail").value.trim();
+
+      const password =
+        document.querySelector("#authPassword").value;
+
+      const message =
+        document.querySelector("#authMessage");
+
+      const submit =
+        document.querySelector("#authSubmit");
+
+      if (!email || !password) {
+        message.textContent =
+          "E-posta ve şifre gerekli.";
+        return;
+      }
+
+      submit.disabled = true;
+      submit.textContent = "Bekleyin...";
+
+      try {
+        const response = await fetch(
+          `${API_BASE}/${isLogin ? "login" : "register"}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              password,
+            }),
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.error || "Bir hata oluştu."
+          );
+        }
+
+        sessionStorage.setItem(
+          "vornexUser",
+          JSON.stringify(data.user)
+        );
+
+        message.textContent =
+          isLogin
+            ? "Giriş başarılı."
+            : "Hesabın oluşturuldu.";
+
+        setTimeout(() => {
+          modal.remove();
+        }, 800);
+
+      } catch (error) {
+        message.textContent =
+          error.message;
+      } finally {
+        submit.disabled = false;
+        submit.textContent =
+          isLogin
+            ? "Giriş Yap"
+            : "Hesap Oluştur";
+      }
+    };
+}
+
+document
+  .querySelector("#loginBtn")
+  ?.addEventListener("click", () => {
+    openAuthModal("login");
+  });
+
+document
+  .querySelector("#registerBtn")
+  ?.addEventListener("click", () => {
+    openAuthModal("register");
+  });
