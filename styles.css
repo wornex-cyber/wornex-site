@@ -1473,3 +1473,380 @@ footer p {
     min-height: auto;
   }
 }
+/* =========================================================
+   VORNEX — PANEL
+   ========================================================= */
+
+.panel-body{
+  margin:0;
+  min-height:100vh;
+  background:#06111f;
+  color:#f4f8ff;
+  font-family:Inter,Arial,sans-serif;
+}
+
+.panel-shell{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:250px 1fr;
+}
+
+/* SOL MENÜ */
+
+.panel-sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:250px;
+  padding:28px 16px;
+  background:#071522;
+  border-right:1px solid #173047;
+  overflow-y:auto;
+  z-index:20;
+}
+
+.panel-logo{
+  display:block;
+  padding:0 14px 32px;
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:#fff;
+}
+
+.panel-logo span{
+  color:#268cff;
+}
+
+.panel-menu-title{
+  margin:22px 14px 9px;
+  color:#617991;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.15em;
+}
+
+.panel-menu-item{
+  width:100%;
+  min-height:45px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 14px;
+  margin:4px 0;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#aebed0;
+  font-size:13px;
+  font-weight:700;
+  text-align:left;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.panel-menu-item:hover{
+  background:#0d2236;
+  color:#fff;
+}
+
+.panel-menu-item.active{
+  color:#45a2ff;
+  background:#0d2842;
+  box-shadow:inset 3px 0 #268cff;
+}
+
+.panel-logout{
+  font-family:inherit;
+}
+
+/* SAĞ TARAF */
+
+.panel-content{
+  grid-column:2;
+  min-width:0;
+}
+
+.panel-topbar{
+  min-height:92px;
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+  padding:18px 38px;
+  background:rgba(5,15,27,.94);
+  border-bottom:1px solid #173047;
+  backdrop-filter:blur(16px);
+}
+
+.panel-topbar h1{
+  margin:0 0 6px;
+  font-size:22px;
+}
+
+.panel-topbar p{
+  margin:0;
+  color:#7189a1;
+  font-size:12px;
+}
+
+.panel-user-box{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:9px 14px;
+  border:1px solid #1b3853;
+  border-radius:12px;
+  background:#091a2b;
+}
+
+.panel-avatar{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:linear-gradient(135deg,#168cff,#315dff);
+  font-weight:900;
+}
+
+.panel-user-box strong,
+.panel-user-box span{
+  display:block;
+}
+
+.panel-user-box strong{
+  max-width:220px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:12px;
+}
+
+.panel-user-box span{
+  margin-top:3px;
+  color:#7189a1;
+  font-size:10px;
+}
+
+/* ANA PANEL */
+
+.panel-main{
+  max-width:1500px;
+  margin:auto;
+  padding:34px 38px 60px;
+}
+
+.panel-stats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+}
+
+.panel-stat-card,
+.panel-card{
+  border:1px solid #173752;
+  border-radius:14px;
+  background:linear-gradient(145deg,#0a1b2d,#081725);
+  box-shadow:0 15px 40px rgba(0,0,0,.18);
+}
+
+.panel-stat-card{
+  min-height:150px;
+  padding:22px;
+}
+
+.panel-stat-card span{
+  display:block;
+  color:#8ca1b7;
+  font-size:12px;
+  font-weight:700;
+}
+
+.panel-stat-card strong{
+  display:block;
+  margin:14px 0 10px;
+  color:#fff;
+  font-size:30px;
+}
+
+.panel-stat-card small{
+  color:#607991;
+  font-size:11px;
+}
+
+.panel-grid{
+  display:grid;
+  grid-template-columns:minmax(0,2fr) minmax(280px,.8fr);
+  gap:18px;
+  margin-top:18px;
+}
+
+.panel-card{
+  padding:22px;
+}
+
+.panel-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.panel-card-head h2{
+  margin:0 0 5px;
+  font-size:18px;
+}
+
+.panel-card-head p{
+  margin:0;
+  color:#7189a1;
+  font-size:11px;
+}
+
+.panel-card-head>a{
+  padding:8px 11px;
+  border:1px solid #19436a;
+  border-radius:8px;
+  color:#3d9cff;
+  font-size:11px;
+}
+
+/* TABLO */
+
+.panel-table-wrap{
+  overflow-x:auto;
+}
+
+.panel-table{
+  width:100%;
+  min-width:600px;
+  border-collapse:collapse;
+}
+
+.panel-table th{
+  padding:13px 12px;
+  border-bottom:1px solid #173047;
+  color:#688199;
+  font-size:10px;
+  text-align:left;
+}
+
+.panel-table td{
+  padding:16px 12px;
+  border-bottom:1px solid #102b42;
+  color:#c5d2df;
+  font-size:12px;
+}
+
+/* HIZLI İŞLEMLER */
+
+.panel-actions-card{
+  align-self:start;
+}
+
+.panel-action-button{
+  width:100%;
+  min-height:67px;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:12px 14px;
+  margin-top:10px;
+  border:1px solid #173752;
+  border-radius:11px;
+  background:#0b2033;
+  color:#fff;
+  font-family:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+
+.panel-action-button:hover{
+  border-color:#268cff;
+  background:#0d2942;
+}
+
+.panel-action-button>span{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  flex:0 0 38px;
+  border-radius:9px;
+  background:#0d3152;
+  font-size:17px;
+}
+
+.panel-action-button div{
+  flex:1;
+}
+
+.panel-action-button strong,
+.panel-action-button small{
+  display:block;
+}
+
+.panel-action-button strong{
+  font-size:12px;
+}
+
+.panel-action-button small{
+  margin-top:4px;
+  color:#7189a1;
+  font-size:10px;
+}
+
+.panel-action-button>b{
+  color:#70879e;
+  font-size:21px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px){
+  .panel-stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .panel-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:760px){
+  .panel-shell{
+    display:block;
+  }
+
+  .panel-sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+
+  .panel-content{
+    width:100%;
+  }
+
+  .panel-topbar{
+    position:relative;
+    padding:20px;
+  }
+
+  .panel-user-box{
+    display:none;
+  }
+
+  .panel-main{
+    padding:22px 16px 45px;
+  }
+
+  .panel-stats{
+    grid-template-columns:1fr;
+  }
+}
