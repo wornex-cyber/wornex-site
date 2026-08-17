@@ -572,3 +572,10 @@ function startMessagePolling(numberId) {
 // ----------------------------------------------------
 
 loadCategories();
+document.querySelector("#loginBtn")?.addEventListener("click", () => {
+  alert("Giriş ekranı hazırlanıyor.");
+});
+
+document.querySelector("#registerBtn")?.addEventListener("click", () => {
+  alert("Kayıt ekranı hazırlanıyor.");
+});
