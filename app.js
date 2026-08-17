@@ -829,3 +829,174 @@ document
   ?.addEventListener("click", () => {
     openAuthModal("register");
   });
+async function renderAccountPanel() {
+  const token = sessionStorage.getItem("vornexToken");
+
+  if (!token) {
+    return;
+  }
+
+  try {
+    const result = await apiFetch("/me");
+    const user = result.user;
+
+    sessionStorage.setItem(
+      "vornexUser",
+      JSON.stringify(user)
+    );
+
+    document
+      .querySelector("#accountPanel")
+      ?.remove();
+
+    const panel = document.createElement("section");
+
+    panel.id = "accountPanel";
+    panel.className = "account-panel panel-section";
+
+    panel.innerHTML = `
+      <div class="account-panel-head">
+        <div>
+          <span class="section-kicker">
+            VORNEX PANEL
+          </span>
+
+          <h2>Hesabım</h2>
+
+          <p>
+            ${user.email}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          id="panelLogoutBtn"
+          class="ghost-btn"
+        >
+          Çıkış Yap
+        </button>
+      </div>
+
+      <div class="account-grid">
+
+        <div class="account-balance-card">
+          <span>GÜNCEL BAKİYE</span>
+
+          <strong>
+            ${formatPrice(user.balance)}
+          </strong>
+
+          <p>
+            Kullanılabilir hesap bakiyen
+          </p>
+
+          <button
+            type="button"
+            id="panelTopupBtn"
+            class="primary-btn"
+          >
+            + Bakiye Yükle
+          </button>
+        </div>
+
+        <div class="account-action-card">
+          <span>HIZLI İŞLEM</span>
+
+          <h3>Yeni numara al</h3>
+
+          <p>
+            Servis ve ülke seçerek yeni
+            sipariş oluştur.
+          </p>
+
+          <button
+            type="button"
+            id="panelBuyBtn"
+            class="ghost-btn"
+          >
+            Numara Al →
+          </button>
+        </div>
+
+        <div class="account-action-card">
+          <span>SİPARİŞLER</span>
+
+          <h3>Aktif işlemler</h3>
+
+          <p>
+            SMS bekleyen ve tamamlanan
+            siparişlerini takip et.
+          </p>
+
+          <button
+            type="button"
+            id="panelOrdersBtn"
+            class="ghost-btn"
+          >
+            Siparişlere Git →
+          </button>
+        </div>
+
+      </div>
+    `;
+
+    const hero = document.querySelector(".hero");
+
+    if (hero) {
+      hero.insertAdjacentElement(
+        "afterend",
+        panel
+      );
+    }
+
+    document
+      .querySelector("#panelBuyBtn")
+      ?.addEventListener("click", () => {
+        document
+          .querySelector("#services")
+          ?.scrollIntoView({
+            behavior: "smooth",
+          });
+      });
+
+    document
+      .querySelector("#panelOrdersBtn")
+      ?.addEventListener("click", () => {
+        document
+          .querySelector("#orders")
+          ?.scrollIntoView({
+            behavior: "smooth",
+          });
+      });
+
+    document
+      .querySelector("#panelTopupBtn")
+      ?.addEventListener("click", () => {
+        alert(
+          "Bakiye yükleme ekranını birazdan ekleyeceğiz."
+        );
+      });
+
+    document
+      .querySelector("#panelLogoutBtn")
+      ?.addEventListener("click", () => {
+        sessionStorage.removeItem(
+          "vornexToken"
+        );
+
+        sessionStorage.removeItem(
+          "vornexUser"
+        );
+
+        location.reload();
+      });
+
+  } catch (error) {
+    console.error(
+      "Panel yüklenemedi:",
+      error
+    );
+  }
+}
+
+renderAccountPanel();
