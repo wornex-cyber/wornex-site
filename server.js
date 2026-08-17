@@ -31,6 +31,56 @@ initDatabase().catch((error) => {
   console.error("Veritabanı başlatma hatası:", error);
 });
 app.use(express.json()); 
+app.post("/api/register", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        error: "E-posta ve şifre gerekli."
+      });
+    }
+
+    const existing = await db.query(
+      "SELECT id FROM users WHERE email = $1",
+      [email]
+    );
+
+    if (existing.rows.length > 0) {
+      return res.status(409).json({
+        error: "Bu e-posta zaten kayıtlı."
+      });
+    }
+
+    const crypto = await import("node:crypto");
+
+    const salt = crypto.randomBytes(16).toString("hex");
+
+    const hash = crypto.scryptSync(
+      password,
+      salt,
+      64
+    ).toString("hex");
+
+    const passwordHash = `${salt}:${hash}`;
+
+    const result = await db.query(
+      "INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id, email, balance",
+      [email, passwordHash]
+    );
+
+    res.status(201).json({
+      success: true,
+      user: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error("Kayıt hatası:", error);
+    res.status(500).json({
+      error: "Kayıt sırasında bir hata oluştu."
+    });
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.SMS_ONAY_API_KEY;
