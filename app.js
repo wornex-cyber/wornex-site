@@ -75,10 +75,22 @@ async function apiFetch(path) {
   }
 
   if (!response.ok) {
-    throw new Error(
-      data?.message || "Sunucu bağlantısında bir hata oluştu."
-    );
+  const errorMessage =
+    data?.error ||
+    data?.message ||
+    "Sunucu bağlantısında bir hata oluştu.";
+
+  if (response.status === 401) {
+    sessionStorage.removeItem("vornexToken");
+    sessionStorage.removeItem("vornexUser");
+
+    setTimeout(() => {
+      openAuthModal("login");
+    }, 100);
   }
+
+  throw new Error(errorMessage);
+}
 
   return data;
 }
@@ -353,13 +365,7 @@ function openOrderModal() {
       </strong>
     </div>
 
-    <div>
-      <span>Tedarikçi Fiyatı</span>
-      <strong>
-        ${formatPrice(currentDetails.price)}
-      </strong>
-    </div>
-  `;
+   
 
   modal.classList.remove("hidden");
 }
