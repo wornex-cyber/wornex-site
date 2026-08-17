@@ -26,7 +26,7 @@
 
       <div class="panel-menu-title">HİZMETLER</div>
 
-      <div class="panel-menu-title">HİZMETLER</div>
+    
 
 <a class="panel-menu-item" href="index.html#services">
   <span>🛒</span>
@@ -86,3 +86,270 @@
   <span>🛡️</span>
   Güvenlik
 </a>
+<button class="panel-menu-item panel-logout" id="panelLogout">
+  <span>↪</span>
+  Çıkış Yap
+</button>
+
+</aside>
+
+<div class="panel-content">
+
+  <header class="panel-topbar">
+
+    <div>
+      <h1>Hoş geldin, VORNEX 👋</h1>
+      <p>Hesabını ve siparişlerini buradan yönetebilirsin.</p>
+    </div>
+
+    <div class="panel-user-box">
+      <div class="panel-avatar">V</div>
+
+      <div>
+        <strong id="panelUserEmail">Yükleniyor...</strong>
+        <span>Müşteri</span>
+      </div>
+    </div>
+
+  </header>
+
+
+  <main class="panel-main">
+
+    <section class="panel-stats">
+
+      <div class="panel-stat-card">
+        <span>Bakiyeniz</span>
+        <strong id="panelBalance">₺0,00</strong>
+        <small>Kullanılabilir bakiye</small>
+      </div>
+
+      <div class="panel-stat-card">
+        <span>Aktif Siparişler</span>
+        <strong id="panelActiveOrders">0</strong>
+        <small>Devam eden işlemler</small>
+      </div>
+
+      <div class="panel-stat-card">
+        <span>Tamamlananlar</span>
+        <strong id="panelCompletedOrders">0</strong>
+        <small>Tamamlanan siparişler</small>
+      </div>
+
+      <div class="panel-stat-card">
+        <span>Toplam Harcama</span>
+        <strong id="panelTotalSpent">₺0,00</strong>
+        <small>Toplam işlem tutarı</small>
+      </div>
+
+    </section>
+
+
+    <section class="panel-grid">
+
+      <div class="panel-card panel-orders-card">
+
+        <div class="panel-card-head">
+          <div>
+            <h2>Aktif Siparişlerim</h2>
+            <p>SMS bekleyen siparişlerini takip et.</p>
+          </div>
+
+          <a href="index.html#orders">
+            Tümünü Gör
+          </a>
+        </div>
+
+        <div class="panel-table-wrap">
+
+          <table class="panel-table">
+
+            <thead>
+              <tr>
+                <th>Servis</th>
+                <th>Ülke</th>
+                <th>Numara</th>
+                <th>Durum</th>
+              </tr>
+            </thead>
+
+            <tbody id="panelOrdersBody">
+              <tr>
+                <td colspan="4">
+                  Henüz aktif sipariş yok.
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel-card panel-actions-card">
+
+        <div class="panel-card-head">
+          <div>
+            <h2>Hızlı İşlemler</h2>
+            <p>Sık kullandığın işlemler.</p>
+          </div>
+        </div>
+
+        <a
+          class="panel-action-button"
+          href="index.html#services"
+        >
+          <span>🛒</span>
+
+          <div>
+            <strong>Numara Al</strong>
+            <small>Yeni numara siparişi</small>
+          </div>
+
+          <b>›</b>
+        </a>
+
+        <button
+          class="panel-action-button"
+          id="panelTopup"
+        >
+          <span>💳</span>
+
+          <div>
+            <strong>Bakiye Yükle</strong>
+            <small>Hesabına bakiye ekle</small>
+          </div>
+
+          <b>›</b>
+        </button>
+
+        <a
+          class="panel-action-button"
+          href="index.html#orders"
+        >
+          <span>📦</span>
+
+          <div>
+            <strong>Siparişlerim</strong>
+            <small>Aktif işlemleri görüntüle</small>
+          </div>
+
+          <b>›</b>
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+</div>
+
+
+<script>
+  const API_BASE = "https://wornex-api.onrender.com/api";
+
+  async function loadPanel() {
+    const token =
+      sessionStorage.getItem("vornexToken");
+
+    if (!token) {
+      location.href = "index.html";
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_BASE}/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+          data.message ||
+          "Hesap bilgileri alınamadı."
+        );
+      }
+
+      const user = data.user || {};
+
+      document
+        .querySelector("#panelUserEmail")
+        .textContent =
+          user.email || "Kullanıcı";
+
+      document
+        .querySelector("#panelBalance")
+        .textContent =
+          new Intl.NumberFormat(
+            "tr-TR",
+            {
+              style: "currency",
+              currency: "TRY"
+            }
+          ).format(
+            Number(user.balance || 0)
+          );
+
+    } catch (error) {
+      console.error(error);
+
+      sessionStorage.removeItem(
+        "vornexToken"
+      );
+
+      sessionStorage.removeItem(
+        "vornexUser"
+      );
+
+      location.href = "index.html";
+    }
+  }
+
+  document
+    .querySelector("#panelLogout")
+    .addEventListener("click", () => {
+
+      sessionStorage.removeItem(
+        "vornexToken"
+      );
+
+      sessionStorage.removeItem(
+        "vornexUser"
+      );
+
+      location.href = "index.html";
+    });
+
+  document
+    .querySelector("#panelTopup")
+    .addEventListener("click", () => {
+      alert(
+        "Bakiye yükleme ekranını sonraki adımda ekleyeceğiz."
+      );
+    });
+
+  document
+    .querySelector("#panelTopupMenu")
+    ?.addEventListener("click", () => {
+      document
+        .querySelector("#panelTopup")
+        ?.click();
+    });
+
+  loadPanel();
+</script>
+
+</body>
+</html>
