@@ -1,36 +1,427 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta name="google-site-verification" content="szjGIdCq3aevJI0sedfcDXm86nVYz4X3aMN6HQ18PT4" />
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VORNEX — Global Numara Platformu</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+
+  <meta
+    name="google-site-verification"
+    content="szjGIdCq3aevJI0sedfcDXm86nVYz4X3aMN6HQ18PT4"
+  >
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="VORNEX global numara platformu. Servis ve ülke seç, stok ve fiyatları görüntüle."
+  >
+
+  <title>VORNEX — Global Numara Platformu</title>
+
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-<header>
-  <a class="logo" href="#">V<span>ORNEX</span></a>
-  <nav>
-    <a href="#services">Servisler</a>
-    <a href="#orders">Siparişler</a>
+
+<header class="topbar">
+
+  <a class="logo" href="#">
+    <span class="logo-mark">V</span>ORNEX
+  </a>
+
+  <nav class="main-nav">
+    <a href="#services">Numara Al</a>
+    <a href="#orders">Siparişlerim</a>
     <a href="#support">Destek</a>
   </nav>
-  <button id="loginBtn">Giriş Yap</button>
-  <button id="registerBtn">Kayıt Ol</button>
+
+  <div class="header-actions">
+    <button
+      class="ghost-btn"
+      id="loginBtn"
+      type="button"
+    >
+      Giriş Yap
+    </button>
+
+    <button
+      class="primary-btn"
+      id="registerBtn"
+      type="button"
+    >
+      Kayıt Ol
+    </button>
+  </div>
+
 </header>
+
+
 <main>
-<section class="hero"><div><small>● GLOBAL NUMARA PLATFORMU</small><h1>İhtiyacın olan numara,<br><em>tek panelde.</em></h1><p>Ülkeni ve servisini seç, stok durumunu gör ve siparişini tek ekrandan takip et.</p><a class="cta" href="#services">Numara Seç →</a></div><aside><small>CANLI STOK</small><strong>100+</strong><p>ülke / servis seçeneği</p><div class="stats"><span>⚡ Hızlı işlem</span><span>🔒 Güvenli</span><span>24/7 Panel</span></div></aside></section>
 
-<section id="services"><small>NUMARA SEÇ</small><h2>Ülke ve servis</h2>
-<div class="selectors"><label>Ülke<select id="country"><option value="">Ülke seçin</option><option value="TR">🇹🇷 Türkiye</option><option value="US">🇺🇸 ABD</option><option value="GB">🇬🇧 İngiltere</option><option value="DE">🇩🇪 Almanya</option><option value="FR">🇫🇷 Fransa</option><option value="CA">🇨🇦 Kanada</option><option value="IT">🇮🇹 İtalya</option><option value="ES">🇪🇸 İspanya</option><option value="AU">🇦🇺 Avustralya</option></select></label>
-<label>Servis<select id="service"><option>Önce ülke seçin</option></select></label><div class="stock">STOK<strong id="stock">—</strong><span id="price">Fiyat bekleniyor</span></div></div>
-<div class="cards" id="cards"></div></section>
+  <!-- HERO -->
+  <section class="hero">
 
-<section id="orders"><small>SİPARİŞLER</small><h2>Son işlemler</h2><div class="table"><table><thead><tr><th>Sipariş</th><th>Servis</th><th>Numara</th><th>Durum</th></tr></thead><tbody id="ordersBody"><tr><td colspan="4">Henüz sipariş yok.</td></tr></tbody></table></div></section>
+    <div class="hero-copy">
 
-<section id="support" class="support"><div><small>DESTEK</small><h2>Bir sorun mu var?</h2><p>Sipariş numaranla destek ekibine ulaş.</p></div><button class="cta">Destek Talebi</button></section>
+      <div class="eyebrow">
+        <span class="live-dot"></span>
+        GLOBAL NUMARA PLATFORMU
+      </div>
+
+      <h1>
+        Doğrulama numaran
+        <span>birkaç tık uzağında.</span>
+      </h1>
+
+      <p>
+        Servisini seç, ülkeni belirle, gerçek zamanlı
+        stok ve fiyat bilgilerini görüntüle.
+        Siparişlerini tek panelden takip et.
+      </p>
+
+      <div class="hero-actions">
+        <a class="primary-btn hero-button" href="#services">
+          Numara Seç
+          <span>→</span>
+        </a>
+
+        <a class="secondary-link" href="#orders">
+          Siparişlerimi Gör
+        </a>
+      </div>
+
+      <div class="trust-row">
+
+        <div>
+          <strong>100+</strong>
+          <span>Ülke</span>
+        </div>
+
+        <div>
+          <strong>7/24</strong>
+          <span>Otomatik Sistem</span>
+        </div>
+
+        <div>
+          <strong>Hızlı</strong>
+          <span>SMS Teslimatı</span>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="hero-dashboard">
+
+      <div class="dashboard-head">
+
+        <div>
+          <span class="dashboard-label">
+            CANLI PLATFORM
+          </span>
+
+          <h3>VORNEX Panel</h3>
+        </div>
+
+        <span class="online-pill">
+          <span></span>
+          Online
+        </span>
+
+      </div>
+
+      <div class="balance-preview">
+        <span>Kullanılabilir servisler</span>
+        <strong>100+</strong>
+        <small>Global numara ağı</small>
+      </div>
+
+      <div class="mini-grid">
+
+        <div class="mini-card">
+          <div class="mini-icon">⚡</div>
+          <span>Hızlı İşlem</span>
+          <strong>Anlık</strong>
+        </div>
+
+        <div class="mini-card">
+          <div class="mini-icon">🔒</div>
+          <span>Güvenli Sistem</span>
+          <strong>Aktif</strong>
+        </div>
+
+      </div>
+
+      <div class="dashboard-status">
+
+        <div>
+          <span>API Durumu</span>
+          <strong>
+            <i></i>
+            Aktif
+          </strong>
+        </div>
+
+        <div>
+          <span>Sistem</span>
+          <strong>7/24</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- SERVICES -->
+  <section
+    class="panel-section"
+    id="services"
+  >
+
+    <div class="section-heading">
+
+      <div>
+        <span class="section-kicker">
+          NUMARA AL
+        </span>
+
+        <h2>
+          Servis ve ülke seç
+        </h2>
+
+        <p>
+          Kullanmak istediğin servisi ve ülkeyi seç.
+          Güncel stok ve satış fiyatı otomatik gösterilir.
+        </p>
+      </div>
+
+      <div class="section-badge">
+        <span></span>
+        Canlı stok
+      </div>
+
+    </div>
+
+
+    <div class="service-panel">
+
+      <div class="selectors">
+
+        <label class="field">
+          <span>Servis</span>
+
+          <select id="country">
+            <option value="">
+              Servis seçin
+            </option>
+          </select>
+        </label>
+
+
+        <label class="field">
+          <span>Ülke</span>
+
+          <select id="service">
+            <option value="">
+              Önce servis seçin
+            </option>
+          </select>
+        </label>
+
+
+        <div class="stock-card">
+
+          <div>
+            <span>CANLI STOK</span>
+            <strong id="stock">—</strong>
+          </div>
+
+          <div class="price-box">
+            <span>SATIŞ FİYATI</span>
+            <strong id="price">
+              Ülke seçin
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="cards"
+        id="cards"
+      ></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ORDERS -->
+  <section
+    class="panel-section"
+    id="orders"
+  >
+
+    <div class="section-heading">
+
+      <div>
+        <span class="section-kicker">
+          SİPARİŞLERİM
+        </span>
+
+        <h2>
+          Son işlemler
+        </h2>
+
+        <p>
+          Aldığın numaraları ve gelen SMS kodlarını
+          buradan takip edebilirsin.
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="orders-panel">
+
+      <div class="table">
+        <table>
+
+          <thead>
+            <tr>
+              <th>Sipariş</th>
+              <th>Servis / Ülke</th>
+              <th>Numara</th>
+              <th>Durum</th>
+            </tr>
+          </thead>
+
+          <tbody id="ordersBody">
+            <tr>
+              <td
+                colspan="4"
+                class="empty-order"
+              >
+                Henüz sipariş bulunmuyor.
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- SUPPORT -->
+  <section
+    class="support-panel"
+    id="support"
+  >
+
+    <div>
+
+      <span class="section-kicker">
+        VORNEX DESTEK
+      </span>
+
+      <h2>
+        Yardıma mı ihtiyacın var?
+      </h2>
+
+      <p>
+        Sipariş veya hesap işlemleriyle ilgili
+        sorunlarda destek ekibine ulaşabilirsin.
+      </p>
+
+    </div>
+
+    <button
+      class="primary-btn"
+      type="button"
+    >
+      Destek Talebi
+    </button>
+
+  </section>
+
 </main>
-<footer><b>VORNEX</b><span>© 2026 VORNEX</span><span>Gizlilik · Kullanım · İade</span></footer>
 
-<div class="modal hidden" id="modal"><div class="box"><button id="x">×</button><small>SİPARİŞ ÖNİZLEME</small><h2>Numara siparişi</h2><div id="summary"></div><p class="notice">Demo arayüzü. Gerçek ödeme ve tedarikçi API bağlantısı sunucu tarafında yapılmalıdır.</p><button class="cta" id="confirm">Demo Siparişi Oluştur</button></div></div>
+
+<footer>
+
+  <div class="footer-logo">
+    <span>V</span>ORNEX
+  </div>
+
+  <p>
+    © 2026 VORNEX. Tüm hakları saklıdır.
+  </p>
+
+  <div>
+    Gizlilik · Kullanım · İade
+  </div>
+
+</footer>
+
+
+<!-- ORDER MODAL -->
+<div
+  class="modal hidden"
+  id="modal"
+>
+
+  <div class="box">
+
+    <button
+      id="x"
+      type="button"
+      aria-label="Kapat"
+    >
+      ×
+    </button>
+
+    <span class="section-kicker">
+      SİPARİŞ ÖNİZLEME
+    </span>
+
+    <h2>
+      Numara siparişi
+    </h2>
+
+    <div
+      id="summary"
+      class="summary"
+    ></div>
+
+    <div class="order-warning">
+      Siparişi onayladıktan sonra numaran hazırlanır
+      ve SMS kodu siparişler alanında görüntülenir.
+    </div>
+
+    <button
+      class="primary-btn confirm-button"
+      id="confirm"
+      type="button"
+    >
+      Siparişi Oluştur
+    </button>
+
+  </div>
+
+</div>
+
+
 <script src="app.js"></script>
-</body></html>
+
+</body>
+</html>
