@@ -386,6 +386,13 @@ closeBtn.addEventListener("click", () => {
 confirmBtn.addEventListener(
   "click",
   async () => {
+    const token = sessionStorage.getItem("vornexToken");
+
+if (!token) {
+  alert("Sipariş vermek için giriş yapmalısın.");
+  openAuthModal("login");
+  return;
+}
     if (!selectedService) {
       alert("Önce ülke seç.");
       return;
