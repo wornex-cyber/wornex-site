@@ -2276,3 +2276,25 @@ footer p {
     width:100%;
   }
 }
+/* PANEL TABLO TAŞMA DÜZELTMESİ */
+.panel-orders-card {
+  min-width: 0;
+}
+
+.panel-table-wrap {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.panel-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.panel-table th,
+.panel-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
