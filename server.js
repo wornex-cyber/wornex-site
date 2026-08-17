@@ -1,8 +1,36 @@
 import express from "express";
 import "dotenv/config";
 
+import pg from "pg";
+
 const app = express();
-app.use(express.json());
+const { Pool } = pg;
+
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL
+    ? { rejectUnauthorized: false }
+    : false,
+});
+
+async function initDatabase() {
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      balance NUMERIC(12, 2) NOT NULL DEFAULT 0,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  console.log("Veritabanı hazır.");
+}
+
+initDatabase().catch((error) => {
+  console.error("Veritabanı başlatma hatası:", error);
+});
+app.use(express.json()); 
 
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.SMS_ONAY_API_KEY;
