@@ -1,4 +1,15 @@
 const API_BASE = "https://wornex-api.onrender.com/api";
+const ALLOWED_SERVICES = [
+  "WhatsApp",
+  "Telegram",
+  "Instagram",
+  "Google",
+  "Facebook",
+  "TikTok",
+  "Discord",
+  "Twitter",
+  "X"
+];
 
 const MIN_SALE_PRICE = 500;
 const PROFIT_MULTIPLIER = 1.5;
@@ -105,7 +116,11 @@ async function loadCategories() {
   `;
 
   try {
-    categories = await apiFetch("/categories");
+    categories = (await apiFetch("/categories")).filter(item =>
+  ALLOWED_SERVICES.some(
+    name => name.toLowerCase() === String(item.name).toLowerCase()
+  )
+);
 
     countrySelect.innerHTML =
       `<option value="">Servis seçin</option>` +
