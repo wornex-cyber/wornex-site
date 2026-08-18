@@ -2664,3 +2664,22 @@ footer p {
 .panel-stat-spent .panel-stat-icon {
   color: #c18bff;
 }
+.panel-stat-footer {
+  margin-top: auto;
+  min-height: 28px;
+}
+
+.panel-stat-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-stat-footer small {
+  max-width: 115px;
+  line-height: 1.3;
+}
+
+.panel-stat-footer a,
+.panel-stat-footer > span {
+  white-space: nowrap;
+}
