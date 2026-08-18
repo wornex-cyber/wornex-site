@@ -775,7 +775,7 @@ function renderServiceChoices(list = categories) {
     .map((item) => `
       <button
         type="button"
-        class="vornex-service-choice"
+        class="vornex-service-choice ${String(item.id) === String(countrySelect.value) ? "active" : ""}"
         data-category-id="${item.id}"
       >
         <span class="vornex-service-choice-icon">
@@ -816,7 +816,9 @@ document
 
     countrySelect.value =
       button.dataset.categoryId;
-
+serviceSearchInput?.dispatchEvent(
+  new Event("input")
+);
     countrySelect.dispatchEvent(
       new Event("change")
     );
