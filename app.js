@@ -427,7 +427,20 @@ if (!token) {
       alert("Önce ülke seç.");
       return;
     }
+const account = await apiFetch("/me");
+const currentBalance = Number(account.user?.balance || 0);
+const requiredBalance = getSalePrice(currentDetails.price);
 
+if (currentBalance < requiredBalance) {
+  alert(
+    `Yetersiz bakiye.\n\n` +
+    `Bakiyen: ${formatPrice(currentBalance)}\n` +
+    `Gerekli: ${formatPrice(requiredBalance)}`
+  );
+
+  location.href = "topup.html";
+  return;
+}
     const oldText = confirmBtn.textContent;
 
     confirmBtn.disabled = true;
