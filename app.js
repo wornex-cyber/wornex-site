@@ -285,7 +285,7 @@ countrySelect.addEventListener("change", async () => {
 function renderCountryCards() {
   cardsEl.innerHTML = "";
 
-  currentServices.slice(0, 12).forEach((item) => {
+  currentServices.forEach((item) => {
     const card = document.createElement("div");
 
     card.className = "card";
