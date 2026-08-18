@@ -180,10 +180,12 @@ async function loadCategories() {
   setLoading(serviceSelect, "Önce servis seçin");
 
   cardsEl.innerHTML = `
-    <div class="card">
-      <p>Servisler hazırlanıyor...</p>
-    </div>
-  `;
+  <div class="premium-empty-selection">
+    <div>⏳</div>
+    <strong>Servisler yükleniyor</strong>
+    <span>Lütfen kısa bir süre bekle.</span>
+  </div>
+`;
 
   try {
     categories = (await apiFetch("/categories")).filter(item =>
@@ -218,12 +220,13 @@ renderServiceChoices();
     countrySelect.innerHTML =
       `<option value="">Servisler alınamadı</option>`;
 
-    cardsEl.innerHTML = `
-      <div class="card">
-        <h3>Bağlantı hatası</h3>
-        <p>${error.message}</p>
-      </div>
-    `;
+   cardsEl.innerHTML = `
+  <div class="premium-empty-selection">
+    <div>⚠️</div>
+    <strong>Servisler yüklenemedi</strong>
+    <span>${error.message}</span>
+  </div>
+`;
   }
 }
 
@@ -253,11 +256,13 @@ countrySelect.addEventListener("change", async () => {
 
   setLoading(serviceSelect, "Ülkeler yükleniyor...");
 
-  cardsEl.innerHTML = `
-    <div class="card">
-      <p>Ülke seçenekleri yükleniyor...</p>
-    </div>
-  `;
+ cardsEl.innerHTML = `
+  <div class="premium-empty-selection">
+    <div>⏳</div>
+    <strong>Ülkeler yükleniyor</strong>
+    <span>Uygun ülkeler hazırlanıyor.</span>
+  </div>
+`;
 
   try {
     currentServices = await apiFetch(
@@ -283,11 +288,12 @@ countrySelect.addEventListener("change", async () => {
       `<option value="">Ülkeler alınamadı</option>`;
 
     cardsEl.innerHTML = `
-      <div class="card">
-        <h3>Ülkeler yüklenemedi</h3>
-        <p>${error.message}</p>
-      </div>
-    `;
+  <div class="premium-empty-selection">
+    <div>⚠️</div>
+    <strong>Ülkeler yüklenemedi</strong>
+    <span>${error.message}</span>
+  </div>
+`;
   }
 });
 
