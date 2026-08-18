@@ -53,6 +53,10 @@ const serviceSelect = document.querySelector("#service");
 const stockEl = document.querySelector("#stock");
 const priceEl = document.querySelector("#price");
 const cardsEl = document.querySelector("#cards");
+const countrySearchInput =
+  document.querySelector(
+    ".vornex-country-column .vornex-search-box input"
+  );
 const modal = document.querySelector("#modal");
 const summaryEl = document.querySelector("#summary");
 const ordersBody = document.querySelector("#ordersBody");
@@ -282,10 +286,10 @@ countrySelect.addEventListener("change", async () => {
 // Ülkeleri kart olarak göster
 // ----------------------------------------------------
 
-function renderCountryCards() {
+function renderCountryCards(list = currentServices) {
   cardsEl.innerHTML = "";
 
-  currentServices.forEach((item) => {
+  list.forEach((item) => {
     const card = document.createElement("div");
 
     card.className = "card";
@@ -310,7 +314,21 @@ ${selectedCategory?.name || "Servis"}
     cardsEl.appendChild(card);
   });
 }
+countrySearchInput?.addEventListener("input", () => {
+  const query =
+    countrySearchInput.value
+      .trim()
+      .toLocaleLowerCase("tr-TR");
 
+  const filteredCountries =
+    currentServices.filter((item) =>
+      String(item.name || "")
+        .toLocaleLowerCase("tr-TR")
+        .includes(query)
+    );
+
+  renderCountryCards(filteredCountries);
+});
 cardsEl.addEventListener("click", (event) => {
   const button = event.target.closest(
     "button[data-service-id]"
