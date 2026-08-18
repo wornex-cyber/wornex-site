@@ -10,7 +10,25 @@ const ALLOWED_SERVICES = [
   "Twitter",
   "X"
 ];
+const SERVICE_ICONS = {
+  WhatsApp: "fa-brands fa-whatsapp",
+  Telegram: "fa-brands fa-telegram",
+  Instagram: "fa-brands fa-instagram",
+  Google: "fa-brands fa-google",
+  Facebook: "fa-brands fa-facebook-f",
+  TikTok: "fa-brands fa-tiktok",
+  Discord: "fa-brands fa-discord",
+  Twitter: "fa-brands fa-x-twitter",
+  X: "fa-brands fa-x-twitter"
+};
 
+function getServiceIcon(serviceName) {
+  const iconClass =
+    SERVICE_ICONS[serviceName] ||
+    "fa-solid fa-mobile-screen-button";
+
+  return `<i class="${iconClass}"></i>`;
+}
 const MIN_SALE_PRICE = 500;
 const PROFIT_MULTIPLIER = 1.5;
 
@@ -267,7 +285,8 @@ function renderCountryCards() {
       <b>🌍</b>
       <h3>${item.name}</h3>
       <p>
-        ${selectedCategory?.name || "Servis"}
+        ${getServiceIcon(selectedCategory?.name || "")}
+${selectedCategory?.name || "Servis"}
         için stok ve fiyatı görüntüle
       </p>
 
