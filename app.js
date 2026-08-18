@@ -23,8 +23,17 @@ const SERVICE_ICONS = {
 };
 
 function getServiceIcon(serviceName) {
+  const normalizedName =
+    String(serviceName || "").toLowerCase();
+
+  const matchedService =
+    Object.keys(SERVICE_ICONS).find(
+      (name) =>
+        name.toLowerCase() === normalizedName
+    );
+
   const iconClass =
-    SERVICE_ICONS[serviceName] ||
+    SERVICE_ICONS[matchedService] ||
     "fa-solid fa-mobile-screen-button";
 
   return `<i class="${iconClass}"></i>`;
