@@ -72,7 +72,7 @@
 
 <div class="panel-menu-title">HESAP</div>
 
-<a class="panel-menu-item" href="#">
+<a class="panel-menu-item" href="#profile">
   <span>👤</span>
   Profil Ayarları
 </a>
@@ -115,6 +115,31 @@
 
 
   <main class="panel-main">
+    <section class="panel-card" id="profile">
+  <div class="panel-card-head">
+    <div>
+      <h2>Profil Bilgileri</h2>
+      <p>Hesap ve telefon doğrulama durumun.</p>
+    </div>
+  </div>
+
+  <div class="panel-profile-info">
+    <div>
+      <span>E-posta</span>
+      <strong id="profileEmail">Yükleniyor...</strong>
+    </div>
+
+    <div>
+      <span>Telefon</span>
+      <strong id="profilePhone">Yükleniyor...</strong>
+    </div>
+
+    <div>
+      <span>Telefon Durumu</span>
+      <strong id="profilePhoneStatus">Kontrol ediliyor...</strong>
+    </div>
+  </div>
+</section>
 
     <section class="panel-stats">
 
@@ -283,6 +308,22 @@
       }
 
       const user = data.user || {};
+      document
+  .querySelector("#profileEmail")
+  .textContent =
+    user.email || "-";
+
+document
+  .querySelector("#profilePhone")
+  .textContent =
+    user.phone || "Telefon eklenmemiş";
+
+document
+  .querySelector("#profilePhoneStatus")
+  .textContent =
+    user.phone_verified
+      ? "Doğrulandı"
+      : "Doğrulanmadı";
 
       document
         .querySelector("#panelUserEmail")
