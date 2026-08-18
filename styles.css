@@ -4842,3 +4842,573 @@ footer p {
     grid-template-columns: 1fr;
   }
 }
+/* =========================================================
+   VORNEX REFERENCE RENTAL UI
+   LEFT COUNTRY / CENTER SERVICES / RIGHT ORDER DETAIL
+========================================================= */
+
+.vornex-rental-panel {
+  position: relative;
+  overflow: hidden;
+  padding: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(35, 126, 255, 0.05),
+      transparent 38%
+    ),
+    #050f1e;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255,255,255,0.025);
+}
+
+.vornex-rental-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(250px, 0.82fr)
+    minmax(330px, 1.15fr)
+    minmax(290px, 0.9fr);
+  min-height: 620px;
+}
+
+.vornex-country-column,
+.vornex-services-column,
+.vornex-order-detail-column {
+  min-width: 0;
+  padding: 24px;
+}
+
+.vornex-country-column,
+.vornex-services-column {
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+
+.vornex-country-column {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(7, 20, 39, 0.96),
+      rgba(4, 14, 28, 0.98)
+    );
+}
+
+.vornex-services-column {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(7, 19, 36, 0.90),
+      rgba(4, 13, 26, 0.94)
+    );
+}
+
+.vornex-order-detail-column {
+  background:
+    radial-gradient(
+      circle at 50% 10%,
+      rgba(31, 119, 255, 0.08),
+      transparent 42%
+    ),
+    #06101f;
+}
+
+
+/* =========================================================
+   COLUMN HEADERS
+========================================================= */
+
+.vornex-column-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.vornex-column-head h3 {
+  margin: 5px 0 0;
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 850;
+}
+
+.vornex-column-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 27px;
+  padding: 0 10px;
+  border: 1px solid rgba(48, 142, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(35, 126, 255, 0.08);
+  color: #43a2ff;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.vornex-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 17px;
+}
+
+.vornex-search-box i {
+  position: absolute;
+  left: 14px;
+  z-index: 2;
+  color: #61758f;
+  font-size: 12px;
+}
+
+.vornex-search-box input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px 0 38px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  outline: none;
+  background: rgba(255,255,255,0.025);
+  color: #dce8f8;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.vornex-search-box input::placeholder {
+  color: #60738d;
+}
+
+.vornex-search-box input:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+
+/* =========================================================
+   KEEP NATIVE SELECTS FOR JS, HIDE VISUALLY
+========================================================= */
+
+.vornex-country-native,
+.vornex-native-service {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0 !important;
+}
+
+
+/* =========================================================
+   COUNTRY COLUMN
+========================================================= */
+
+.vornex-country-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 0 3px;
+}
+
+.vornex-country-list-head > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8193a9;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.vornex-country-list-head i {
+  color: #368fff;
+}
+
+.vornex-country-list-head small {
+  color: #536880;
+  font-size: 9px;
+}
+
+.vornex-country-list {
+  display: flex !important;
+  flex-direction: column;
+  gap: 7px !important;
+  max-height: 480px;
+  margin-top: 0 !important;
+  padding-right: 5px;
+  overflow-y: auto;
+}
+
+.vornex-country-list::-webkit-scrollbar,
+.vornex-service-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.vornex-country-list::-webkit-scrollbar-track,
+.vornex-service-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.vornex-country-list::-webkit-scrollbar-thumb,
+.vornex-service-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(72, 139, 220, 0.25);
+}
+
+.vornex-country-list .card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 60px;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  margin: 0;
+  padding: 9px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.018);
+  cursor: default;
+  transition: 0.18s ease;
+}
+
+.vornex-country-list .card:hover {
+  transform: none;
+  border-color: rgba(43, 141, 255, 0.30);
+  background: rgba(36, 126, 255, 0.07);
+}
+
+.vornex-country-list .card b {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin: 0;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 9px;
+  background: rgba(255,255,255,0.025);
+  font-size: 20px;
+}
+
+.vornex-country-list .card h3 {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  color: #e9f1fb;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.vornex-country-list .card p {
+  display: none;
+}
+
+.vornex-country-list .card button {
+  grid-column: 3;
+  grid-row: 1;
+  width: auto;
+  min-width: 55px;
+  height: 30px;
+  margin: 0;
+  padding: 0 10px;
+  border: 1px solid rgba(43, 143, 255, 0.24);
+  border-radius: 8px;
+  background: rgba(31, 124, 255, 0.07);
+  color: #56a9ff;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.vornex-country-list .card button:hover {
+  border-color: rgba(58, 157, 255, 0.60);
+  background: rgba(41, 137, 255, 0.16);
+}
+
+
+/* =========================================================
+   EMPTY COUNTRY STATE
+========================================================= */
+
+.vornex-country-list .premium-empty-selection {
+  min-height: 290px;
+  border: 1px dashed rgba(255,255,255,0.07);
+  border-radius: 13px;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(37, 129, 255, 0.06),
+      transparent 55%
+    );
+}
+
+
+/* =========================================================
+   SERVICE LIST
+========================================================= */
+
+.vornex-services-column .vornex-service-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-height: 505px;
+  margin-top: 0;
+  padding-right: 5px;
+  overflow-y: auto;
+}
+
+.vornex-services-column .vornex-service-choice {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 61px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.018);
+  color: #dce8f7;
+  cursor: pointer;
+  transition: 0.18s ease;
+}
+
+.vornex-services-column .vornex-service-choice::after {
+  content: "›";
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  color: #526a84;
+  font-size: 18px;
+}
+
+.vornex-services-column .vornex-service-choice:hover {
+  transform: none;
+  border-color: rgba(47, 146, 255, 0.35);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(30, 124, 255, 0.10),
+      rgba(30, 124, 255, 0.025)
+    );
+}
+
+.vornex-services-column .vornex-service-choice:focus {
+  border-color: rgba(49, 148, 255, 0.7);
+  outline: none;
+  background: rgba(35, 130, 255, 0.11);
+}
+
+.vornex-services-column .vornex-service-choice-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  font-size: 21px;
+}
+
+.vornex-services-column .vornex-service-choice-name {
+  color: #eef5ff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* BRAND COLORS */
+
+.vornex-services-column .fa-whatsapp {
+  color: #25d366;
+}
+
+.vornex-services-column .fa-telegram {
+  color: #229ed9;
+}
+
+.vornex-services-column .fa-instagram {
+  color: #e4405f;
+}
+
+.vornex-services-column .fa-google {
+  color: #4285f4;
+}
+
+.vornex-services-column .fa-facebook-f {
+  color: #1877f2;
+}
+
+.vornex-services-column .fa-discord {
+  color: #5865f2;
+}
+
+.vornex-services-column .fa-tiktok,
+.vornex-services-column .fa-x-twitter {
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   RIGHT ORDER DETAIL
+========================================================= */
+
+.vornex-reference-result {
+  position: sticky;
+  top: 104px;
+  min-height: 520px;
+  padding: 22px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  background:
+    radial-gradient(
+      circle at 50% 10%,
+      rgba(39, 134, 255, 0.07),
+      transparent 40%
+    ),
+    rgba(5, 16, 31, 0.88);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.025),
+    0 20px 50px rgba(0,0,0,0.18);
+}
+
+.vornex-order-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  margin: 18px 0;
+  padding: 24px 18px;
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 12px;
+  text-align: center;
+  background: rgba(255,255,255,0.015);
+}
+
+.vornex-order-placeholder-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(48, 148, 255, 0.20);
+  border-radius: 14px;
+  background: rgba(34, 129, 255, 0.08);
+  color: #3f9dff;
+  font-size: 22px;
+}
+
+.vornex-order-placeholder strong {
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.vornex-order-placeholder p {
+  max-width: 250px;
+  margin: 8px auto 0;
+  color: #73869f;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.vornex-reference-result .buy-result-grid {
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.vornex-reference-result .buy-result-item {
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.018);
+}
+
+.vornex-reference-result .buy-result-item strong {
+  margin-top: 6px;
+  font-size: 19px;
+}
+
+.vornex-reference-result .buy-result-security {
+  margin-top: 15px;
+}
+
+.vornex-reference-result .buy-preview-button {
+  margin-top: 18px;
+}
+
+
+/* =========================================================
+   REMOVE OLD COUNTRY LIST HEADER
+========================================================= */
+
+.vornex-rental-panel + .country-list-head {
+  display: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1150px) {
+  .vornex-rental-grid {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+
+  .vornex-order-detail-column {
+    grid-column: 1 / -1;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .vornex-reference-result {
+    position: relative;
+    top: auto;
+    min-height: auto;
+  }
+
+  .vornex-reference-result .buy-result-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .vornex-rental-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vornex-country-column,
+  .vornex-services-column {
+    border-right: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .vornex-country-column,
+  .vornex-services-column,
+  .vornex-order-detail-column {
+    padding: 18px;
+  }
+
+  .vornex-country-list,
+  .vornex-services-column .vornex-service-list {
+    max-height: 390px;
+  }
+
+  .vornex-reference-result .buy-result-grid {
+    grid-template-columns: 1fr;
+  }
+}
