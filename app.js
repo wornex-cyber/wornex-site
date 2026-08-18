@@ -69,6 +69,10 @@ const confirmBtn = document.querySelector("#confirm");
 const closeBtn = document.querySelector("#x");
 const openOrderPreviewBtn =
   document.querySelector("#openOrderPreview");
+const orderPlaceholderEl =
+  document.querySelector(
+    ".vornex-order-placeholder"
+  );
 const buySteps =
   document.querySelectorAll(".buy-step");
 function setBuyStep(step) {
@@ -369,7 +373,21 @@ serviceSelect.addEventListener("change", async () => {
       (item) =>
         String(item.id) === String(serviceId)
     ) || null;
+if (orderPlaceholderEl && selectedCategory && selectedService) {
+  orderPlaceholderEl.innerHTML = `
+    <div class="vornex-order-placeholder-icon">
+      ${getServiceIcon(selectedCategory.name)}
+    </div>
 
+    <strong>
+      ${selectedCategory.name} • ${selectedService.name}
+    </strong>
+
+    <p>
+      Seçimin hazır. Canlı stok ve fiyat bilgileri aşağıda.
+    </p>
+  `;
+}
   stockEl.textContent = "...";
   priceEl.textContent = "Fiyat alınıyor...";
 
