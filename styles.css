@@ -5495,3 +5495,111 @@ body {
     max-width: 100%;
   }
 }
+@media (max-width: 760px) {
+  .vornex-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 0 12px;
+  }
+
+  .vornex-brand {
+    min-width: 0;
+  }
+
+  .vornex-brand-main {
+    font-size: 22px;
+  }
+
+  .vornex-header-actions {
+    gap: 8px;
+  }
+
+  .vornex-theme-button {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+  }
+
+  .vornex-register-button {
+    min-width: 96px;
+    height: 46px;
+    padding: 0 14px;
+  }
+
+  .vornex-hero {
+    display: block;
+    grid-template-columns: 1fr;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 34px 16px 26px;
+    overflow: hidden;
+  }
+
+  .vornex-hero-content {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .vornex-hero-badge {
+    width: fit-content;
+    max-width: 100%;
+    padding: 10px 12px;
+    font-size: 9px;
+    white-space: normal;
+  }
+
+  .vornex-hero h1 {
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(38px, 11vw, 48px);
+    line-height: 1.03;
+    letter-spacing: -1.5px;
+  }
+
+  .vornex-hero h1 span {
+    display: block;
+    white-space: normal;
+  }
+
+  .vornex-hero-description {
+    width: 100%;
+    max-width: 100%;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .vornex-feature-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .vornex-feature {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .vornex-hero-actions {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .vornex-primary-cta,
+  .vornex-secondary-cta {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  .vornex-security-note {
+    max-width: 100%;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .vornex-main-stats {
+    width: 100%;
+    max-width: 100%;
+  }
+}
