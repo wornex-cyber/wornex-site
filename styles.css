@@ -2298,3 +2298,38 @@ footer p {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.panel-profile-info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.panel-profile-info > div {
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.panel-profile-info span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #8ea0b8;
+}
+
+.panel-profile-info strong {
+  font-size: 15px;
+  color: #ffffff;
+}
+
+#profilePhoneStatus {
+  color: #35d07f;
+}
+
+@media (max-width: 900px) {
+  .panel-profile-info {
+    grid-template-columns: 1fr;
+  }
+}
