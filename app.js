@@ -432,15 +432,98 @@ const currentBalance = Number(account.user?.balance || 0);
 const requiredBalance = getSalePrice(currentDetails.price);
 
 if (currentBalance < requiredBalance) {
-  alert(
-    `Yetersiz bakiye.\n\n` +
-    `Bakiyen: ${formatPrice(currentBalance)}\n` +
-    `Gerekli: ${formatPrice(requiredBalance)}`
+  const missingBalance =
+    requiredBalance - currentBalance;
+
+  const balanceModal =
+    document.createElement("div");
+
+  balanceModal.className =
+    "modal balance-warning-modal";
+
+  balanceModal.innerHTML = `
+    <div class="box balance-warning-box">
+
+      <button
+        type="button"
+        class="balance-warning-close"
+        aria-label="Kapat"
+      >
+        ×
+      </button>
+
+      <span class="section-kicker">
+        BAKİYE YETERSİZ
+      </span>
+
+      <h2>Siparişi tamamlamak için bakiye yükle</h2>
+
+      <p class="balance-warning-text">
+        Hesabındaki bakiye bu sipariş için yeterli değil.
+      </p>
+
+      <div class="balance-warning-grid">
+
+        <div>
+          <span>Mevcut Bakiye</span>
+          <strong>
+            ${formatPrice(currentBalance)}
+          </strong>
+        </div>
+
+        <div>
+          <span>Gerekli Tutar</span>
+          <strong>
+            ${formatPrice(requiredBalance)}
+          </strong>
+        </div>
+
+        <div class="balance-warning-missing">
+          <span>Eksik Tutar</span>
+          <strong>
+            ${formatPrice(missingBalance)}
+          </strong>
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="primary-btn balance-warning-topup"
+      >
+        Bakiye Yükle →
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(balanceModal);
+
+  balanceModal
+    .querySelector(".balance-warning-close")
+    .addEventListener("click", () => {
+      balanceModal.remove();
+    });
+
+  balanceModal
+    .querySelector(".balance-warning-topup")
+    .addEventListener("click", () => {
+      location.href = "topup.html";
+    });
+
+  balanceModal.addEventListener(
+    "click",
+    (event) => {
+      if (event.target === balanceModal) {
+        balanceModal.remove();
+      }
+    }
   );
 
-  location.href = "topup.html";
   return;
 }
+
+  
     const oldText = confirmBtn.textContent;
 
     confirmBtn.disabled = true;
