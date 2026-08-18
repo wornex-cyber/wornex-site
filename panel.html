@@ -173,31 +173,67 @@
 
     <section class="panel-stats">
 
-      <div class="panel-stat-card">
-        <span>Bakiyeniz</span>
-        <strong id="panelBalance">₺0,00</strong>
-        <small>Kullanılabilir bakiye</small>
-      </div>
+  <div class="panel-stat-card panel-stat-balance">
+    <div class="panel-stat-top">
+      <span class="panel-stat-icon">💳</span>
+      <span class="panel-stat-badge">Cüzdan</span>
+    </div>
 
-      <div class="panel-stat-card">
-        <span>Aktif Siparişler</span>
-        <strong id="panelActiveOrders">0</strong>
-        <small>Devam eden işlemler</small>
-      </div>
+    <span class="panel-stat-label">Kullanılabilir Bakiye</span>
+    <strong id="panelBalance">₺0,00</strong>
 
-      <div class="panel-stat-card">
-        <span>Tamamlananlar</span>
-        <strong id="panelCompletedOrders">0</strong>
-        <small>Tamamlanan siparişler</small>
-      </div>
+    <div class="panel-stat-footer">
+      <small>Anlık kullanılabilir tutar</small>
+      <a href="topup.html">Bakiye Yükle →</a>
+    </div>
+  </div>
 
-      <div class="panel-stat-card">
-        <span>Toplam Harcama</span>
-        <strong id="panelTotalSpent">₺0,00</strong>
-        <small>Toplam işlem tutarı</small>
-      </div>
+  <div class="panel-stat-card panel-stat-active">
+    <div class="panel-stat-top">
+      <span class="panel-stat-icon">⚡</span>
+      <span class="panel-stat-badge">Canlı</span>
+    </div>
 
-    </section>
+    <span class="panel-stat-label">Aktif Siparişler</span>
+    <strong id="panelActiveOrders">0</strong>
+
+    <div class="panel-stat-footer">
+      <small>SMS bekleyen işlemler</small>
+      <a href="index.html#orders">Görüntüle →</a>
+    </div>
+  </div>
+
+  <div class="panel-stat-card panel-stat-completed">
+    <div class="panel-stat-top">
+      <span class="panel-stat-icon">✓</span>
+      <span class="panel-stat-badge">Başarılı</span>
+    </div>
+
+    <span class="panel-stat-label">Tamamlanan Siparişler</span>
+    <strong id="panelCompletedOrders">0</strong>
+
+    <div class="panel-stat-footer">
+      <small>Başarıyla sonuçlanan</small>
+      <span>Toplam işlem</span>
+    </div>
+  </div>
+
+  <div class="panel-stat-card panel-stat-spent">
+    <div class="panel-stat-top">
+      <span class="panel-stat-icon">↗</span>
+      <span class="panel-stat-badge">Toplam</span>
+    </div>
+
+    <span class="panel-stat-label">Toplam Harcama</span>
+    <strong id="panelTotalSpent">₺0,00</strong>
+
+    <div class="panel-stat-footer">
+      <small>Tüm zamanlar</small>
+      <span>İşlem hacmi</span>
+    </div>
+  </div>
+
+</section>
 
 
     <section class="panel-grid">
