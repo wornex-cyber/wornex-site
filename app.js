@@ -54,6 +54,10 @@ const stockEl = document.querySelector("#stock");
 const priceEl = document.querySelector("#price");
 const cardsEl = document.querySelector("#cards");
 const countrySearchInput =
+  const serviceSearchInput =
+  document.querySelector(
+    ".vornex-services-column .vornex-search-box input"
+  );
   document.querySelector(
     ".vornex-country-column .vornex-search-box input"
   );
@@ -760,13 +764,13 @@ function startMessagePolling(numberId) {
 // ----------------------------------------------------
 // Başlat
 // ----------------------------------------------------
-function renderServiceChoices() {
+function renderServiceChoices(list = categories) {
   const container =
     document.querySelector("#serviceChoices");
 
   if (!container) return;
 
-  container.innerHTML = categories
+  container.innerHTML = list
     .map((item) => `
       <button
         type="button"
@@ -784,7 +788,21 @@ function renderServiceChoices() {
     `)
     .join("");
 }
+serviceSearchInput?.addEventListener("input", () => {
+  const query =
+    serviceSearchInput.value
+      .trim()
+      .toLocaleLowerCase("tr-TR");
 
+  const filteredServices =
+    categories.filter((item) =>
+      String(item.name || "")
+        .toLocaleLowerCase("tr-TR")
+        .includes(query)
+    );
+
+  renderServiceChoices(filteredServices);
+});
 document
   .querySelector("#serviceChoices")
   ?.addEventListener("click", (event) => {
