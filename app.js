@@ -389,7 +389,10 @@ function openOrderModal() {
   summaryEl.innerHTML = `
     <div>
       <span>Servis</span>
-      <strong>${selectedCategory.name}</strong>
+      <strong>
+  ${getServiceIcon(selectedCategory.name)}
+  ${selectedCategory.name}
+</strong>
     </div>
 
     <div>
