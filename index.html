@@ -25,21 +25,38 @@
 
 <body>
 
-<header class="topbar">
+<header class="vornex-header">
 
-  <a class="logo" href="#">
-    <span class="logo-mark">V</span>ORNEX
+  <a class="vornex-brand" href="#">
+    <span class="vornex-brand-main">
+      <b>V</b>ORNEX
+    </span>
+    <small>ONLINE</small>
   </a>
 
-  <nav class="main-nav">
-    <a href="#services">Numara Al</a>
-    <a href="#orders">Siparişlerim</a>
-    <a href="#support">Destek</a>
+  <nav class="vornex-nav">
+    <a class="active" href="#">Ana Sayfa</a>
+    <a href="#services">Hizmetler</a>
+    <a href="#services">Ülkeler</a>
+    <a href="#how-it-works">Nasıl Çalışır?</a>
+    <a href="#api">API</a>
+    <a href="#services">Fiyatlar</a>
+    <a href="#faq">SSS</a>
+    <a href="#support">İletişim</a>
   </nav>
 
-  <div class="header-actions">
+  <div class="vornex-header-actions">
+
     <button
-      class="ghost-btn"
+      class="vornex-theme-button"
+      type="button"
+      aria-label="Tema"
+    >
+      ☾
+    </button>
+
+    <button
+      class="vornex-login-button"
       id="loginBtn"
       type="button"
     >
@@ -47,12 +64,13 @@
     </button>
 
     <button
-      class="primary-btn"
+      class="vornex-register-button"
       id="registerBtn"
       type="button"
     >
       Kayıt Ol
     </button>
+
   </div>
 
 </header>
@@ -60,114 +78,148 @@
 
 <main>
 
-  <!-- HERO -->
-  <section class="hero">
+  <!-- PREMIUM HERO -->
+  <section class="vornex-hero">
 
-    <div class="hero-copy">
+    <div class="vornex-hero-content">
 
-      <div class="eyebrow">
-        <span class="live-dot"></span>
-        GLOBAL NUMARA PLATFORMU
+      <div class="vornex-hero-badge">
+        <span>🌐</span>
+        GLOBAL SANAL NUMARA HİZMETİ
       </div>
 
       <h1>
-        Doğrulama numaran
-        <span>birkaç tık uzağında.</span>
+        VORNEX ile
+        <span>Sınırları Kaldırın</span>
       </h1>
 
-      <p>
-        Servisini seç, ülkeni belirle, gerçek zamanlı
-        stok ve fiyat bilgilerini görüntüle.
-        Siparişlerini tek panelden takip et.
+      <p class="vornex-hero-description">
+        200+ servis için 180+ ülkeden sanal numaralar.
+        Anında teslimat, uygun fiyat, maksimum gizlilik.
       </p>
 
-      <div class="hero-actions">
-        <a class="primary-btn hero-button" href="#services">
-          Numara Seç
+
+      <div class="vornex-feature-row">
+
+        <div class="vornex-feature">
+          <div class="vornex-feature-icon">ϟ</div>
+
+          <div>
+            <strong>Anında Teslimat</strong>
+            <span>Hızlı ve otomatik</span>
+          </div>
+        </div>
+
+        <div class="vornex-feature">
+          <div class="vornex-feature-icon">♢</div>
+
+          <div>
+            <strong>%99.9 Güvenilir</strong>
+            <span>Kesintisiz hizmet</span>
+          </div>
+        </div>
+
+        <div class="vornex-feature">
+          <div class="vornex-feature-icon">◎</div>
+
+          <div>
+            <strong>180+ Ülke</strong>
+            <span>200+ Servis Desteği</span>
+          </div>
+        </div>
+
+        <div class="vornex-feature">
+          <div class="vornex-feature-icon">◉</div>
+
+          <div>
+            <strong>7/24 Destek</strong>
+            <span>Canlı Yardım</span>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="vornex-hero-actions">
+
+        <a
+          class="vornex-primary-cta"
+          href="#services"
+        >
+          Numara Kirala
           <span>→</span>
         </a>
 
-        <a class="secondary-link" href="#orders">
-          Siparişlerimi Gör
+        <a
+          class="vornex-secondary-cta"
+          href="#services"
+        >
+          Hizmetleri İncele
+          <span>⊞</span>
         </a>
+
       </div>
 
-      <div class="trust-row">
 
-        <div>
-          <strong>100+</strong>
-          <span>Ülke</span>
-        </div>
-
-        <div>
-          <strong>7/24</strong>
-          <span>Otomatik Sistem</span>
-        </div>
-
-        <div>
-          <strong>Hızlı</strong>
-          <span>SMS Teslimatı</span>
-        </div>
-
+      <div class="vornex-security-note">
+        <span>✓</span>
+        Güvenli Ödeme Altyapısı ile %100 Güvende
       </div>
 
     </div>
 
 
-    <div class="hero-dashboard">
+    <!-- GLOBE -->
+    <div class="vornex-globe-area">
 
-      <div class="dashboard-head">
+      <div class="vornex-floating-stat vornex-floating-country">
+        <span class="vornex-floating-icon">◎</span>
 
         <div>
-          <span class="dashboard-label">
-            CANLI PLATFORM
-          </span>
+          <strong>180+ Ülke</strong>
+          <small>Global Erişim</small>
+        </div>
+      </div>
 
-          <h3>VORNEX Panel</h3>
+      <div class="vornex-floating-stat vornex-floating-service">
+        <span class="vornex-floating-icon">◇</span>
+
+        <div>
+          <strong>200+ Servis</strong>
+          <small>Geniş Destek</small>
+        </div>
+      </div>
+
+      <div class="vornex-floating-stat vornex-floating-delivery">
+        <span class="vornex-floating-icon">ϟ</span>
+
+        <div>
+          <strong>Anında Teslimat</strong>
+          <small>10sn içinde</small>
+        </div>
+      </div>
+
+
+      <div class="vornex-globe">
+
+        <div class="vornex-orbit orbit-one"></div>
+        <div class="vornex-orbit orbit-two"></div>
+        <div class="vornex-orbit orbit-three"></div>
+
+        <div class="vornex-globe-sphere">
+
+          <div class="vornex-globe-grid"></div>
+
+          <div class="vornex-globe-logo">
+            V
+          </div>
+
         </div>
 
-        <span class="online-pill">
+        <div class="vornex-globe-light"></div>
+
+        <div class="vornex-globe-platform">
           <span></span>
-          Online
-        </span>
-
-      </div>
-
-      <div class="balance-preview">
-        <span>Kullanılabilir servisler</span>
-        <strong>100+</strong>
-        <small>Global numara ağı</small>
-      </div>
-
-      <div class="mini-grid">
-
-        <div class="mini-card">
-          <div class="mini-icon">⚡</div>
-          <span>Hızlı İşlem</span>
-          <strong>Anlık</strong>
-        </div>
-
-        <div class="mini-card">
-          <div class="mini-icon">🔒</div>
-          <span>Güvenli Sistem</span>
-          <strong>Aktif</strong>
-        </div>
-
-      </div>
-
-      <div class="dashboard-status">
-
-        <div>
-          <span>API Durumu</span>
-          <strong>
-            <i></i>
-            Aktif
-          </strong>
-        </div>
-
-        <div>
-          <span>Sistem</span>
-          <strong>7/24</strong>
         </div>
 
       </div>
@@ -175,6 +227,135 @@
     </div>
 
   </section>
+
+
+  <!-- HERO STATS -->
+  <section class="vornex-main-stats">
+
+    <div class="vornex-main-stat">
+      <span class="vornex-main-stat-icon">♙</span>
+
+      <div>
+        <strong>10.000+</strong>
+        <small>Mutlu Müşteri</small>
+      </div>
+    </div>
+
+    <div class="vornex-main-stat">
+      <span class="vornex-main-stat-icon">🛒</span>
+
+      <div>
+        <strong>50.000+</strong>
+        <small>Başarılı Sipariş</small>
+      </div>
+    </div>
+
+    <div class="vornex-main-stat">
+      <span class="vornex-main-stat-icon">◎</span>
+
+      <div>
+        <strong>180+</strong>
+        <small>Ülke</small>
+      </div>
+    </div>
+
+    <div class="vornex-main-stat">
+      <span class="vornex-main-stat-icon">◇</span>
+
+      <div>
+        <strong>200+</strong>
+        <small>Servis</small>
+      </div>
+    </div>
+
+    <div class="vornex-main-stat">
+      <span class="vornex-main-stat-icon">ϟ</span>
+
+      <div>
+        <strong>99.9%</strong>
+        <small>Başarı Oranı</small>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- POPULAR COUNTRIES -->
+  <section class="vornex-popular-countries">
+
+    <div class="vornex-section-center">
+
+      <span class="vornex-mini-label">
+        ⌁ POPÜLER ÜLKELER
+      </span>
+
+      <h2>Popüler Ülkeler</h2>
+
+      <p>
+        En çok tercih edilen ülkelerden numara kiralayın
+      </p>
+
+    </div>
+
+
+    <div class="vornex-country-grid">
+
+      <a class="vornex-country-card" href="#services">
+        <div class="vornex-country-flag">🇺🇸</div>
+        <strong>Amerika</strong>
+        <span>125+ Servis</span>
+        <small>₺6.50'den başlayan</small>
+      </a>
+
+      <a class="vornex-country-card" href="#services">
+        <div class="vornex-country-flag">🇬🇧</div>
+        <strong>İngiltere</strong>
+        <span>85+ Servis</span>
+        <small>₺5.50'den başlayan</small>
+      </a>
+
+      <a class="vornex-country-card" href="#services">
+        <div class="vornex-country-flag">🇨🇦</div>
+        <strong>Kanada</strong>
+        <span>70+ Servis</span>
+        <small>₺6.00'dan başlayan</small>
+      </a>
+
+      <a class="vornex-country-card" href="#services">
+        <div class="vornex-country-flag">🇩🇪</div>
+        <strong>Almanya</strong>
+        <span>80+ Servis</span>
+        <small>₺5.00'dan başlayan</small>
+      </a>
+
+      <a class="vornex-country-card" href="#services">
+        <div class="vornex-country-flag">🇫🇷</div>
+        <strong>Fransa</strong>
+        <span>60+ Servis</span>
+        <small>₺5.50'den başlayan</small>
+      </a>
+
+      <a class="vornex-country-card" href="#services">
+        <div class="vornex-country-flag">🇳🇱</div>
+        <strong>Hollanda</strong>
+        <span>45+ Servis</span>
+        <small>₺5.00'dan başlayan</small>
+      </a>
+
+    </div>
+
+
+    <div class="vornex-country-more">
+
+      <a href="#services">
+        Tüm Ülkeleri Gör
+        <span>◎</span>
+      </a>
+
+    </div>
+
+  </section>
+  
 <!-- SERVICES -->
 <section class="panel-section premium-buy-section" id="services">
 
