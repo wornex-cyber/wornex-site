@@ -4755,3 +4755,90 @@ footer p {
   margin-right: 6px;
   font-size: 15px;
 }
+/* =========================================
+   VORNEX SERVICE LOGO CHOICES
+========================================= */
+
+.vornex-service-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.vornex-service-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 11px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(15, 31, 53, 0.88),
+      rgba(7, 18, 34, 0.82)
+    );
+  color: #dbe8f8;
+  cursor: pointer;
+  text-align: left;
+  transition: 0.2s ease;
+}
+
+.vornex-service-choice:hover {
+  transform: translateY(-1px);
+  border-color: rgba(54, 151, 255, 0.45);
+  background: rgba(36, 129, 255, 0.08);
+}
+
+.vornex-service-choice-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 18px;
+}
+
+.vornex-service-choice-name {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.vornex-service-choice .fa-whatsapp {
+  color: #25d366;
+}
+
+.vornex-service-choice .fa-telegram {
+  color: #229ed9;
+}
+
+.vornex-service-choice .fa-instagram {
+  color: #e4405f;
+}
+
+.vornex-service-choice .fa-google {
+  color: #4285f4;
+}
+
+.vornex-service-choice .fa-facebook-f {
+  color: #1877f2;
+}
+
+.vornex-service-choice .fa-discord {
+  color: #5865f2;
+}
+
+.vornex-service-choice .fa-tiktok,
+.vornex-service-choice .fa-x-twitter {
+  color: #ffffff;
+}
+
+@media (max-width: 650px) {
+  .vornex-service-list {
+    grid-template-columns: 1fr;
+  }
+}
