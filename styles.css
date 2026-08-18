@@ -4675,3 +4675,50 @@ footer p {
     white-space: normal;
   }
 }
+/* SERVICE BRAND ICONS */
+
+.premium-country-cards .card p i {
+  margin-right: 7px;
+  font-size: 17px;
+  vertical-align: -2px;
+}
+
+/* WhatsApp */
+.premium-country-cards .fa-whatsapp {
+  color: #25d366;
+}
+
+/* Telegram */
+.premium-country-cards .fa-telegram {
+  color: #229ed9;
+}
+
+/* Instagram */
+.premium-country-cards .fa-instagram {
+  color: #e4405f;
+}
+
+/* Google */
+.premium-country-cards .fa-google {
+  color: #4285f4;
+}
+
+/* Facebook */
+.premium-country-cards .fa-facebook-f {
+  color: #1877f2;
+}
+
+/* TikTok */
+.premium-country-cards .fa-tiktok {
+  color: #ffffff;
+}
+
+/* Discord */
+.premium-country-cards .fa-discord {
+  color: #5865f2;
+}
+
+/* X */
+.premium-country-cards .fa-x-twitter {
+  color: #ffffff;
+}
