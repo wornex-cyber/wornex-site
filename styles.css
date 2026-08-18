@@ -4594,3 +4594,84 @@ footer p {
     padding-right: 18px;
   }
 }
+/* VORNEX HERO REFERENCE MATCH - PASS 2 */
+
+.vornex-hero {
+  width: 100%;
+  max-width: none;
+  grid-template-columns: minmax(620px, 1fr) minmax(620px, 1fr);
+  padding: 55px 3.2% 40px;
+  gap: 20px;
+}
+
+.vornex-hero-content {
+  max-width: 720px;
+}
+
+.vornex-hero h1 {
+  max-width: none;
+  font-size: clamp(50px, 4.2vw, 68px);
+  letter-spacing: -2px;
+}
+
+.vornex-hero h1 span {
+  white-space: nowrap;
+}
+
+.vornex-feature-row {
+  grid-template-columns: repeat(4, minmax(135px, 1fr));
+  gap: 14px;
+}
+
+.vornex-feature {
+  min-width: 0;
+  padding: 12px 10px;
+}
+
+.vornex-feature strong {
+  font-size: 10px;
+}
+
+.vornex-feature span {
+  font-size: 8px;
+}
+
+.vornex-globe-area {
+  min-height: 520px;
+}
+
+.vornex-globe {
+  width: 520px;
+  height: 520px;
+}
+
+.vornex-globe-sphere {
+  width: 365px;
+  height: 365px;
+}
+
+.vornex-globe-logo {
+  width: 165px;
+  height: 165px;
+  font-size: 102px;
+}
+
+.orbit-one,
+.orbit-two,
+.orbit-three {
+  width: 490px;
+}
+
+.vornex-main-stats {
+  width: calc(100% - 6.4%);
+}
+
+@media (max-width: 1300px) {
+  .vornex-hero {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .vornex-hero h1 span {
+    white-space: normal;
+  }
+}
