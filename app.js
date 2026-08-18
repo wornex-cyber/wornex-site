@@ -54,12 +54,13 @@ const stockEl = document.querySelector("#stock");
 const priceEl = document.querySelector("#price");
 const cardsEl = document.querySelector("#cards");
 const countrySearchInput =
-  const serviceSearchInput =
-  document.querySelector(
-    ".vornex-services-column .vornex-search-box input"
-  );
   document.querySelector(
     ".vornex-country-column .vornex-search-box input"
+  );
+
+const serviceSearchInput =
+  document.querySelector(
+    ".vornex-services-column .vornex-search-box input"
   );
 const modal = document.querySelector("#modal");
 const summaryEl = document.querySelector("#summary");
