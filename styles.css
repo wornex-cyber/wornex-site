@@ -2555,3 +2555,112 @@ footer p {
     width: 100%;
   }
 }
+.panel-stat-card {
+  position: relative;
+  overflow: hidden;
+  padding: 20px 20px 18px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(13,28,52,0.96), rgba(8,20,40,0.96));
+  border: 1px solid rgba(90,140,255,0.12);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.24);
+  min-height: 150px;
+}
+
+.panel-stat-card::before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(70,120,255,0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.panel-stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.panel-stat-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(57,110,255,0.14);
+  border: 1px solid rgba(90,140,255,0.16);
+  font-size: 16px;
+}
+
+.panel-stat-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ec2ff;
+  background: rgba(73,122,255,0.10);
+  border: 1px solid rgba(73,122,255,0.18);
+}
+
+.panel-stat-label {
+  display: block;
+  font-size: 13px;
+  color: rgba(220,232,255,0.70);
+  margin-bottom: 8px;
+}
+
+.panel-stat-card strong {
+  display: block;
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+
+.panel-stat-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel-stat-footer small {
+  color: rgba(220,232,255,0.58);
+  font-size: 12px;
+}
+
+.panel-stat-footer a {
+  color: #8bb8ff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.panel-stat-footer a:hover {
+  color: #b8d3ff;
+}
+
+.panel-stat-balance .panel-stat-icon {
+  color: #7db3ff;
+}
+
+.panel-stat-active .panel-stat-icon {
+  color: #ffb357;
+}
+
+.panel-stat-completed .panel-stat-icon {
+  color: #51d58a;
+}
+
+.panel-stat-spent .panel-stat-icon {
+  color: #c18bff;
+}
