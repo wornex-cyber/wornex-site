@@ -2333,3 +2333,225 @@ footer p {
     grid-template-columns: 1fr;
   }
 }
+/* ================================
+   PREMIUM PANEL TOPBAR
+================================ */
+
+.panel-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(5, 16, 30, 0.78);
+  backdrop-filter: blur(18px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.panel-topbar-left {
+  min-width: 0;
+}
+
+.panel-page-label {
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #4b9cff;
+}
+
+.panel-topbar-left h1 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
+.panel-topbar-left p {
+  margin: 7px 0 0;
+  font-size: 13px;
+  color: #8192aa;
+}
+
+.panel-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.panel-balance-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 210px;
+  padding: 11px 14px;
+  border: 1px solid rgba(75, 156, 255, 0.22);
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(33, 106, 255, 0.16),
+      rgba(255,255,255,0.025)
+    );
+  color: #ffffff;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.panel-balance-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(75, 156, 255, 0.42);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(33, 106, 255, 0.23),
+      rgba(255,255,255,0.04)
+    );
+}
+
+.panel-balance-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: rgba(75, 156, 255, 0.14);
+  font-size: 18px;
+}
+
+.panel-balance-button div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.panel-balance-button small {
+  margin-bottom: 2px;
+  font-size: 10px;
+  color: #8091a9;
+}
+
+.panel-balance-button strong {
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.panel-balance-button b {
+  font-size: 22px;
+  font-weight: 400;
+  color: #4b9cff;
+}
+
+.panel-notification-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 13px;
+  background: rgba(255,255,255,0.035);
+  color: #ffffff;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.panel-notification-button:hover {
+  border-color: rgba(75, 156, 255, 0.35);
+  background: rgba(75, 156, 255, 0.09);
+}
+
+.panel-notification-dot {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 7px;
+  height: 7px;
+  border: 2px solid #07111f;
+  border-radius: 50%;
+  background: #34d399;
+}
+
+.panel-user-box {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 220px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.035);
+}
+
+.panel-user-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.panel-user-details strong {
+  overflow: hidden;
+  font-size: 12px;
+  color: #ffffff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel-user-details span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3px;
+  font-size: 10px;
+  color: #8192aa;
+}
+
+.panel-online-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+}
+
+.panel-user-chevron {
+  color: #6f8199;
+  font-size: 16px;
+}
+
+@media (max-width: 1100px) {
+  .panel-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .panel-topbar-actions {
+    width: 100%;
+  }
+
+  .panel-balance-button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 760px) {
+  .panel-topbar-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .panel-balance-button,
+  .panel-user-box {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .panel-notification-button {
+    width: 100%;
+  }
+}
