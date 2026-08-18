@@ -4722,3 +4722,36 @@ footer p {
 .premium-country-cards .fa-x-twitter {
   color: #ffffff;
 }
+#summary .fa-whatsapp {
+  color: #25d366;
+}
+
+#summary .fa-telegram {
+  color: #229ed9;
+}
+
+#summary .fa-instagram {
+  color: #e4405f;
+}
+
+#summary .fa-google {
+  color: #4285f4;
+}
+
+#summary .fa-facebook-f {
+  color: #1877f2;
+}
+
+#summary .fa-tiktok,
+#summary .fa-x-twitter {
+  color: #ffffff;
+}
+
+#summary .fa-discord {
+  color: #5865f2;
+}
+
+#summary i {
+  margin-right: 6px;
+  font-size: 15px;
+}
