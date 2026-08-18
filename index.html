@@ -175,44 +175,83 @@
     </div>
 
   </section>
+<!-- SERVICES -->
+<section class="panel-section premium-buy-section" id="services">
 
+  <div class="buy-section-header">
 
-  <!-- SERVICES -->
-  <section
-    class="panel-section"
-    id="services"
-  >
+    <div>
+      <span class="section-kicker">NUMARA AL</span>
 
-    <div class="section-heading">
+      <h2>Yeni numara siparişi oluştur</h2>
 
-      <div>
-        <span class="section-kicker">
-          NUMARA AL
-        </span>
-
-        <h2>
-          Servis ve ülke seç
-        </h2>
-
-        <p>
-          Kullanmak istediğin servisi ve ülkeyi seç.
-          Güncel stok ve satış fiyatı otomatik gösterilir.
-        </p>
-      </div>
-
-      <div class="section-badge">
-        <span></span>
-        Canlı stok
-      </div>
-
+      <p>
+        Servisini seç, ülkeni belirle, canlı stok ve fiyatı
+        görüntüle. Siparişini birkaç adımda tamamla.
+      </p>
     </div>
 
+    <div class="buy-live-badge">
+      <span></span>
+      Sistem Aktif
+    </div>
 
-    <div class="service-panel">
+  </div>
 
-      <div class="selectors">
 
-        <label class="field">
+  <div class="buy-steps">
+
+    <div class="buy-step active">
+      <span>01</span>
+      <div>
+        <strong>Servis</strong>
+        <small>Platformu seç</small>
+      </div>
+    </div>
+
+    <div class="buy-step">
+      <span>02</span>
+      <div>
+        <strong>Ülke</strong>
+        <small>Lokasyonu belirle</small>
+      </div>
+    </div>
+
+    <div class="buy-step">
+      <span>03</span>
+      <div>
+        <strong>Stok & Fiyat</strong>
+        <small>Canlı bilgileri gör</small>
+      </div>
+    </div>
+
+    <div class="buy-step">
+      <span>04</span>
+      <div>
+        <strong>Onay</strong>
+        <small>Siparişi tamamla</small>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="service-panel premium-service-panel">
+
+    <div class="buy-selector-grid">
+
+      <!-- SERVİS -->
+      <div class="buy-selector-card">
+
+        <div class="buy-selector-number">01</div>
+
+        <div class="buy-selector-title">
+          <span>SERVİS SEÇİMİ</span>
+          <strong>Hangi platform için numara istiyorsun?</strong>
+        </div>
+
+        <label class="field premium-field">
+
           <span>Servis</span>
 
           <select id="country">
@@ -220,50 +259,141 @@
               Servis seçin
             </option>
           </select>
+
+          <small>
+            WhatsApp, Telegram, Google, Instagram ve diğer servisler
+          </small>
+
         </label>
-
-
-        <label class="field">
-          <span>Ülke</span>
-
-          <select id="service">
-            <option value="">
-              Önce servis seçin
-            </option>
-          </select>
-        </label>
-
-
-        <div class="stock-card">
-
-          <div>
-            <span>CANLI STOK</span>
-            <strong id="stock">—</strong>
-          </div>
-
-          <div class="price-box">
-            <span>SATIŞ FİYATI</span>
-            <strong id="price">
-              Ülke seçin
-            </strong>
-          </div>
-
-        </div>
 
       </div>
 
 
-      <div
-        class="cards"
-        id="cards"
-      ></div>
+      <!-- ÜLKE -->
+      <div class="buy-selector-card">
+
+        <div class="buy-selector-number">02</div>
+
+        <div class="buy-selector-title">
+          <span>ÜLKE SEÇİMİ</span>
+          <strong>Kullanmak istediğin ülkeyi belirle</strong>
+        </div>
+
+        <label class="field premium-field">
+
+          <span>Ülke</span>
+
+          <select id="service" disabled>
+            <option value="">
+              Önce servis seçin
+            </option>
+          </select>
+
+          <small>
+            Seçtiğin servise uygun ülkeler otomatik listelenir
+          </small>
+
+        </label>
+
+      </div>
+
+
+      <!-- SONUÇ -->
+      <div class="buy-result-card">
+
+        <div class="buy-result-top">
+          <span>CANLI SİPARİŞ BİLGİSİ</span>
+
+          <div class="buy-result-live">
+            <i></i>
+            Canlı
+          </div>
+        </div>
+
+        <div class="buy-result-grid">
+
+          <div class="buy-result-item">
+            <span>Mevcut Stok</span>
+            <strong id="stock">—</strong>
+            <small>Anlık kullanılabilir</small>
+          </div>
+
+          <div class="buy-result-item">
+            <span>Satış Fiyatı</span>
+            <strong id="price">Ülke seçin</strong>
+            <small>Tek işlem fiyatı</small>
+          </div>
+
+        </div>
+
+        <div class="buy-result-divider"></div>
+
+        <div class="buy-result-security">
+          <span>🛡️</span>
+          <div>
+            <strong>Güvenli sipariş</strong>
+            <small>
+              Sipariş oluşturulmadan önce detayları kontrol edebilirsin.
+            </small>
+          </div>
+        </div>
+
+        <button
+          class="primary-btn buy-preview-button"
+          id="openOrderPreview"
+          type="button"
+          disabled
+        >
+          Siparişi Önizle
+          <span>→</span>
+        </button>
+
+      </div>
 
     </div>
 
-  </section>
+
+    <!-- ÜLKE KARTLARI -->
+    <div class="country-list-head">
+
+      <div>
+        <span class="section-kicker">
+          UYGUN LOKASYONLAR
+        </span>
+
+        <h3>Ülke seçenekleri</h3>
+
+        <p>
+          Servis seçtiğinde kullanılabilir ülkeler burada listelenir.
+        </p>
+      </div>
+
+      <div class="country-list-status">
+        <span></span>
+        Canlı stok
+      </div>
+
+    </div>
 
 
-  <!-- ORDERS -->
+    <div
+      class="cards premium-country-cards"
+      id="cards"
+    >
+      <div class="premium-empty-selection">
+        <div>🌍</div>
+        <strong>Önce bir servis seç</strong>
+        <span>
+          Kullanılabilir ülkeleri görmek için yukarıdan servis seçimi yap.
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+ 
   <section
     class="panel-section"
     id="orders"
