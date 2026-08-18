@@ -5412,3 +5412,86 @@ footer p {
     grid-template-columns: 1fr;
   }
 }
+/* =========================================
+   VORNEX MOBILE WIDTH FIX
+========================================= */
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 760px) {
+
+  main {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .vornex-hero,
+  .vornex-main-stats,
+  .vornex-popular-countries,
+  .premium-buy-section {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .vornex-hero {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .vornex-globe-area {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .vornex-globe {
+    width: 340px;
+    height: 340px;
+    max-width: 100%;
+    transform: none;
+  }
+
+  .vornex-globe-sphere {
+    width: 245px;
+    height: 245px;
+  }
+
+  .vornex-globe-logo {
+    width: 115px;
+    height: 115px;
+    font-size: 70px;
+  }
+
+  .orbit-one,
+  .orbit-two,
+  .orbit-three {
+    width: 330px;
+    max-width: 100%;
+  }
+
+  .vornex-floating-stat {
+    min-width: 125px;
+    padding: 9px 10px;
+  }
+
+  .premium-buy-section {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .vornex-rental-panel,
+  .vornex-rental-grid,
+  .vornex-country-column,
+  .vornex-services-column,
+  .vornex-order-detail-column {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+}
