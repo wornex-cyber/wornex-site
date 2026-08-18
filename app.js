@@ -297,7 +297,11 @@ function renderCountryCards(list = currentServices) {
   list.forEach((item) => {
     const card = document.createElement("div");
 
-    card.className = "card";
+    card.className = `card ${
+  String(item.id) === String(serviceSelect.value)
+    ? "active"
+    : ""
+}`;
 
     card.innerHTML = `
       <b>🌍</b>
@@ -342,7 +346,7 @@ cardsEl.addEventListener("click", (event) => {
   if (!button) return;
 
   serviceSelect.value = button.dataset.serviceId;
-
+renderCountryCards();
   serviceSelect.dispatchEvent(
     new Event("change")
   );
