@@ -180,7 +180,7 @@ async function loadCategories() {
         .join("");
 
     countrySelect.disabled = false;
-
+renderServiceChoices();
     cardsEl.innerHTML = `
   <div class="premium-empty-selection">
     <div>🌍</div>
@@ -733,7 +733,48 @@ function startMessagePolling(numberId) {
 // ----------------------------------------------------
 // Başlat
 // ----------------------------------------------------
+function renderServiceChoices() {
+  const container =
+    document.querySelector("#serviceChoices");
 
+  if (!container) return;
+
+  container.innerHTML = categories
+    .map((item) => `
+      <button
+        type="button"
+        class="vornex-service-choice"
+        data-category-id="${item.id}"
+      >
+        <span class="vornex-service-choice-icon">
+          ${getServiceIcon(item.name)}
+        </span>
+
+        <span class="vornex-service-choice-name">
+          ${item.name}
+        </span>
+      </button>
+    `)
+    .join("");
+}
+
+document
+  .querySelector("#serviceChoices")
+  ?.addEventListener("click", (event) => {
+    const button =
+      event.target.closest(
+        ".vornex-service-choice"
+      );
+
+    if (!button) return;
+
+    countrySelect.value =
+      button.dataset.categoryId;
+
+    countrySelect.dispatchEvent(
+      new Event("change")
+    );
+  });
 loadCategories();
 
 function openAuthModal(mode) {
