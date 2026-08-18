@@ -421,110 +421,232 @@
   </div>
 
 
-  <div class="service-panel premium-service-panel">
+  <div class="service-panel premium-service-panel vornex-rental-panel">
 
-    <div class="buy-selector-grid">
+  <div class="vornex-rental-grid">
 
-      <!-- SERVİS -->
-      <div class="buy-selector-card">
 
-        <div class="buy-selector-number">01</div>
+    <!-- SOL: ÜLKELER -->
+    <aside class="vornex-country-column">
 
-        <div class="buy-selector-title">
-          <span>SERVİS SEÇİMİ</span>
-          <strong>Hangi platform için numara istiyorsun?</strong>
+      <div class="vornex-column-head">
+        <div>
+          <span class="section-kicker">
+            ÜLKELER
+          </span>
+
+          <h3>Ülke Seçimi</h3>
         </div>
 
-        <label class="field premium-field">
+        <span class="vornex-column-count">
+          180+
+        </span>
+      </div>
 
-          <span>Servis</span>
 
-          <select id="country">
-            <option value="">
-              Servis seçin
-            </option>
-          </select>
-<div
-  class="vornex-service-list"
-  id="serviceChoices"
-></div>
-          <small>
-            WhatsApp, Telegram, Google, Instagram ve diğer servisler
-          </small>
+      <div class="vornex-search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
 
-        </label>
+        <input
+          type="text"
+          placeholder="Ülke ara..."
+          disabled
+        >
+      </div>
+
+
+      <label class="field premium-field vornex-country-native">
+
+        <span>Ülke</span>
+
+        <select id="service" disabled>
+          <option value="">
+            Önce servis seçin
+          </option>
+        </select>
+
+      </label>
+
+
+      <div class="vornex-country-list-head">
+        <span>
+          <i class="fa-solid fa-earth-europe"></i>
+          TÜM ÜLKELER
+        </span>
+
+        <small>Canlı stok</small>
+      </div>
+
+
+      <div
+        class="cards premium-country-cards vornex-country-list"
+        id="cards"
+      >
+
+        <div class="premium-empty-selection">
+          <div>🌍</div>
+
+          <strong>
+            Önce bir servis seç
+          </strong>
+
+          <span>
+            Servisini seçtiğinde uygun ülkeler burada listelenecek.
+          </span>
+        </div>
+
+      </div>
+
+    </aside>
+
+
+
+    <!-- ORTA: SERVİSLER -->
+    <section class="vornex-services-column">
+
+      <div class="vornex-column-head">
+
+        <div>
+          <span class="section-kicker">
+            SERVİSLER
+          </span>
+
+          <h3>Servis Seçimi</h3>
+        </div>
+
+        <span class="vornex-column-count">
+          200+
+        </span>
 
       </div>
 
 
-      <!-- ÜLKE -->
-      <div class="buy-selector-card">
+      <div class="vornex-search-box">
 
-        <div class="buy-selector-number">02</div>
+        <i class="fa-solid fa-magnifying-glass"></i>
 
-        <div class="buy-selector-title">
-          <span>ÜLKE SEÇİMİ</span>
-          <strong>Kullanmak istediğin ülkeyi belirle</strong>
-        </div>
-
-        <label class="field premium-field">
-
-          <span>Ülke</span>
-
-          <select id="service" disabled>
-            <option value="">
-              Önce servis seçin
-            </option>
-          </select>
-
-          <small>
-            Seçtiğin servise uygun ülkeler otomatik listelenir
-          </small>
-
-        </label>
+        <input
+          type="text"
+          placeholder="Servis ara..."
+          disabled
+        >
 
       </div>
 
 
-      <!-- SONUÇ -->
-      <div class="buy-result-card">
+      <label class="field premium-field vornex-native-service">
+
+        <span>Servis</span>
+
+        <select id="country">
+          <option value="">
+            Servis seçin
+          </option>
+        </select>
+
+      </label>
+
+
+      <div
+        class="vornex-service-list"
+        id="serviceChoices"
+      ></div>
+
+    </section>
+
+
+
+    <!-- SAĞ: DETAY -->
+    <aside class="vornex-order-detail-column">
+
+      <div class="buy-result-card vornex-reference-result">
 
         <div class="buy-result-top">
-          <span>CANLI SİPARİŞ BİLGİSİ</span>
+
+          <span>
+            SİPARİŞ DETAYI
+          </span>
 
           <div class="buy-result-live">
             <i></i>
             Canlı
           </div>
+
         </div>
+
+
+        <div class="vornex-order-placeholder">
+
+          <div class="vornex-order-placeholder-icon">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+          </div>
+
+          <strong>
+            Numara kiralamaya hazır
+          </strong>
+
+          <p>
+            Servis ve ülke seçerek kullanılabilir stok ve fiyatı görüntüle.
+          </p>
+
+        </div>
+
 
         <div class="buy-result-grid">
 
           <div class="buy-result-item">
+
             <span>Mevcut Stok</span>
-            <strong id="stock">—</strong>
-            <small>Anlık kullanılabilir</small>
+
+            <strong id="stock">
+              —
+            </strong>
+
+            <small>
+              Anlık kullanılabilir
+            </small>
+
           </div>
 
+
           <div class="buy-result-item">
+
             <span>Satış Fiyatı</span>
-            <strong id="price">Ülke seçin</strong>
-            <small>Tek işlem fiyatı</small>
+
+            <strong id="price">
+              Ülke seçin
+            </strong>
+
+            <small>
+              Tek işlem fiyatı
+            </small>
+
           </div>
 
         </div>
+
 
         <div class="buy-result-divider"></div>
 
+
         <div class="buy-result-security">
+
           <span>🛡️</span>
+
           <div>
-            <strong>Güvenli sipariş</strong>
+
+            <strong>
+              Güvenli sipariş
+            </strong>
+
             <small>
-              Sipariş oluşturulmadan önce detayları kontrol edebilirsin.
+              Sipariş vermeden önce tüm detayları kontrol edebilirsin.
             </small>
+
           </div>
+
         </div>
+
 
         <button
           class="primary-btn buy-preview-button"
@@ -538,46 +660,12 @@
 
       </div>
 
-    </div>
+    </aside>
 
-
-    <!-- ÜLKE KARTLARI -->
-    <div class="country-list-head">
-
-      <div>
-        <span class="section-kicker">
-          UYGUN LOKASYONLAR
-        </span>
-
-        <h3>Ülke seçenekleri</h3>
-
-        <p>
-          Servis seçtiğinde kullanılabilir ülkeler burada listelenir.
-        </p>
-      </div>
-
-      <div class="country-list-status">
-        <span></span>
-        Canlı stok
-      </div>
-
-    </div>
-
-
-    <div
-      class="cards premium-country-cards"
-      id="cards"
-    >
-      <div class="premium-empty-selection">
-        <div>🌍</div>
-        <strong>Önce bir servis seç</strong>
-        <span>
-          Kullanılabilir ülkeleri görmek için yukarıdan servis seçimi yap.
-        </span>
-      </div>
-    </div>
 
   </div>
+
+</div>
 
 </section>
 
