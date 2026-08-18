@@ -415,6 +415,9 @@ priceEl.textContent =
   `${formatPrice(salePrice)} / işlem`;
     openOrderPreviewBtn.disabled =
   Number(currentDetails.stock) <= 0;
+    if (Number(currentDetails.stock) <= 0) {
+  priceEl.textContent = "Şu anda stok yok";
+}
   } catch (error) {
     console.error(error);
 
