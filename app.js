@@ -297,7 +297,17 @@ countrySelect.addEventListener("change", async () => {
 
 function renderCountryCards(list = currentServices) {
   cardsEl.innerHTML = "";
+if (list.length === 0) {
+  cardsEl.innerHTML = `
+    <div class="premium-empty-selection">
+      <div>🔎</div>
+      <strong>Ülke bulunamadı</strong>
+      <span>Aramana uygun ülke yok.</span>
+    </div>
+  `;
 
+  return;
+}
   list.forEach((item) => {
     const card = document.createElement("div");
 
@@ -792,6 +802,17 @@ function renderServiceChoices(list = categories) {
     document.querySelector("#serviceChoices");
 
   if (!container) return;
+  if (list.length === 0) {
+  container.innerHTML = `
+    <div class="premium-empty-selection">
+      <div>🔎</div>
+      <strong>Servis bulunamadı</strong>
+      <span>Aramana uygun servis yok.</span>
+    </div>
+  `;
+
+  return;
+}
 
   container.innerHTML = list
     .map((item) => `
