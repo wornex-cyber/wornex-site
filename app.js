@@ -31,6 +31,18 @@ const summaryEl = document.querySelector("#summary");
 const ordersBody = document.querySelector("#ordersBody");
 const confirmBtn = document.querySelector("#confirm");
 const closeBtn = document.querySelector("#x");
+const openOrderPreviewBtn =
+  document.querySelector("#openOrderPreview");
+const buySteps =
+  document.querySelectorAll(".buy-step");
+function setBuyStep(step) {
+  buySteps.forEach((item, index) => {
+    item.classList.toggle(
+      "active",
+      index < step
+    );
+  });
+}
 
 // SmsOnayım yapısı:
 // Kategori = Google / WhatsApp / Telegram vb.
@@ -118,6 +130,7 @@ function clearDetails() {
   priceEl.textContent = "Ülke seçin";
   selectedService = null;
   currentDetails = null;
+  openOrderPreviewBtn.disabled = true;
 }
 
 // ----------------------------------------------------
@@ -177,6 +190,7 @@ countrySelect.addEventListener("change", async () => {
   clearDetails();
 
   const categoryId = countrySelect.value;
+  setBuyStep(categoryId ? 2 : 1);
 
   selectedCategory =
     categories.find(
@@ -286,6 +300,7 @@ serviceSelect.addEventListener("change", async () => {
   const serviceId = serviceSelect.value;
 
   clearDetails();
+  setBuyStep(serviceId ? 3 : 2);
 
   if (!serviceId) return;
 
@@ -310,6 +325,8 @@ serviceSelect.addEventListener("change", async () => {
 
 priceEl.textContent =
   `${formatPrice(salePrice)} / işlem`;
+    openOrderPreviewBtn.disabled =
+  Number(currentDetails.stock) <= 0;
   } catch (error) {
     console.error(error);
 
@@ -366,7 +383,7 @@ function openOrderModal() {
       <strong>${formatPrice(salePrice)}</strong>
     </div>
   `;
-
+setBuyStep(4);
   modal.classList.remove("hidden");
 }
 // Ülke seçildiğinde otomatik modal açma yerine
@@ -379,7 +396,10 @@ priceEl.addEventListener(
   "click",
   openOrderModal
 );
-
+openOrderPreviewBtn.addEventListener(
+  "click",
+  openOrderModal
+);
 closeBtn.addEventListener("click", () => {
   modal.classList.add("hidden");
 });
