@@ -11,12 +11,12 @@ const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.SMS_ONAY_API_KEY;
 const AUTH_SECRET = process.env.AUTH_SECRET;
 const SMS_BASE = "https://www.smsonayim.com/api";
-const VONAGE_API_KEY = process.env.VONAGE_API_KEY;
-const VONAGE_API_SECRET = process.env.VONAGE_API_SECRET;
+const VONAGE_APPLICATION_ID = process.env.VONAGE_APPLICATION_ID;
+const VONAGE_PRIVATE_KEY = process.env.VONAGE_PRIVATE_KEY;
 
 const vonage = new Vonage({
-  apiKey: VONAGE_API_KEY,
-  apiSecret: VONAGE_API_SECRET,
+  applicationId: VONAGE_APPLICATION_ID,
+  privateKey: VONAGE_PRIVATE_KEY,
 });
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -839,18 +839,13 @@ function isValidPhone(phone) {
   return /^\+[1-9]\d{7,14}$/.test(phone);
 }
 
-function vonageBasicAuth() {
-  return Buffer
-    .from(`${VONAGE_API_KEY}:${VONAGE_API_SECRET}`)
-    .toString("base64");
-}
 
 // OTP GÖNDER
 app.post("/api/verify/start", async (req, res) => {
   try {
     const phone = normalizePhone(req.body?.phone);
 
-    if (!VONAGE_API_KEY || !VONAGE_API_SECRET) {
+    if (!VONAGE_APPLICATION_ID || !VONAGE_PRIVATE_KEY) {
       return res.status(500).json({
         success: false,
         message: "Vonage API ayarları eksik.",
@@ -881,55 +876,20 @@ app.post("/api/verify/start", async (req, res) => {
       });
     }
 
-    const response = await fetch(
-      "https://api.nexmo.com/v2/verify",
-      {
-        method: "POST",
+  const data = await vonage.verify2.newRequest({
+  brand: "VORNEX",
+  codeLength: 6,
+  workflow: [
+    {
+      channel: "sms",
+      to: phone,
+    },
+  ],
+});
 
-        headers: {
-          "Content-Type": "application/json",
+  
 
-          Authorization:
-            `Basic ${vonageBasicAuth()}`,
-        },
-
-        body: JSON.stringify({
-          brand: "VORNEX",
-
-          code_length: 6,
-
-          workflow: [
-            {
-              channel: "sms",
-              to: phone,
-            },
-          ],
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error(
-        "Vonage verify start error:",
-        data
-      );
-
-      return res
-        .status(response.status)
-        .json({
-          success: false,
-          message:
-            data?.detail ||
-            data?.title ||
-            "SMS doğrulama başlatılamadı.",
-        });
-    }
-
-    const requestId =
-      data.request_id ||
-      data.requestId;
+    const requestId = data.requestId;
 
     if (!requestId) {
       return res.status(502).json({
@@ -1029,60 +989,24 @@ app.post("/api/verify/check", async (req, res) => {
 
     pending.attempts += 1;
 
-    const response = await fetch(
-      `https://api.nexmo.com/v2/verify/${encodeURIComponent(
-        pending.requestId
-      )}`,
-      {
-        method: "POST",
+    const status = await vonage.verify2.checkCode(pending.requestId, code);
 
-        headers: {
-          "Content-Type": "application/json",
+    if (status === "completed") {
+  pendingVerifications.delete(phone);
 
-          Authorization:
-            `Basic ${vonageBasicAuth()}`,
-        },
+  return res.json({
+    success: true,
+    verified: true,
+    message: "Telefon numarası doğrulandı.",
+  });
+}
 
-        body: JSON.stringify({
-          code,
-        }),
-      }
-    );
-
-    if (response.ok) {
-      pendingVerifications.delete(phone);
-
-      return res.json({
-        success: true,
-        verified: true,
-        message:
-          "Telefon numarası doğrulandı.",
-      });
-    }
-
-    let data = {};
-
-    try {
-      data = await response.json();
-    } catch {}
-
-    console.error(
-      "Vonage verify check error:",
-      data
-    );
-
-    return res
-      .status(response.status)
-      .json({
-        success: false,
-        verified: false,
-        message:
-          response.status === 400
-            ? "Doğrulama kodu yanlış."
-            : data?.detail ||
-              data?.title ||
-              "Kod doğrulanamadı.",
-      });
+return res.status(400).json({
+  success: false,
+  verified: false,
+  message: "Doğrulama kodu geçersiz.",
+});
+   
 
   } catch (error) {
     console.error(
