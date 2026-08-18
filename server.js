@@ -70,6 +70,16 @@ async function initDatabase() {
     );
   `);
 
+  await db.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS phone TEXT;
+  `);
+
+  await db.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS phone_verified BOOLEAN NOT NULL DEFAULT FALSE;
+  `);
+
   console.log("Veritabanı hazır.");
 }
 
@@ -500,8 +510,7 @@ app.get(
     try {
       const result =
         await db.query(
-          `
-          SELECT id, email, balance
+          `SELECT id, email, balance, phone, phone_verified
           FROM users
           WHERE id = $1
           `,
@@ -841,7 +850,7 @@ function isValidPhone(phone) {
 
 
 // OTP GÖNDER
-app.post("/api/verify/start", async (req, res) => {
+app.post("/api/verify/start", requireAuth, async (req, res) => {
   try {
     const phone = normalizePhone(req.body?.phone);
 
@@ -903,6 +912,7 @@ app.post("/api/verify/start", async (req, res) => {
       phone,
       {
         requestId,
+        userId: req.userId,
         createdAt: Date.now(),
         attempts: 0,
       }
@@ -929,7 +939,7 @@ app.post("/api/verify/start", async (req, res) => {
 
 
 // OTP KONTROL
-app.post("/api/verify/check", async (req, res) => {
+app.post("/api/verify/check", requireAuth, async (req, res) => {
   try {
     const phone =
       normalizePhone(req.body?.phone);
@@ -963,7 +973,12 @@ app.post("/api/verify/check", async (req, res) => {
           "Bu numara için aktif doğrulama bulunamadı.",
       });
     }
-
+if (pending.userId !== req.userId) {
+  return res.status(403).json({
+    success: false,
+    message: "Bu doğrulama isteği bu kullanıcıya ait değil.",
+  });
+}
     if (
       Date.now() - pending.createdAt >
       10 * 60_000
@@ -992,6 +1007,15 @@ app.post("/api/verify/check", async (req, res) => {
     const status = await vonage.verify2.checkCode(pending.requestId, code);
 
     if (status === "completed") {
+      await db.query(
+  `
+    UPDATE users
+    SET phone = $1,
+        phone_verified = TRUE
+    WHERE id = $2
+  `,
+  [phone, req.userId]
+);
   pendingVerifications.delete(phone);
 
   return res.json({
