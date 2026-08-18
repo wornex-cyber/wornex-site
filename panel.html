@@ -97,21 +97,51 @@
 
   <header class="panel-topbar">
 
-    <div>
-      <h1>Hoş geldin, VORNEX 👋</h1>
-      <p>Hesabını ve siparişlerini buradan yönetebilirsin.</p>
-    </div>
+  <div class="panel-topbar-left">
+    <div class="panel-page-label">VORNEX PANEL</div>
+    <h1>Kontrol Merkezi</h1>
+    <p>Hesabını, bakiyeni ve siparişlerini tek yerden yönet.</p>
+  </div>
+
+  <div class="panel-topbar-actions">
+
+    <a class="panel-balance-button" href="topup.html">
+      <span class="panel-balance-icon">💳</span>
+
+      <div>
+        <small>Kullanılabilir Bakiye</small>
+        <strong id="panelTopBalance">₺0,00</strong>
+      </div>
+
+      <b>＋</b>
+    </a>
+
+    <button
+      class="panel-notification-button"
+      type="button"
+      aria-label="Bildirimler"
+    >
+      🔔
+      <span class="panel-notification-dot"></span>
+    </button>
 
     <div class="panel-user-box">
       <div class="panel-avatar">V</div>
 
-      <div>
+      <div class="panel-user-details">
         <strong id="panelUserEmail">Yükleniyor...</strong>
-        <span>Müşteri</span>
+        <span>
+          <i class="panel-online-dot"></i>
+          Doğrulanmış Hesap
+        </span>
       </div>
+
+      <span class="panel-user-chevron">⌄</span>
     </div>
 
-  </header>
+  </div>
+
+</header>
 
 
   <main class="panel-main">
@@ -342,7 +372,18 @@ document
           ).format(
             Number(user.balance || 0)
           );
-
+document
+  .querySelector("#panelTopBalance")
+  .textContent =
+    new Intl.NumberFormat(
+      "tr-TR",
+      {
+        style: "currency",
+        currency: "TRY"
+      }
+    ).format(
+      Number(user.balance || 0)
+    );
     } catch (error) {
       console.error(error);
 
