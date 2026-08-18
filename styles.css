@@ -2803,3 +2803,19 @@ footer p {
     width: 100%;
   }
 }
+.panel-table {
+  min-width: 0;
+}
+
+.panel-table-wrap {
+  overflow-x: hidden;
+}
+
+.panel-table th,
+.panel-table td {
+  white-space: nowrap;
+}
+
+.panel-empty-state {
+  min-width: 0;
+}
