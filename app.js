@@ -49,10 +49,7 @@ function setBuyStep(step) {
 // Servis = Türkiye / ABD / Almanya vb.
 //
 // Mevcut HTML'deki başlıkları JS ile doğru hale getiriyoruz.
-try {
-  countrySelect.parentElement.firstChild.textContent = "Servis";
-  serviceSelect.parentElement.firstChild.textContent = "Ülke";
-} catch (e) {}
+
 
 let categories = [];
 let currentServices = [];
@@ -166,7 +163,15 @@ async function loadCategories() {
 
     countrySelect.disabled = false;
 
-    cardsEl.innerHTML = "";
+    cardsEl.innerHTML = `
+  <div class="premium-empty-selection">
+    <div>🌍</div>
+    <strong>Önce bir servis seç</strong>
+    <span>
+      Kullanılabilir ülkeleri görmek için yukarıdan servis seçimi yap.
+    </span>
+  </div>
+`;
   } catch (error) {
     console.error(error);
 
