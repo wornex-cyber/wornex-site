@@ -917,7 +917,40 @@ app.get(
             API_KEY
           )}/getMessage/${numberId}`
         );
-
+      if (Number(data.status) === 1) {
+        await db.query(
+          `
+            UPDATE orders
+            SET
+              status = 'completed',
+              sms_code = $1,
+              updated_at = NOW()
+            WHERE provider_number_id = $2
+              AND user_id = $3
+          `,
+          [
+            String(data.code || ""),
+            String(numberId),
+            req.userId
+          ]
+        );
+      }
+            if (Number(data.status) === -1) {
+        await db.query(
+          `
+            UPDATE orders
+            SET
+              status = 'cancelled',
+              updated_at = NOW()
+            WHERE provider_number_id = $1
+              AND user_id = $2
+          `,
+          [
+            String(numberId),
+            req.userId
+          ]
+        );
+      }
       res.json(data);
     } catch (error) {
       console.error(error);
