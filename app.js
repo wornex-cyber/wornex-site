@@ -413,6 +413,7 @@ if (orderPlaceholderEl && selectedCategory && selectedService) {
 }
   stockEl.textContent = "...";
   priceEl.textContent = "Fiyat alınıyor...";
+  openOrderPreviewBtn.textContent = "Stok kontrol ediliyor...";
 
   try {
     currentDetails = await apiFetch(
@@ -428,6 +429,10 @@ priceEl.textContent =
   `${formatPrice(salePrice)} / işlem`;
     openOrderPreviewBtn.disabled =
   Number(currentDetails.stock) <= 0;
+    openOrderPreviewBtn.textContent =
+  Number(currentDetails.stock) <= 0
+    ? "Stokta Yok"
+    : "Siparişi Önizle →";
     if (Number(currentDetails.stock) <= 0) {
   priceEl.textContent = "Şu anda stok yok";
 }
