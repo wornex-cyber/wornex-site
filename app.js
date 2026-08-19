@@ -641,7 +641,7 @@ if (currentBalance < requiredBalance) {
 
     try {
       const order = await apiFetch(
-        `/order/${selectedService.id}`
+        `/order/${selectedService.id}?categoryName=${encodeURIComponent(selectedCategory?.name || "")}&countryName=${encodeURIComponent(selectedService?.name || "")}`
       );
 
       if (!order.success || !order.number) {
