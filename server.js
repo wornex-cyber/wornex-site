@@ -79,7 +79,25 @@ async function initDatabase() {
     ALTER TABLE users
     ADD COLUMN IF NOT EXISTS phone_verified BOOLEAN NOT NULL DEFAULT FALSE;
   `);
-
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS orders (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+      provider_number_id TEXT UNIQUE NOT NULL,
+      category_id TEXT,
+      service_id TEXT NOT NULL,
+      service_name TEXT NOT NULL,
+      country_name TEXT NOT NULL,
+      phone_number TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      price NUMERIC(12, 2) NOT NULL DEFAULT 0,
+      sms_code TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
   console.log("Veritabanı hazır.");
 }
 
@@ -708,6 +726,13 @@ app.get(
 
     const { serviceId } =
       req.params;
+    const categoryName = String(
+  req.query.categoryName || ""
+).trim();
+
+const countryName = String(
+  req.query.countryName || ""
+).trim();
 
     if (!validId(serviceId)) {
       return res.status(400).json({
