@@ -5635,3 +5635,21 @@ body {
     grid-template-columns: 1fr;
   }
 }
+/* TAMAMLANAN SATIN ALMA ADIMI */
+
+.buy-step.completed {
+  border-color: rgba(53, 212, 154, 0.28);
+  background: rgba(53, 212, 154, 0.06);
+}
+
+.buy-step.completed > span {
+  background: rgba(53, 212, 154, 0.16);
+  color: #35d49a;
+  font-size: 0;
+}
+
+.buy-step.completed > span::after {
+  content: "✓";
+  font-size: 15px;
+  font-weight: 900;
+}
