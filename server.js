@@ -1121,7 +1121,23 @@ app.get(
             API_KEY
           )}/cancelNumber/${numberId}`
         );
-
+      if (data.success) {
+        await db.query(
+          `
+            UPDATE orders
+            SET
+              status = 'cancelled',
+              updated_at = NOW()
+            WHERE provider_number_id = $1
+              AND user_id = $2
+              AND status = 'pending'
+          `,
+          [
+            String(numberId),
+            req.userId
+          ]
+        );
+      }
       res.json(data);
     } catch (error) {
       console.error(error);
