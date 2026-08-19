@@ -758,47 +758,149 @@ const countryName = String(
             supplierPrice * 1.5
           )
         );
-      const data =
-        await smsRequest(
+           const debitResult =
+        await db.query(
+          `
+            UPDATE users
+            SET balance = balance - $1
+            WHERE id = $2
+              AND balance >= $1
+            RETURNING balance
+          `,
+          [
+            salePrice,
+            req.userId
+          ]
+        );
+
+      if (debitResult.rows.length === 0) {
+        return res.status(402).json({
+          success: false,
+          message:
+            "Yetersiz bakiye."
+        });
+      }
+           let data;
+
+      try {
+        data = await smsRequest(
           `/${encodeURIComponent(
             API_KEY
           )}/getNumber/${serviceId}`
         );
+      } catch (providerError) {
+        await db.query(
+          `
+            UPDATE users
+            SET balance = balance + $1
+            WHERE id = $2
+          `,
+          [
+            salePrice,
+            req.userId
+          ]
+        );
+
+        throw providerError;
+      }
+
       if (
+        !data.success ||
+        !data.number ||
+        !data.number_id
+      ) {
+        await db.query(
+          `
+            UPDATE users
+            SET balance = balance + $1
+            WHERE id = $2
+          `,
+          [
+            salePrice,
+            req.userId
+          ]
+        );
+
+        return res.status(502).json({
+          success: false,
+          message:
+            data.message ||
+            "Numara alınamadı."
+        });
+      }
+       if (
         data.success &&
         data.number &&
         data.number_id
       ) {
-        await db.query(
-          `
-            INSERT INTO orders (
-              user_id,
-              provider_number_id,
-              service_id,
-              service_name,
-              country_name,
-              phone_number,
-              status,
-              price
-            )
-            VALUES (
-              $1, $2, $3, $4,
-              $5, $6, 'pending', $7
-            )
-            ON CONFLICT (provider_number_id)
-            DO NOTHING
-          `,
-          [
-            req.userId,
-            String(data.number_id),
-            String(serviceId),
-            categoryName || "Servis",
-            countryName || "Ülke",
-            String(data.number),
-            salePrice,
-          ]
-        );
-      }
+        try {
+          const orderInsert =
+            await db.query(
+              `
+                INSERT INTO orders (
+                  user_id,
+                  provider_number_id,
+                  service_id,
+                  service_name,
+                  country_name,
+                  phone_number,
+                  status,
+                  price
+                )
+                VALUES (
+                  $1, $2, $3, $4,
+                  $5, $6, 'pending', $7
+                )
+                ON CONFLICT (provider_number_id)
+                DO NOTHING
+                RETURNING id
+              `,
+              [
+                req.userId,
+                String(data.number_id),
+                String(serviceId),
+                categoryName || "Servis",
+                countryName || "Ülke",
+                String(data.number),
+                salePrice,
+              ]
+            );
+
+          if (orderInsert.rows.length === 0) {
+            throw new Error(
+              "Sipariş kaydı oluşturulamadı."
+            );
+          }
+        } catch (orderError) {
+          try {
+            await smsRequest(
+              `/${encodeURIComponent(
+                API_KEY
+              )}/cancelNumber/${data.number_id}`
+            );
+          } catch (cancelError) {
+            console.error(
+              "Provider iptal hatası:",
+              cancelError
+            );
+          }
+
+          await db.query(
+            `
+              UPDATE users
+              SET balance = balance + $1
+              WHERE id = $2
+            `,
+            [
+              salePrice,
+              req.userId
+            ]
+          );
+
+          throw orderError;
+        }
+      } 
+
       res.json(data);
     } catch (error) {
       console.error(error);
