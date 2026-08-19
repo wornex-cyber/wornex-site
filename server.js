@@ -811,7 +811,78 @@ const countryName = String(
     }
   }
 );
+// --------------------------------------------------
+// Kullanıcının siparişleri
+// --------------------------------------------------
 
+app.get(
+  "/api/orders",
+  requireAuth,
+  async (req, res) => {
+    try {
+      const result = await db.query(
+        `
+          SELECT
+            id,
+            provider_number_id,
+            service_id,
+            service_name,
+            country_name,
+            phone_number,
+            status,
+            price,
+            sms_code,
+            created_at,
+            updated_at
+          FROM orders
+          WHERE user_id = $1
+          ORDER BY created_at DESC
+        `,
+        [req.userId]
+      );
+
+      const orders = result.rows;
+
+      const activeOrders =
+        orders.filter(
+          (order) => order.status === "pending"
+        ).length;
+
+      const completedOrders =
+        orders.filter(
+          (order) => order.status === "completed"
+        ).length;
+
+      const totalSpent =
+        orders.reduce(
+          (total, order) =>
+            total + Number(order.price || 0),
+          0
+        );
+
+      res.json({
+        success: true,
+        orders,
+        stats: {
+          activeOrders,
+          completedOrders,
+          totalSpent,
+        },
+      });
+    } catch (error) {
+      console.error(
+        "Sipariş listesi hatası:",
+        error
+      );
+
+      res.status(500).json({
+        success: false,
+        message:
+          "Siparişler alınamadı.",
+      });
+    }
+  }
+);
 // --------------------------------------------------
 // Read SMS
 // --------------------------------------------------
