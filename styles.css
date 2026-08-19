@@ -5653,3 +5653,13 @@ body {
   font-size: 15px;
   font-weight: 900;
 }
+/* MOBIL SIPARISLER HIZALAMA */
+
+@media (max-width: 760px) {
+  #orders {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
