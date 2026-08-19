@@ -1072,6 +1072,7 @@ app.get(
 
 app.get(
   "/api/cancel/:numberId",
+    requireAuth,
   async (req, res) => {
     if (!API_KEY) {
       return res.status(500).json({
@@ -1091,7 +1092,28 @@ app.get(
           "Geçersiz numberId.",
       });
     }
+    const ownedOrder =
+      await db.query(
+        `
+          SELECT id
+          FROM orders
+          WHERE provider_number_id = $1
+            AND user_id = $2
+          LIMIT 1
+        `,
+        [
+          String(numberId),
+          req.userId
+        ]
+      );
 
+    if (ownedOrder.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Sipariş bulunamadı."
+      });
+    }
     try {
       const data =
         await smsRequest(
