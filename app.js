@@ -77,9 +77,16 @@ const buySteps =
   document.querySelectorAll(".buy-step");
 function setBuyStep(step) {
   buySteps.forEach((item, index) => {
+    const stepNumber = index + 1;
+
+    item.classList.toggle(
+      "completed",
+      stepNumber < step
+    );
+
     item.classList.toggle(
       "active",
-      index < step
+      stepNumber === step
     );
   });
 }
