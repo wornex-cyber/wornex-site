@@ -473,6 +473,112 @@ document
     ).format(
       Number(user.balance || 0)
     );
+            const ordersResponse = await fetch(
+        `${API_BASE}/orders`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      if (ordersResponse.ok) {
+        const ordersData =
+          await ordersResponse.json();
+
+        const stats =
+          ordersData.stats || {};
+
+        document
+          .querySelector("#panelActiveOrders")
+          .textContent =
+            Number(stats.activeOrders || 0);
+
+        document
+          .querySelector("#panelCompletedOrders")
+          .textContent =
+            Number(stats.completedOrders || 0);
+
+        document
+          .querySelector("#panelTotalSpent")
+          .textContent =
+            new Intl.NumberFormat(
+              "tr-TR",
+              {
+                style: "currency",
+                currency: "TRY"
+              }
+            ).format(
+              Number(stats.totalSpent || 0)
+            );
+             const orders =
+          Array.isArray(ordersData.orders)
+            ? ordersData.orders
+            : [];
+
+        const activeOrders =
+          orders.filter(
+            (order) =>
+              order.status === "pending"
+          );
+
+        const ordersBody =
+          document.querySelector(
+            "#panelOrdersBody"
+          );
+
+        if (
+          ordersBody &&
+          activeOrders.length > 0
+        ) {
+          ordersBody.innerHTML =
+            activeOrders
+              .map(
+                (order) => `
+                  <tr>
+                    <td>
+                      ${order.service_name || "-"}
+                    </td>
+
+                    <td>
+                      ${order.country_name || "-"}
+                    </td>
+
+                    <td>
+                      <strong>
+                        ${order.phone_number || "-"}
+                      </strong>
+                    </td>
+
+                    <td>
+                      <span style="color:#f0b94d">
+                        ● SMS bekleniyor
+                      </span>
+                    </td>
+
+                    <td>
+                      ${new Intl.NumberFormat(
+                        "tr-TR",
+                        {
+                          style: "currency",
+                          currency: "TRY"
+                        }
+                      ).format(
+                        Number(order.price || 0)
+                      )}
+                    </td>
+
+                    <td>
+                      <a href="index.html#orders">
+                        Görüntüle →
+                      </a>
+                    </td>
+                  </tr>
+                `
+              )
+              .join("");
+        }
+      }
     } catch (error) {
       console.error(error);
 
