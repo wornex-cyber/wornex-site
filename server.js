@@ -1023,15 +1023,25 @@ app.get(
           ]
         );
       }
-            if (Number(data.status) === -1) {
+                 if (Number(data.status) === -1) {
         await db.query(
           `
-            UPDATE orders
-            SET
-              status = 'cancelled',
-              updated_at = NOW()
-            WHERE provider_number_id = $1
-              AND user_id = $2
+            WITH cancelled_order AS (
+              UPDATE orders
+              SET
+                status = 'cancelled',
+                updated_at = NOW()
+              WHERE provider_number_id = $1
+                AND user_id = $2
+                AND status = 'pending'
+              RETURNING user_id, price
+            )
+            UPDATE users
+            SET balance =
+              users.balance + cancelled_order.price
+            FROM cancelled_order
+            WHERE users.id =
+              cancelled_order.user_id
           `,
           [
             String(numberId),
