@@ -662,43 +662,7 @@ app.get(
   }
 );
 
-// --------------------------------------------------
-// Provider balance
-// Şimdilik mevcut davranışı bozmuyoruz.
-// Sonraki aşamada admin-only olacak.
-// --------------------------------------------------
 
-app.get(
-  "/api/balance",
-  async (req, res) => {
-    if (!API_KEY) {
-      return res.status(500).json({
-        success: false,
-        message:
-          "SMS_ONAY_API_KEY ayarlanmamış.",
-      });
-    }
-
-    try {
-      const data =
-        await smsRequest(
-          `/${encodeURIComponent(
-            API_KEY
-          )}/getBalance`
-        );
-
-      res.json(data);
-    } catch (error) {
-      console.error(error);
-
-      res.status(502).json({
-        success: false,
-        message:
-          "Bakiye alınamadı.",
-      });
-    }
-  }
-);
 
 // --------------------------------------------------
 // Order
