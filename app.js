@@ -437,12 +437,13 @@ priceEl.textContent =
   priceEl.textContent = "Şu anda stok yok";
 }
   } catch (error) {
-    console.error(error);
+  console.error(error);
 
-    stockEl.textContent = "Hata";
-    priceEl.textContent =
-      "Fiyat alınamadı";
-  }
+  stockEl.textContent = "Hata";
+  priceEl.textContent = "Fiyat alınamadı";
+  openOrderPreviewBtn.disabled = true;
+  openOrderPreviewBtn.textContent = "Bilgi alınamadı";
+}
 });
 
 // ----------------------------------------------------
