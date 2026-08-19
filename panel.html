@@ -76,13 +76,13 @@
   <span>👤</span>
   Profil Ayarları
 </a>
-
+<!--
 <a class="panel-menu-item" href="#">
   <span>🔑</span>
   API Anahtarım
 </a>
-
-<a class="panel-menu-item" href="#">
+-->
+<a class="panel-menu-item" href="#security">
   <span>🛡️</span>
   Güvenlik
 </a>
@@ -170,7 +170,39 @@
     </div>
   </div>
 </section>
+<section class="panel-card" id="security">
 
+  <div class="panel-card-head">
+    <div>
+      <h2>Hesap Güvenliği</h2>
+      <p>Hesabının güvenlik ve doğrulama durumunu kontrol et.</p>
+    </div>
+  </div>
+
+  <div class="panel-profile-info">
+
+    <div>
+      <span>Telefon Doğrulaması</span>
+      <strong id="securityPhoneStatus">
+        Kontrol ediliyor...
+      </strong>
+    </div>
+
+    <div>
+      <span>Oturum Durumu</span>
+      <strong>Aktif</strong>
+    </div>
+
+    <div>
+      <span>Hesap E-postası</span>
+      <strong id="securityEmail">
+        Yükleniyor...
+      </strong>
+    </div>
+
+  </div>
+
+</section>
     <section class="panel-stats">
 
   <div class="panel-stat-card panel-stat-balance">
@@ -399,7 +431,17 @@ document
     user.phone_verified
       ? "Doğrulandı"
       : "Doğrulanmadı";
+document
+  .querySelector("#securityPhoneStatus")
+  .textContent =
+    user.phone_verified
+      ? "Doğrulandı"
+      : "Doğrulanmadı";
 
+document
+  .querySelector("#securityEmail")
+  .textContent =
+    user.email || "-";
       document
         .querySelector("#panelUserEmail")
         .textContent =
