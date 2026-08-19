@@ -743,13 +743,62 @@ const countryName = String(
     }
 
     try {
+           const serviceDetails =
+        await smsRequest(
+          `/getServiceDetails/${serviceId}`
+        );
+
+      const supplierPrice =
+        Number(serviceDetails.price || 0);
+
+      const salePrice =
+        Math.ceil(
+          Math.max(
+            500,
+            supplierPrice * 1.5
+          )
+        );
       const data =
         await smsRequest(
           `/${encodeURIComponent(
             API_KEY
           )}/getNumber/${serviceId}`
         );
-
+      if (
+        data.success &&
+        data.number &&
+        data.number_id
+      ) {
+        await db.query(
+          `
+            INSERT INTO orders (
+              user_id,
+              provider_number_id,
+              service_id,
+              service_name,
+              country_name,
+              phone_number,
+              status,
+              price
+            )
+            VALUES (
+              $1, $2, $3, $4,
+              $5, $6, 'pending', $7
+            )
+            ON CONFLICT (provider_number_id)
+            DO NOTHING
+          `,
+          [
+            req.userId,
+            String(data.number_id),
+            String(serviceId),
+            categoryName || "Servis",
+            countryName || "Ülke",
+            String(data.number),
+            salePrice,
+          ]
+        );
+      }
       res.json(data);
     } catch (error) {
       console.error(error);
