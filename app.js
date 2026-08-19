@@ -509,6 +509,7 @@ openOrderPreviewBtn.addEventListener(
 );
 closeBtn.addEventListener("click", () => {
   modal.classList.add("hidden");
+  setBuyStep(3);
 });
 
 // ----------------------------------------------------
