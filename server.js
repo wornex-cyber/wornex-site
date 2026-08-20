@@ -316,7 +316,54 @@ function requireAuth(req, res, next) {
 
   next();
 }
+async function requireVerifiedPhone(
+  req,
+  res,
+  next
+) {
+  try {
+    const result = await db.query(
+      `
+        SELECT phone_verified
+        FROM users
+        WHERE id = $1
+        LIMIT 1
+      `,
+      [req.userId]
+    );
 
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Kullanıcı bulunamadı.",
+      });
+    }
+
+    if (!result.rows[0].phone_verified) {
+      return res.status(403).json({
+        success: false,
+        code:
+          "PHONE_VERIFICATION_REQUIRED",
+        message:
+          "Sipariş vermeden önce telefonunu doğrulamalısın.",
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error(
+      "Telefon doğrulama kontrolü hatası:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Telefon doğrulama durumu kontrol edilemedi.",
+    });
+  }
+}
 // --------------------------------------------------
 // Password
 // --------------------------------------------------
@@ -765,6 +812,7 @@ app.get(
 app.get(
   "/api/order/:serviceId",
   requireAuth,
+  requireVerifiedPhone,
   orderRateLimiter,
   async (req, res) => {
   
