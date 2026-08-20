@@ -1918,7 +1918,59 @@ app.post(
     }
   }
 );
+// ----------------------------------------------------
+// ODEME GECMISI
+// ----------------------------------------------------
 
+app.get(
+  "/api/payments",
+  requireAuth,
+  async (req, res) => {
+    try {
+      const result = await db.query(
+        `
+          SELECT
+            id,
+            amount,
+            status,
+            created_at,
+            credited_at
+          FROM payments
+          WHERE user_id = $1
+          ORDER BY created_at DESC
+          LIMIT 50
+        `,
+        [req.userId]
+      );
+
+      const payments =
+        result.rows.map((payment) => ({
+          id: payment.id,
+          amount: Number(payment.amount),
+          status: payment.status,
+          createdAt: payment.created_at,
+          creditedAt: payment.credited_at
+        }));
+
+      return res.json({
+        success: true,
+        payments
+      });
+
+    } catch (error) {
+      console.error(
+        "Ödeme geçmişi hatası:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Ödeme geçmişi alınamadı."
+      });
+    }
+  }
+);
 // ----------------------------------------------------
 // VONAGE SMS OTP
 // ----------------------------------------------------
