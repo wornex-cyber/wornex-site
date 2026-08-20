@@ -670,6 +670,10 @@ app.get(
       authConfigured: Boolean(
         AUTH_SECRET
       ),
+      iyzicoConfigured: Boolean(
+      IYZICO_API_KEY &&
+      IYZICO_SECRET_KEY
+      ),
     });
   }
 );
@@ -1741,6 +1745,172 @@ app.post(
         message:
           "Ödeme başlatılırken sunucu hatası oluştu.",
       });
+    }
+  }
+);
+// --------------------------------------------------
+// IYZICO ÖDEME CALLBACK
+// --------------------------------------------------
+
+app.post(
+  "/api/payments/callback",
+  async (req, res) => {
+    try {
+      const token =
+        normalizePaymentField(
+          req.body?.token,
+          500
+        );
+
+      if (!token) {
+        return res.redirect(
+          303,
+          `${FRONTEND_ORIGIN}/topup.html?payment=failed`
+        );
+      }
+
+      const paymentResult =
+        await db.query(
+          `
+            SELECT
+              id,
+              user_id,
+              conversation_id,
+              amount,
+              status,
+              credited_at
+            FROM payments
+            WHERE iyzico_token = $1
+            LIMIT 1
+          `,
+          [token]
+        );
+
+      if (paymentResult.rows.length === 0) {
+        return res.redirect(
+          303,
+          `${FRONTEND_ORIGIN}/topup.html?payment=failed`
+        );
+      }
+
+      const payment =
+        paymentResult.rows[0];
+
+      if (payment.credited_at) {
+        return res.redirect(
+          303,
+          `${FRONTEND_ORIGIN}/topup.html?payment=success`
+        );
+      }
+
+      const checkout =
+        await retrieveCheckoutForm({
+          locale: Iyzipay.LOCALE.TR,
+          conversationId:
+            payment.conversation_id,
+          token,
+        });
+
+      const amountMatches =
+        Number.isFinite(
+          Number(checkout?.paidPrice)
+        ) &&
+        Math.abs(
+          Number(checkout.paidPrice) -
+          Number(payment.amount)
+        ) < 0.001;
+
+      const conversationMatches =
+        String(
+          checkout?.conversationId || ""
+        ) ===
+        String(payment.conversation_id);
+
+      const basketMatches =
+        String(checkout?.basketId || "") ===
+        `TOPUP-${payment.id}`;
+
+      const paymentSucceeded =
+        checkout?.status === "success" &&
+        checkout?.paymentStatus ===
+          "SUCCESS" &&
+        checkout?.currency === "TRY" &&
+        amountMatches &&
+        conversationMatches &&
+        basketMatches;
+
+      if (!paymentSucceeded) {
+        const errorMessage =
+          checkout?.errorMessage ||
+          checkout?.paymentStatus ||
+          "Ödeme doğrulanamadı.";
+
+        await db.query(
+          `
+            UPDATE payments
+            SET
+              status = 'failed',
+              error_message = $1,
+              updated_at = NOW()
+            WHERE id = $2
+              AND credited_at IS NULL
+          `,
+          [
+            String(errorMessage),
+            payment.id
+          ]
+        );
+
+        return res.redirect(
+          303,
+          `${FRONTEND_ORIGIN}/topup.html?payment=failed`
+        );
+      }
+
+      await db.query(
+        `
+          WITH credited_payment AS (
+            UPDATE payments
+            SET
+              status = 'completed',
+              payment_id = $1,
+              error_message = NULL,
+              credited_at = NOW(),
+              updated_at = NOW()
+            WHERE id = $2
+              AND credited_at IS NULL
+            RETURNING
+              user_id,
+              amount
+          )
+          UPDATE users
+          SET balance =
+            users.balance +
+            credited_payment.amount
+          FROM credited_payment
+          WHERE users.id =
+            credited_payment.user_id
+        `,
+        [
+          String(checkout.paymentId || ""),
+          payment.id
+        ]
+      );
+
+      return res.redirect(
+        303,
+        `${FRONTEND_ORIGIN}/topup.html?payment=success`
+      );
+    } catch (error) {
+      console.error(
+        "Iyzico callback hatası:",
+        error
+      );
+
+      return res.redirect(
+        303,
+        `${FRONTEND_ORIGIN}/topup.html?payment=error`
+      );
     }
   }
 );
