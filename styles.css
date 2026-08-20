@@ -5950,3 +5950,52 @@ body {
   background: rgba(255, 184, 77, 0.1);
   color: #ffc56d;
 }
+/* BAKIYE YUKLE BUTONU */
+
+#startPayment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 18px;
+  padding: 12px 20px;
+  border: 1px solid #348fff;
+  border-radius: 9px;
+  background: linear-gradient(
+    135deg,
+    #2588ff,
+    #1765d8
+  );
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(37, 136, 255, 0.2);
+}
+
+#startPayment:hover {
+  border-color: #68aaff;
+  background: linear-gradient(
+    135deg,
+    #3595ff,
+    #2074ee
+  );
+}
+
+#startPayment:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.panel-card .notice {
+  margin: 14px 0 0;
+  color: #7890a8;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  #startPayment {
+    width: 100%;
+  }
+}
