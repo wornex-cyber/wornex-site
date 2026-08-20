@@ -1,4 +1,5 @@
 import express from "express";
+import helmet from "helmet";
 import "dotenv/config";
 import pg from "pg";
 import crypto from "node:crypto";
@@ -76,7 +77,11 @@ app.use(
     extended: false,
   })
 );
-
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 const PUBLIC_FILES = new Set([
   "/",
   "/index.html",
