@@ -143,7 +143,75 @@
                 <option value="2500">₺2.500</option>
               </select>
             </label>
+            <div class="topup-buyer-grid">
 
+              <label>
+                Ad
+                <input
+                  type="text"
+                  id="buyerName"
+                  maxlength="50"
+                  autocomplete="given-name"
+                  placeholder="Adınız"
+                >
+              </label>
+
+              <label>
+                Soyad
+                <input
+                  type="text"
+                  id="buyerSurname"
+                  maxlength="50"
+                  autocomplete="family-name"
+                  placeholder="Soyadınız"
+                >
+              </label>
+
+              <label>
+                T.C. Kimlik Numarası
+                <input
+                  type="text"
+                  id="buyerIdentityNumber"
+                  maxlength="11"
+                  inputmode="numeric"
+                  placeholder="11 haneli kimlik numarası"
+                >
+              </label>
+
+              <label>
+                Şehir
+                <input
+                  type="text"
+                  id="buyerCity"
+                  maxlength="50"
+                  autocomplete="address-level2"
+                  placeholder="İzmir"
+                >
+              </label>
+
+              <label>
+                Posta Kodu
+                <input
+                  type="text"
+                  id="buyerZipCode"
+                  maxlength="10"
+                  inputmode="numeric"
+                  autocomplete="postal-code"
+                  placeholder="35860"
+                >
+              </label>
+
+              <label class="topup-address-field">
+                Adres
+                <textarea
+                  id="buyerAddress"
+                  maxlength="250"
+                  autocomplete="street-address"
+                  placeholder="Mahalle, sokak ve bina numarası"
+                ></textarea>
+              </label>
+
+            </div>
             <br>
 
             <button class="cta" id="startPayment">
