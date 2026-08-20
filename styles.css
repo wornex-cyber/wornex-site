@@ -5868,3 +5868,30 @@ body {
     grid-column: auto;
   }
 }
+/* IYZICO ODEME SONUC MESAJI */
+
+.payment-status {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border: 1px solid;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.payment-status.success {
+  border-color: rgba(53, 212, 154, 0.4);
+  background: rgba(53, 212, 154, 0.1);
+  color: #55e5ae;
+}
+
+.payment-status.error {
+  border-color: rgba(255, 85, 105, 0.4);
+  background: rgba(255, 85, 105, 0.1);
+  color: #ff788b;
+}
+
+.payment-status[hidden] {
+  display: none;
+}
