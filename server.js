@@ -51,7 +51,11 @@ const db = new Pool({
 // --------------------------------------------------
 
 app.use(express.json());
-
+app.use(
+  express.urlencoded({
+    extended: false,
+  })
+);
 // index.html, app.js, styles.css vb. dosyaları sun
 app.use(express.static("."));
 
@@ -250,6 +254,15 @@ const otpStartRateLimiter =
       (req) => req.userId,
     message:
       "Çok fazla doğrulama kodu istediniz. 1 saat sonra tekrar deneyin.",
+  });
+const paymentRateLimiter =
+  createRateLimiter({
+    windowMs: 10 * 60 * 1000,
+    maxRequests: 5,
+    keyGenerator:
+      (req) => req.userId,
+    message:
+      "Çok fazla ödeme başlatma isteği gönderdiniz. 10 dakika sonra tekrar deneyin.",
   });
 // --------------------------------------------------
 // Auth token
@@ -498,6 +511,141 @@ async function smsRequest(path) {
       `Geçersiz API cevabı: ${text}`
     );
   }
+}
+// --------------------------------------------------
+// Iyzico helpers
+// --------------------------------------------------
+const ALLOWED_TOPUP_AMOUNTS =
+  new Set([
+    100,
+    250,
+    500,
+    1000,
+    2500,
+  ]);
+
+function normalizePaymentField(
+  value,
+  maxLength = 120
+) {
+  return String(value || "")
+    .trim()
+    .slice(0, maxLength);
+}
+
+function isAllowedTopupAmount(value) {
+  const amount = Number(value);
+
+  return (
+    Number.isInteger(amount) &&
+    ALLOWED_TOPUP_AMOUNTS.has(amount)
+  );
+}
+function buildCheckoutRequest({
+  paymentId,
+  conversationId,
+  amount,
+  user,
+  buyer,
+  ip,
+}) {
+  const price =
+    Number(amount).toFixed(2);
+
+  const contactName =
+    `${buyer.name} ${buyer.surname}`;
+
+  return {
+    locale: Iyzipay.LOCALE.TR,
+    conversationId,
+    price,
+    paidPrice: price,
+    currency: Iyzipay.CURRENCY.TRY,
+    basketId: `TOPUP-${paymentId}`,
+    paymentGroup:
+      Iyzipay.PAYMENT_GROUP.PRODUCT,
+    callbackUrl:
+      `${BACKEND_ORIGIN}/api/payments/callback`,
+
+    buyer: {
+      id: String(user.id),
+      name: buyer.name,
+      surname: buyer.surname,
+      gsmNumber: user.phone,
+      email: user.email,
+      identityNumber:
+        buyer.identityNumber,
+      registrationAddress:
+        buyer.address,
+      ip,
+      city: buyer.city,
+      country: "Turkey",
+      zipCode: buyer.zipCode,
+    },
+
+    shippingAddress: {
+      contactName,
+      city: buyer.city,
+      country: "Turkey",
+      address: buyer.address,
+      zipCode: buyer.zipCode,
+    },
+
+    billingAddress: {
+      contactName,
+      city: buyer.city,
+      country: "Turkey",
+      address: buyer.address,
+      zipCode: buyer.zipCode,
+    },
+
+    basketItems: [
+      {
+        id: String(paymentId),
+        name: "VORNEX Bakiye",
+        category1:
+          "Dijital Hizmet",
+        itemType:
+          Iyzipay.BASKET_ITEM_TYPE.VIRTUAL,
+        price,
+      },
+    ],
+  };
+}
+function initializeCheckoutForm(request) {
+  return new Promise(
+    (resolve, reject) => {
+      iyzipay.checkoutFormInitialize.create(
+        request,
+        (error, result) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+
+          resolve(result);
+        }
+      );
+    }
+  );
+}
+
+function retrieveCheckoutForm(request) {
+  return new Promise(
+    (resolve, reject) => {
+      iyzipay.checkoutForm.retrieve(
+        request,
+        (error, result) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+
+          resolve(result);
+        }
+      );
+    }
+  );
 }
 
 // --------------------------------------------------
@@ -1366,6 +1514,237 @@ app.get(
     }
   }
 );
+// --------------------------------------------------
+// IYZICO ÖDEME BAŞLAT
+// --------------------------------------------------
+
+app.post(
+  "/api/payments/start",
+  requireAuth,
+  requireVerifiedPhone,
+  paymentRateLimiter,
+  async (req, res) => {
+    let paymentId = null;
+
+    try {
+      if (
+        !IYZICO_API_KEY ||
+        !IYZICO_SECRET_KEY
+      ) {
+        return res.status(500).json({
+          success: false,
+          message:
+            "Iyzico ödeme ayarları eksik.",
+        });
+      }
+
+      const amount =
+        Number(req.body?.amount);
+
+      if (!isAllowedTopupAmount(amount)) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Geçersiz bakiye yükleme tutarı.",
+        });
+      }
+
+      const buyer = {
+        name: normalizePaymentField(
+          req.body?.name,
+          50
+        ),
+        surname: normalizePaymentField(
+          req.body?.surname,
+          50
+        ),
+        identityNumber:
+          normalizePaymentField(
+            req.body?.identityNumber,
+            30
+          ),
+        city: normalizePaymentField(
+          req.body?.city,
+          50
+        ),
+        address: normalizePaymentField(
+          req.body?.address,
+          200
+        ),
+        zipCode: normalizePaymentField(
+          req.body?.zipCode,
+          12
+        ),
+      };
+
+      if (
+        buyer.name.length < 2 ||
+        buyer.surname.length < 2 ||
+        buyer.identityNumber.length < 5 ||
+        buyer.city.length < 2 ||
+        buyer.address.length < 5 ||
+        buyer.zipCode.length < 3
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Ödeme bilgilerini eksiksiz gir.",
+        });
+      }
+
+      if (
+        !/^[0-9A-Za-z]+$/.test(
+          buyer.identityNumber
+        )
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Kimlik numarası geçersiz.",
+        });
+      }
+
+      const userResult =
+        await db.query(
+          `
+            SELECT
+              id,
+              email,
+              phone,
+              phone_verified
+            FROM users
+            WHERE id = $1
+            LIMIT 1
+          `,
+          [req.userId]
+        );
+
+      if (userResult.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Kullanıcı bulunamadı.",
+        });
+      }
+
+      const user = userResult.rows[0];
+
+      const conversationId =
+        crypto.randomUUID();
+
+      const paymentInsert =
+        await db.query(
+          `
+            INSERT INTO payments (
+              user_id,
+              conversation_id,
+              amount,
+              status
+            )
+            VALUES (
+              $1,
+              $2,
+              $3,
+              'pending'
+            )
+            RETURNING id
+          `,
+          [
+            req.userId,
+            conversationId,
+            amount,
+          ]
+        );
+
+      paymentId =
+        paymentInsert.rows[0].id;
+
+      const buyerIp = String(
+        req.ip ||
+        req.socket.remoteAddress ||
+        "127.0.0.1"
+      ).replace(/^::ffff:/, "");
+
+      const checkoutRequest =
+        buildCheckoutRequest({
+          paymentId,
+          conversationId,
+          amount,
+          user,
+          buyer,
+          ip: buyerIp,
+        });
+
+      const checkout =
+        await initializeCheckoutForm(
+          checkoutRequest
+        );
+
+      if (
+        checkout?.status !== "success" ||
+        !checkout?.token ||
+        !checkout?.paymentPageUrl
+      ) {
+        const errorMessage =
+          checkout?.errorMessage ||
+          "Iyzico ödeme formu oluşturulamadı.";
+
+        await db.query(
+          `
+            UPDATE payments
+            SET
+              status = 'failed',
+              error_message = $1,
+              updated_at = NOW()
+            WHERE id = $2
+          `,
+          [
+            errorMessage,
+            paymentId
+          ]
+        );
+
+        return res.status(502).json({
+          success: false,
+          message: errorMessage,
+        });
+      }
+
+      await db.query(
+        `
+          UPDATE payments
+          SET
+            iyzico_token = $1,
+            updated_at = NOW()
+          WHERE id = $2
+        `,
+        [
+          checkout.token,
+          paymentId
+        ]
+      );
+
+      return res.json({
+        success: true,
+        paymentId,
+        paymentPageUrl:
+          checkout.paymentPageUrl,
+      });
+    } catch (error) {
+      console.error(
+        "Ödeme başlatma hatası:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Ödeme başlatılırken sunucu hatası oluştu.",
+      });
+    }
+  }
+);
+
 // ----------------------------------------------------
 // VONAGE SMS OTP
 // ----------------------------------------------------
