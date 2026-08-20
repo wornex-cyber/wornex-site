@@ -280,19 +280,121 @@
         location.href = "index.html";
       }
     }
-
+ 
     document
       .querySelector("#startPayment")
-      .addEventListener("click", () => {
+      .addEventListener("click", async () => {
+
+        const token =
+          sessionStorage.getItem("vornexToken");
+
+        if (!token) {
+          location.href = "index.html";
+          return;
+        }
+
+        const button =
+          document.querySelector("#startPayment");
 
         const amount =
-          document.querySelector("#topupAmount").value;
+          Number(
+            document.querySelector("#topupAmount").value
+          );
 
-        alert(
-          `₺${amount} ödeme seçildi. Ödeme altyapısını sonraki adımda bağlayacağız.`
-        );
+        const buyer = {
+          name:
+            document.querySelector("#buyerName").value.trim(),
+
+          surname:
+            document.querySelector("#buyerSurname").value.trim(),
+
+          identityNumber:
+            document
+              .querySelector("#buyerIdentityNumber")
+              .value
+              .trim(),
+
+          city:
+            document.querySelector("#buyerCity").value.trim(),
+
+          zipCode:
+            document.querySelector("#buyerZipCode").value.trim(),
+
+          address:
+            document.querySelector("#buyerAddress").value.trim()
+        };
+
+        if (
+          !buyer.name ||
+          !buyer.surname ||
+          !buyer.identityNumber ||
+          !buyer.city ||
+          !buyer.zipCode ||
+          !buyer.address
+        ) {
+          alert("Lütfen ödeme bilgilerini eksiksiz doldurun.");
+          return;
+        }
+
+        if (!/^\d{11}$/.test(buyer.identityNumber)) {
+          alert("T.C. kimlik numarası 11 rakam olmalıdır.");
+          return;
+        }
+
+        const originalButtonText = button.textContent;
+
+        button.disabled = true;
+        button.textContent = "Ödeme hazırlanıyor...";
+
+        try {
+          const response = await fetch(
+            `${API_BASE}/payments/start`,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+              },
+
+              body: JSON.stringify({
+                amount,
+                buyer
+              })
+            }
+          );
+
+          const data =
+            await response.json().catch(() => ({}));
+
+          if (!response.ok) {
+            throw new Error(
+              data.error ||
+              data.message ||
+              "Ödeme başlatılamadı."
+            );
+          }
+
+          if (!data.paymentPageUrl) {
+            throw new Error(
+              "Ödeme sayfası bağlantısı alınamadı."
+            );
+          }
+
+          location.href = data.paymentPageUrl;
+
+        } catch (error) {
+          console.error(error);
+
+          alert(
+            error.message ||
+            "Ödeme başlatılırken bir hata oluştu."
+          );
+
+          button.disabled = false;
+          button.textContent = originalButtonText;
+        }
       });
-
     document
       .querySelector("#panelLogout")
       .addEventListener("click", () => {
