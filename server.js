@@ -1025,6 +1025,7 @@ app.get(
               updated_at = NOW()
             WHERE provider_number_id = $2
               AND user_id = $3
+                      AND status = 'pending'
           `,
           [
             String(data.code || ""),
