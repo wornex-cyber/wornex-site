@@ -34,11 +34,15 @@ const vonage = new Vonage({
   applicationId: VONAGE_APPLICATION_ID,
   privateKey: VONAGE_PRIVATE_KEY,
 });
-const iyzipay = new Iyzipay({
-  apiKey: IYZICO_API_KEY,
-  secretKey: IYZICO_SECRET_KEY,
-  uri: IYZICO_BASE_URL,
-});
+const iyzipay =
+  IYZICO_API_KEY &&
+  IYZICO_SECRET_KEY
+    ? new Iyzipay({
+        apiKey: IYZICO_API_KEY,
+        secretKey: IYZICO_SECRET_KEY,
+        uri: IYZICO_BASE_URL,
+      })
+    : null;
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DATABASE_URL
