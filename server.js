@@ -76,8 +76,7 @@ app.use(
     extended: false,
   })
 );
-// index.html, app.js, styles.css vb. dosyaları sun
-app.use(express.static("."));
+
 const PUBLIC_FILES = new Set([
   "/",
   "/index.html",
