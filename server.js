@@ -13,7 +13,9 @@ const AUTH_SECRET = process.env.AUTH_SECRET;
 const SMS_BASE = "https://www.smsonayim.com/api";
 const VONAGE_APPLICATION_ID = process.env.VONAGE_APPLICATION_ID;
 const VONAGE_PRIVATE_KEY = process.env.VONAGE_PRIVATE_KEY;
-
+const FRONTEND_ORIGIN =
+  process.env.FRONTEND_ORIGIN ||
+  "https://wornex-web.onrender.com";
 const vonage = new Vonage({
   applicationId: VONAGE_APPLICATION_ID,
   privateKey: VONAGE_PRIVATE_KEY,
@@ -36,7 +38,10 @@ app.use(express.static("."));
 
 // Frontend erişimi
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+  "Access-Control-Allow-Origin",
+  FRONTEND_ORIGIN
+);
 
   res.setHeader(
     "Access-Control-Allow-Methods",
