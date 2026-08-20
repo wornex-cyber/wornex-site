@@ -867,7 +867,93 @@
 
 </div>
 
+<!-- PHONE VERIFICATION MODAL -->
+<div
+  class="modal hidden"
+  id="phoneVerifyModal"
+>
+  <div class="box phone-verify-box">
 
+    <button
+      id="phoneVerifyClose"
+      type="button"
+      aria-label="Kapat"
+    >
+      ×
+    </button>
+
+    <span class="section-kicker">
+      HESAP GÜVENLİĞİ
+    </span>
+
+    <h2>
+      Telefonunu doğrula
+    </h2>
+
+    <p class="phone-verify-description">
+      Hesabını ve siparişlerini korumak için
+      telefon numaranı doğrula.
+    </p>
+
+    <div id="phoneStartStep">
+
+      <label for="verifyPhoneInput">
+        Telefon numarası
+      </label>
+
+      <input
+        id="verifyPhoneInput"
+        type="tel"
+        inputmode="tel"
+        autocomplete="tel"
+        placeholder="+905xxxxxxxxx"
+      >
+
+      <button
+        class="primary-btn"
+        id="sendVerifyCodeBtn"
+        type="button"
+      >
+        Doğrulama Kodu Gönder
+      </button>
+
+    </div>
+
+    <div
+      class="hidden"
+      id="phoneCodeStep"
+    >
+
+      <label for="verifyCodeInput">
+        6 haneli doğrulama kodu
+      </label>
+
+      <input
+        id="verifyCodeInput"
+        type="text"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        maxlength="6"
+        placeholder="000000"
+      >
+
+      <button
+        class="primary-btn"
+        id="checkVerifyCodeBtn"
+        type="button"
+      >
+        Telefonu Doğrula
+      </button>
+
+    </div>
+
+    <p
+      class="phone-verify-message"
+      id="phoneVerifyMessage"
+    ></p>
+
+  </div>
+</div>
 <script src="app.js"></script>
 
 </body>
