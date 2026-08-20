@@ -6,7 +6,7 @@ import { Vonage } from "@vonage/server-sdk";
 const { Pool } = pg;
 
 const app = express();
-
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.SMS_ONAY_API_KEY;
 const AUTH_SECRET = process.env.AUTH_SECRET;
@@ -118,6 +118,76 @@ function validId(value) {
   return /^[0-9]+$/.test(String(value));
 }
 const activeOrderUsers = new Set();
+function createRateLimiter({
+  windowMs,
+  maxRequests,
+  keyGenerator,
+  message,
+}) {
+  const buckets = new Map();
+
+  return (req, res, next) => {
+    const now = Date.now();
+
+    const key = String(
+      keyGenerator
+        ? keyGenerator(req)
+        : req.ip ||
+          req.socket.remoteAddress ||
+          "unknown"
+    );
+
+    const current = buckets.get(key);
+
+    if (
+      !current ||
+      now >= current.resetAt
+    ) {
+      buckets.set(key, {
+        count: 1,
+        resetAt: now + windowMs,
+      });
+
+      return next();
+    }
+
+    if (current.count >= maxRequests) {
+      return res.status(429).json({
+        success: false,
+        message:
+          message ||
+          "Çok fazla istek gönderdiniz. Biraz bekleyin.",
+      });
+    }
+
+    current.count += 1;
+    next();
+  };
+}
+const loginRateLimiter =
+  createRateLimiter({
+    windowMs: 15 * 60 * 1000,
+    maxRequests: 10,
+    message:
+      "Çok fazla giriş denemesi. 15 dakika sonra tekrar deneyin.",
+  });
+
+const registerRateLimiter =
+  createRateLimiter({
+    windowMs: 60 * 60 * 1000,
+    maxRequests: 5,
+    message:
+      "Çok fazla kayıt denemesi. Daha sonra tekrar deneyin.",
+  });
+const orderRateLimiter =
+  createRateLimiter({
+    windowMs: 60 * 1000,
+    maxRequests: 10,
+    keyGenerator:
+      (req) => req.userId,
+    message:
+      "Çok fazla sipariş denemesi. 1 dakika bekleyin.",
+  });
 // --------------------------------------------------
 // Auth token
 // --------------------------------------------------
@@ -352,6 +422,7 @@ app.get(
 
 app.post(
   "/api/register",
+ registerRateLimiter,
   async (req, res) => {
     try {
       const email = String(
@@ -437,6 +508,7 @@ app.post(
 
 app.post(
   "/api/login",
+  loginRateLimiter,
   async (req, res) => {
     try {
       const email = String(
@@ -684,7 +756,9 @@ app.get(
 app.get(
   "/api/order/:serviceId",
   requireAuth,
+  orderRateLimiter,
   async (req, res) => {
+  
     if (!API_KEY) {
       return res.status(500).json({
         success: false,
