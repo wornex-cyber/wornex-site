@@ -78,7 +78,33 @@ app.use(
 );
 // index.html, app.js, styles.css vb. dosyaları sun
 app.use(express.static("."));
+const PUBLIC_FILES = new Set([
+  "/",
+  "/index.html",
+  "/app.js",
+  "/styles.css",
+  "/panel.html",
+  "/privacy.html",
+  "/topup.html",
+]);
 
+app.use((req, res, next) => {
+  if (
+    req.path.startsWith("/api/") ||
+    PUBLIC_FILES.has(req.path)
+  ) {
+    return next();
+  }
+
+  return res.sendStatus(404);
+});
+
+app.use(
+  express.static(".", {
+    dotfiles: "deny",
+    index: "index.html",
+  })
+);
 // Frontend erişimi
 app.use((req, res, next) => {
   res.setHeader(
