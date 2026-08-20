@@ -712,9 +712,19 @@ const countryName = String(
           `/getServiceDetails/${serviceId}`
         );
 
-      const supplierPrice =
-        Number(serviceDetails.price || 0);
+           const supplierPrice =
+        Number(serviceDetails?.price);
 
+      if (
+        !Number.isFinite(supplierPrice) ||
+        supplierPrice < 0
+      ) {
+        return res.status(502).json({
+          success: false,
+          message:
+            "Geçersiz servis fiyatı."
+        });
+      }
       const salePrice =
         Math.ceil(
           Math.max(
