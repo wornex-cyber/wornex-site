@@ -1556,7 +1556,47 @@ async function renderAccountPanel() {
             Siparişlere Git →
           </button>
         </div>
+        <div class="account-action-card">
+          <span>TELEFON GÜVENLİĞİ</span>
 
+          <h3>
+            ${
+              user.phone_verified
+                ? "Telefon doğrulandı"
+                : "Doğrulama gerekli"
+            }
+          </h3>
+
+          <p>
+            ${
+              user.phone_verified
+                ? user.phone ||
+                  "Telefon numaran doğrulandı."
+                : "Sipariş verebilmek için telefonunu doğrula."
+            }
+          </p>
+
+          <button
+            type="button"
+            id="panelVerifyPhoneBtn"
+            class="${
+              user.phone_verified
+                ? "ghost-btn"
+                : "primary-btn"
+            }"
+            ${
+              user.phone_verified
+                ? "disabled"
+                : ""
+            }
+          >
+            ${
+              user.phone_verified
+                ? "✓ Doğrulandı"
+                : "Telefonunu Doğrula →"
+            }
+          </button>
+        </div>
       </div>
     `;
 
@@ -1577,6 +1617,15 @@ async function renderAccountPanel() {
           ?.scrollIntoView({
             behavior: "smooth",
           });
+      });
+    document
+      .querySelector("#panelVerifyPhoneBtn")
+      ?.addEventListener("click", () => {
+        if (!user.phone_verified) {
+          openPhoneVerificationModal(
+            user.phone || ""
+          );
+        }
       });
 
     document
