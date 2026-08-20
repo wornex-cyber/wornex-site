@@ -173,7 +173,13 @@ async function apiFetch(path) {
     }, 100);
   }
 
-  throw new Error(errorMessage);
+    const requestError =
+    new Error(errorMessage);
+
+  requestError.code =
+    data?.code || "";
+
+  throw requestError;
 }
 
   return data;
@@ -975,7 +981,16 @@ if (currentBalance < requiredBalance) {
       );
     } catch (error) {
       console.error(error);
+      if (
+        error.code ===
+        "PHONE_VERIFICATION_REQUIRED"
+      ) {
+        modal.classList.add("hidden");
 
+        openPhoneVerificationModal();
+
+        return;
+      }
       alert(
         `Sipariş oluşturulamadı:\n${error.message}`
       );
