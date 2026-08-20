@@ -1455,6 +1455,11 @@ footer p {
 }
 
 @media (max-width: 600px) {
+    .account-panel {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   .account-panel-head {
     align-items: flex-start;
     flex-direction: column;
