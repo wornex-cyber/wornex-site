@@ -58,7 +58,7 @@
         Bakiye Yükle
       </a>
 
-      <a class="panel-menu-item" href="#">
+       <a class="panel-menu-item" href="topup.html#paymentHistory">
         <span>🧾</span>
         Ödeme Geçmişi
       </a>
@@ -229,7 +229,56 @@
           </div>
 
         </section>
+        <section
+          class="panel-grid payment-history-section"
+          id="paymentHistory"
+        >
 
+          <div class="panel-card">
+
+            <div class="panel-card-head">
+              <div>
+                <h2>Ödeme Geçmişi</h2>
+                <p>Son bakiye yükleme işlemleriniz.</p>
+              </div>
+
+              <button
+                type="button"
+                id="refreshPayments"
+                class="panel-history-refresh"
+              >
+                Yenile
+              </button>
+            </div>
+
+            <div class="panel-table-wrap">
+
+              <table class="panel-table">
+
+                <thead>
+                  <tr>
+                    <th>İşlem</th>
+                    <th>Tutar</th>
+                    <th>Durum</th>
+                    <th>Tarih</th>
+                  </tr>
+                </thead>
+
+                <tbody id="paymentHistoryBody">
+                  <tr>
+                    <td colspan="4">
+                      Ödemeler yükleniyor...
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </section>
       </main>
 
     </div>
@@ -324,6 +373,140 @@
     }
 
     showPaymentResult();
+        async function loadPaymentHistory() {
+      const token =
+        sessionStorage.getItem("vornexToken");
+
+      const tableBody =
+        document.querySelector(
+          "#paymentHistoryBody"
+        );
+
+      if (!token || !tableBody) {
+        return;
+      }
+
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="4">
+            Ödemeler yükleniyor...
+          </td>
+        </tr>
+      `;
+
+      try {
+        const response = await fetch(
+          `${API_BASE}/payments`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        const data =
+          await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(
+            data.message ||
+            "Ödeme geçmişi alınamadı."
+          );
+        }
+
+        const payments =
+          Array.isArray(data.payments)
+            ? data.payments
+            : [];
+
+        if (payments.length === 0) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="4">
+                Henüz ödeme işleminiz bulunmuyor.
+              </td>
+            </tr>
+          `;
+
+          return;
+        }
+
+        const moneyFormatter =
+          new Intl.NumberFormat("tr-TR", {
+            style: "currency",
+            currency: "TRY"
+          });
+
+        const dateFormatter =
+          new Intl.DateTimeFormat("tr-TR", {
+            dateStyle: "short",
+            timeStyle: "short"
+          });
+
+        tableBody.innerHTML =
+          payments.map((payment) => {
+            const paymentStatus =
+              payment.status === "completed"
+                ? "completed"
+                : payment.status === "failed"
+                  ? "failed"
+                  : "pending";
+
+            const statusText = {
+              completed: "Tamamlandı",
+              failed: "Başarısız",
+              pending: "Bekliyor"
+            }[paymentStatus];
+
+            const paymentDate =
+              dateFormatter.format(
+                new Date(payment.createdAt)
+              );
+
+            return `
+              <tr>
+                <td>#${Number(payment.id)}</td>
+
+                <td>
+                  ${moneyFormatter.format(
+                    Number(payment.amount || 0)
+                  )}
+                </td>
+
+                <td>
+                  <span
+                    class="payment-history-badge ${paymentStatus}"
+                  >
+                    ${statusText}
+                  </span>
+                </td>
+
+                <td>${paymentDate}</td>
+              </tr>
+            `;
+          }).join("");
+
+      } catch (error) {
+        console.error(error);
+
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="4">
+              Ödeme geçmişi yüklenemedi.
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    document
+      .querySelector("#refreshPayments")
+      .addEventListener(
+        "click",
+        loadPaymentHistory
+      );
+
+    loadPaymentHistory();
     document
       .querySelector("#startPayment")
       .addEventListener("click", async () => {
