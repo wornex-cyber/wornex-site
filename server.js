@@ -23,6 +23,22 @@ const IYZICO_SECRET_KEY =
 const IYZICO_BASE_URL =
   process.env.IYZICO_BASE_URL ||
   "https://sandbox-api.iyzipay.com";
+const IYZICO_IS_SANDBOX =
+  IYZICO_BASE_URL.includes(
+    "sandbox-api.iyzipay.com"
+  );
+
+const PAYMENT_TEST_EMAILS =
+  new Set(
+    String(
+      process.env.PAYMENT_TEST_EMAILS || ""
+    )
+      .split(",")
+      .map((email) =>
+        email.trim().toLowerCase()
+      )
+      .filter(Boolean)
+  );
 
 const BACKEND_ORIGIN =
   process.env.BACKEND_ORIGIN ||
@@ -1636,6 +1652,20 @@ app.post(
       }
 
       const user = userResult.rows[0];
+      if (
+        IYZICO_IS_SANDBOX &&
+        !PAYMENT_TEST_EMAILS.has(
+          String(user.email || "")
+            .trim()
+            .toLowerCase()
+        )
+      ) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "Sandbox ödemeleri yalnızca yetkili test hesaplarına açıktır."
+        });
+      }
 
       const conversationId =
         crypto.randomUUID();
