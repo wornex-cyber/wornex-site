@@ -5810,3 +5810,61 @@ body {
     font-size: 22px;
   }
 }
+/* IYZICO BAKIYE YUKLEME FORMU */
+
+.panel-card > label,
+.topup-buyer-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #9eb2c7;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.panel-card #topupAmount,
+.topup-buyer-grid input,
+.topup-buyer-grid textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 1px solid #1b3b58;
+  border-radius: 9px;
+  outline: none;
+  background: #071625;
+  color: #ffffff;
+  font: inherit;
+}
+
+.panel-card #topupAmount:focus,
+.topup-buyer-grid input:focus,
+.topup-buyer-grid textarea:focus {
+  border-color: #2d8cff;
+  box-shadow: 0 0 0 3px rgba(45, 140, 255, 0.12);
+}
+
+.topup-buyer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.topup-address-field {
+  grid-column: 1 / -1;
+}
+
+.topup-buyer-grid textarea {
+  min-height: 95px;
+  resize: vertical;
+}
+
+@media (max-width: 760px) {
+  .topup-buyer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topup-address-field {
+    grid-column: auto;
+  }
+}
