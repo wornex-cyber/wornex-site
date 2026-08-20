@@ -5895,3 +5895,58 @@ body {
 .payment-status[hidden] {
   display: none;
 }
+/* ODEME GECMISI */
+
+.payment-history-section {
+  grid-template-columns: 1fr;
+}
+
+.payment-history-section .panel-card {
+  width: 100%;
+  min-width: 0;
+}
+
+.panel-history-refresh {
+  padding: 9px 14px;
+  border: 1px solid #205080;
+  border-radius: 8px;
+  background: #0b2035;
+  color: #55aaff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.panel-history-refresh:hover {
+  border-color: #2d8cff;
+  background: #102b47;
+  color: #ffffff;
+}
+
+.payment-history-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 9px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.payment-history-badge.completed {
+  border-color: rgba(53, 212, 154, 0.35);
+  background: rgba(53, 212, 154, 0.1);
+  color: #55e5ae;
+}
+
+.payment-history-badge.failed {
+  border-color: rgba(255, 85, 105, 0.35);
+  background: rgba(255, 85, 105, 0.1);
+  color: #ff788b;
+}
+
+.payment-history-badge.pending {
+  border-color: rgba(255, 184, 77, 0.35);
+  background: rgba(255, 184, 77, 0.1);
+  color: #ffc56d;
+}
