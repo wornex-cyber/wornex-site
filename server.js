@@ -188,6 +188,15 @@ const orderRateLimiter =
     message:
       "Çok fazla sipariş denemesi. 1 dakika bekleyin.",
   });
+const otpStartRateLimiter =
+  createRateLimiter({
+    windowMs: 60 * 60 * 1000,
+    maxRequests: 5,
+    keyGenerator:
+      (req) => req.userId,
+    message:
+      "Çok fazla doğrulama kodu istediniz. 1 saat sonra tekrar deneyin.",
+  });
 // --------------------------------------------------
 // Auth token
 // --------------------------------------------------
@@ -1273,7 +1282,11 @@ function isValidPhone(phone) {
 
 
 // OTP GÖNDER
-app.post("/api/verify/start", requireAuth, async (req, res) => {
+app.post(
+  "/api/verify/start",
+  requireAuth,
+  otpStartRateLimiter,
+  async (req, res) => {
   try {
     const phone = normalizePhone(req.body?.phone);
 
