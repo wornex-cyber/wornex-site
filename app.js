@@ -1600,7 +1600,7 @@ async function renderAccountPanel() {
       </div>
     `;
 
-    const hero = document.querySelector(".hero");
+    const hero = document.querySelector(".vornex-hero");
 
     if (hero) {
       hero.insertAdjacentElement(
