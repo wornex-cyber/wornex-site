@@ -84,6 +84,12 @@ async function initDatabase() {
     ALTER TABLE users
     ADD COLUMN IF NOT EXISTS phone_verified BOOLEAN NOT NULL DEFAULT FALSE;
   `);
+    await db.query(`
+    CREATE UNIQUE INDEX IF NOT EXISTS
+      users_phone_unique_idx
+    ON users (phone)
+    WHERE phone IS NOT NULL;
+  `);
   await db.query(`
     CREATE TABLE IF NOT EXISTS orders (
       id SERIAL PRIMARY KEY,
@@ -1351,7 +1357,27 @@ app.post(
         message: "Telefon numarasını +905xxxxxxxxx formatında gir.",
       });
     }
+    const phoneOwner = await db.query(
+      `
+        SELECT id
+        FROM users
+        WHERE phone = $1
+          AND id <> $2
+        LIMIT 1
+      `,
+      [
+        phone,
+        req.userId
+      ]
+    );
 
+    if (phoneOwner.rows.length > 0) {
+      return res.status(409).json({
+        success: false,
+        message:
+          "Bu telefon numarası başka bir hesapta kullanılıyor.",
+      });
+    }
     const previous = pendingVerifications.get(phone);
 
     if (
@@ -1517,6 +1543,14 @@ return res.status(400).json({
    
 
   } catch (error) {
+       if (error?.code === "23505") {
+      return res.status(409).json({
+        success: false,
+        verified: false,
+        message:
+          "Bu telefon numarası başka bir hesapta kullanılıyor.",
+      });
+    }
     console.error(
       "Verify check error:",
       error
