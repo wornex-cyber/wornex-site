@@ -112,7 +112,7 @@ initDatabase().catch((error) => {
 function validId(value) {
   return /^[0-9]+$/.test(String(value));
 }
-
+const activeOrderUsers = new Set();
 // --------------------------------------------------
 // Auth token
 // --------------------------------------------------
@@ -705,7 +705,15 @@ const countryName = String(
           "Geçersiz serviceId.",
       });
     }
+    if (activeOrderUsers.has(req.userId)) {
+      return res.status(429).json({
+        success: false,
+        message:
+          "Sipariş işleminiz zaten devam ediyor."
+      });
+    }
 
+    activeOrderUsers.add(req.userId);
     try {
            const serviceDetails =
         await smsRequest(
@@ -884,7 +892,9 @@ const countryName = String(
         message:
           "Numara alınamadı.",
       });
-    }
+    } finally {
+  activeOrderUsers.delete(req.userId);
+}
   }
 );
 // --------------------------------------------------
