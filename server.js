@@ -1927,6 +1927,22 @@ app.get(
   requireAuth,
   async (req, res) => {
     try {
+           await db.query(
+        `
+          UPDATE payments
+          SET
+            status = 'failed',
+            error_message =
+              'Ödeme süresi doldu.',
+            updated_at = NOW()
+          WHERE user_id = $1
+            AND status = 'pending'
+            AND created_at <
+              NOW() - INTERVAL '30 minutes'
+        `,
+        [req.userId]
+      );
+
       const result = await db.query(
         `
           SELECT
