@@ -75,6 +75,34 @@ const orderPlaceholderEl =
   );
 const buySteps =
   document.querySelectorAll(".buy-step");
+const phoneVerifyModal =
+  document.querySelector("#phoneVerifyModal");
+
+const phoneVerifyClose =
+  document.querySelector("#phoneVerifyClose");
+
+const phoneStartStep =
+  document.querySelector("#phoneStartStep");
+
+const phoneCodeStep =
+  document.querySelector("#phoneCodeStep");
+
+const verifyPhoneInput =
+  document.querySelector("#verifyPhoneInput");
+
+const verifyCodeInput =
+  document.querySelector("#verifyCodeInput");
+
+const sendVerifyCodeBtn =
+  document.querySelector("#sendVerifyCodeBtn");
+
+const checkVerifyCodeBtn =
+  document.querySelector("#checkVerifyCodeBtn");
+
+const phoneVerifyMessage =
+  document.querySelector("#phoneVerifyMessage");
+
+let activeVerificationPhone = "";
 function setBuyStep(step) {
   buySteps.forEach((item, index) => {
     const stepNumber = index + 1;
@@ -150,7 +178,280 @@ async function apiFetch(path) {
 
   return data;
 }
+async function apiPost(path, body) {
+  const token =
+    sessionStorage.getItem("vornexToken");
 
+  const response = await fetch(
+    `${API_BASE}${path}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {}),
+      },
+      body: JSON.stringify(body),
+    }
+  );
+
+  const text = await response.text();
+
+  let data;
+
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error(
+      "Sunucudan geçersiz cevap geldi."
+    );
+  }
+
+  if (!response.ok) {
+    const errorMessage =
+      data?.error ||
+      data?.message ||
+      "Sunucu bağlantısında bir hata oluştu.";
+
+    if (response.status === 401) {
+      sessionStorage.removeItem(
+        "vornexToken"
+      );
+
+      sessionStorage.removeItem(
+        "vornexUser"
+      );
+
+      setTimeout(() => {
+        openAuthModal("login");
+      }, 100);
+    }
+
+    throw new Error(errorMessage);
+  }
+
+  return data;
+}
+function setPhoneVerifyMessage(
+  message,
+  type = ""
+) {
+  phoneVerifyMessage.textContent = message;
+
+  phoneVerifyMessage.classList.remove(
+    "error",
+    "success"
+  );
+
+  if (type) {
+    phoneVerifyMessage.classList.add(type);
+  }
+}
+
+function resetPhoneVerificationModal() {
+  activeVerificationPhone = "";
+
+  verifyPhoneInput.value = "";
+  verifyCodeInput.value = "";
+
+  phoneStartStep.classList.remove("hidden");
+  phoneCodeStep.classList.add("hidden");
+
+  sendVerifyCodeBtn.disabled = false;
+  checkVerifyCodeBtn.disabled = false;
+
+  sendVerifyCodeBtn.textContent =
+    "Doğrulama Kodu Gönder";
+
+  checkVerifyCodeBtn.textContent =
+    "Telefonu Doğrula";
+
+  setPhoneVerifyMessage("");
+}
+
+function openPhoneVerificationModal(
+  phone = ""
+) {
+  resetPhoneVerificationModal();
+
+  if (phone) {
+    verifyPhoneInput.value = phone;
+  }
+
+  phoneVerifyModal.classList.remove(
+    "hidden"
+  );
+
+  verifyPhoneInput.focus();
+}
+
+function closePhoneVerificationModal() {
+  phoneVerifyModal.classList.add("hidden");
+
+  resetPhoneVerificationModal();
+}
+sendVerifyCodeBtn?.addEventListener(
+  "click",
+  async () => {
+    const token =
+      sessionStorage.getItem("vornexToken");
+
+    if (!token) {
+      closePhoneVerificationModal();
+      openAuthModal("login");
+      return;
+    }
+
+    const phone = String(
+      verifyPhoneInput.value || ""
+    )
+      .replace(/\s+/g, "")
+      .replace(/[()-]/g, "");
+
+    if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
+      setPhoneVerifyMessage(
+        "Telefon numaranı +905xxxxxxxxx formatında gir.",
+        "error"
+      );
+
+      return;
+    }
+
+    const oldText =
+      sendVerifyCodeBtn.textContent;
+
+    sendVerifyCodeBtn.disabled = true;
+    sendVerifyCodeBtn.textContent =
+      "Kod gönderiliyor...";
+
+    setPhoneVerifyMessage("");
+
+    try {
+      const result = await apiPost(
+        "/verify/start",
+        {
+          phone,
+        }
+      );
+
+      activeVerificationPhone = phone;
+
+      phoneStartStep.classList.add(
+        "hidden"
+      );
+
+      phoneCodeStep.classList.remove(
+        "hidden"
+      );
+
+      setPhoneVerifyMessage(
+        result.message ||
+          "Doğrulama kodu gönderildi.",
+        "success"
+      );
+
+      verifyCodeInput.focus();
+    } catch (error) {
+      setPhoneVerifyMessage(
+        error.message,
+        "error"
+      );
+    } finally {
+      sendVerifyCodeBtn.disabled = false;
+      sendVerifyCodeBtn.textContent =
+        oldText;
+    }
+  }
+);
+checkVerifyCodeBtn?.addEventListener(
+  "click",
+  async () => {
+    const code = String(
+      verifyCodeInput.value || ""
+    ).trim();
+
+    if (!activeVerificationPhone) {
+      setPhoneVerifyMessage(
+        "Önce telefonuna doğrulama kodu gönder.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!/^\d{6}$/.test(code)) {
+      setPhoneVerifyMessage(
+        "Telefona gelen 6 haneli kodu gir.",
+        "error"
+      );
+
+      return;
+    }
+
+    const oldText =
+      checkVerifyCodeBtn.textContent;
+
+    checkVerifyCodeBtn.disabled = true;
+    checkVerifyCodeBtn.textContent =
+      "Kontrol ediliyor...";
+
+    setPhoneVerifyMessage("");
+
+    try {
+      const result = await apiPost(
+        "/verify/check",
+        {
+          phone: activeVerificationPhone,
+          code,
+        }
+      );
+
+      if (!result.verified) {
+        throw new Error(
+          result.message ||
+            "Doğrulama tamamlanamadı."
+        );
+      }
+
+      setPhoneVerifyMessage(
+        result.message ||
+          "Telefon numarası doğrulandı.",
+        "success"
+      );
+
+      await renderAccountPanel();
+
+      setTimeout(() => {
+        closePhoneVerificationModal();
+      }, 1200);
+    } catch (error) {
+      setPhoneVerifyMessage(
+        error.message,
+        "error"
+      );
+    } finally {
+      checkVerifyCodeBtn.disabled = false;
+      checkVerifyCodeBtn.textContent =
+        oldText;
+    }
+  }
+);
+phoneVerifyClose?.addEventListener(
+  "click",
+  closePhoneVerificationModal
+);
+
+phoneVerifyModal?.addEventListener(
+  "click",
+  (event) => {
+    if (event.target === phoneVerifyModal) {
+      closePhoneVerificationModal();
+    }
+  }
+);
 function setLoading(element, text = "Yükleniyor...") {
   element.innerHTML = `<option value="">${text}</option>`;
   element.disabled = true;
@@ -1093,7 +1394,7 @@ function openAuthModal(mode) {
           JSON.stringify(data.user)
         );
         sessionStorage.setItem("vornexToken", data.token);
-
+        await renderAccountPanel();
         message.textContent =
           isLogin
             ? "Giriş başarılı."
@@ -1142,7 +1443,13 @@ async function renderAccountPanel() {
       "vornexUser",
       JSON.stringify(user)
     );
-
+    if (!user.phone_verified) {
+      setTimeout(() => {
+        openPhoneVerificationModal(
+          user.phone || ""
+        );
+      }, 300);
+    }
     document
       .querySelector("#accountPanel")
       ?.remove();
