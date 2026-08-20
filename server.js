@@ -3,6 +3,7 @@ import "dotenv/config";
 import pg from "pg";
 import crypto from "node:crypto";
 import { Vonage } from "@vonage/server-sdk";
+import Iyzipay from "iyzipay";
 const { Pool } = pg;
 
 const app = express();
@@ -13,12 +14,30 @@ const AUTH_SECRET = process.env.AUTH_SECRET;
 const SMS_BASE = "https://www.smsonayim.com/api";
 const VONAGE_APPLICATION_ID = process.env.VONAGE_APPLICATION_ID;
 const VONAGE_PRIVATE_KEY = process.env.VONAGE_PRIVATE_KEY;
+const IYZICO_API_KEY =
+  process.env.IYZICO_API_KEY;
+
+const IYZICO_SECRET_KEY =
+  process.env.IYZICO_SECRET_KEY;
+
+const IYZICO_BASE_URL =
+  process.env.IYZICO_BASE_URL ||
+  "https://sandbox-api.iyzipay.com";
+
+const BACKEND_ORIGIN =
+  process.env.BACKEND_ORIGIN ||
+  "https://wornex-api.onrender.com";
 const FRONTEND_ORIGIN =
   process.env.FRONTEND_ORIGIN ||
   "https://wornex-web.onrender.com";
 const vonage = new Vonage({
   applicationId: VONAGE_APPLICATION_ID,
   privateKey: VONAGE_PRIVATE_KEY,
+});
+const iyzipay = new Iyzipay({
+  apiKey: IYZICO_API_KEY,
+  secretKey: IYZICO_SECRET_KEY,
+  uri: IYZICO_BASE_URL,
 });
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
