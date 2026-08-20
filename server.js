@@ -128,6 +128,35 @@ async function initDatabase() {
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
   `);
+    await db.query(`
+    CREATE TABLE IF NOT EXISTS payments (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+      conversation_id TEXT UNIQUE NOT NULL,
+      iyzico_token TEXT UNIQUE,
+      amount NUMERIC(12, 2) NOT NULL
+        CHECK (amount > 0),
+      status TEXT NOT NULL DEFAULT 'pending',
+      payment_id TEXT,
+      error_message TEXT,
+      credited_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL
+        DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL
+        DEFAULT NOW()
+    );
+  `);
+  await db.query(`
+    CREATE INDEX IF NOT EXISTS
+      payments_user_created_idx
+    ON payments (
+      user_id,
+      created_at DESC
+    );
+  `);
+
   console.log("Veritabanı hazır.");
 }
 
