@@ -110,7 +110,11 @@
       </header>
 
       <main class="panel-main">
-
+        <div
+          id="paymentStatus"
+          class="payment-status"
+          hidden
+        ></div>
         <section class="panel-stats">
 
           <div class="panel-stat-card">
@@ -280,7 +284,46 @@
         location.href = "index.html";
       }
     }
- 
+     function showPaymentResult() {
+      const paymentResult =
+        new URLSearchParams(location.search)
+          .get("payment");
+
+      const statusBox =
+        document.querySelector("#paymentStatus");
+
+      const messages = {
+        success:
+          "Ödeme başarıyla tamamlandı. Bakiyeniz hesabınıza eklendi.",
+
+        failed:
+          "Ödeme tamamlanamadı. Hesabınıza bakiye eklenmedi.",
+
+        error:
+          "Ödeme sonucu kontrol edilirken bir hata oluştu."
+      };
+
+      if (!messages[paymentResult]) {
+        return;
+      }
+
+      statusBox.hidden = false;
+      statusBox.textContent = messages[paymentResult];
+
+      statusBox.classList.add(
+        paymentResult === "success"
+          ? "success"
+          : "error"
+      );
+
+      history.replaceState(
+        {},
+        document.title,
+        location.pathname
+      );
+    }
+
+    showPaymentResult();
     document
       .querySelector("#startPayment")
       .addEventListener("click", async () => {
