@@ -314,6 +314,13 @@ const paymentRateLimiter =
     message:
       "Çok fazla ödeme başlatma isteği gönderdiniz. 10 dakika sonra tekrar deneyin.",
   });
+const catalogRateLimiter =
+  createRateLimiter({
+    windowMs: 60 * 1000,
+    maxRequests: 60,
+    message:
+      "Çok fazla servis sorgusu gönderdiniz. 1 dakika bekleyin.",
+  });
 // --------------------------------------------------
 // Auth token
 // --------------------------------------------------
@@ -958,6 +965,7 @@ app.get(
 
 app.get(
   "/api/categories",
+  catalogRateLimiter,
   async (req, res) => {
     try {
       const data =
@@ -984,6 +992,7 @@ app.get(
 
 app.get(
   "/api/services/:categoryId",
+  catalogRateLimiter,
   async (req, res) => {
     const { categoryId } =
       req.params;
@@ -1021,6 +1030,7 @@ app.get(
 
 app.get(
   "/api/service/:serviceId",
+  catalogRateLimiter,
   async (req, res) => {
     const { serviceId } =
       req.params;
