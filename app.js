@@ -137,16 +137,20 @@ let currentOrder = null;
 // Yardımcı fonksiyon
 // ----------------------------------------------------
 
-async function apiFetch(path) {
+async function apiFetch(path, options = {}) {
   const token = sessionStorage.getItem("vornexToken");
 
-  const response = await fetch(`${API_BASE}${path}`, {
-    headers: token
+ const response = await fetch(`${API_BASE}${path}`, {
+  ...options,
+  headers: {
+    ...(options.headers || {}),
+    ...(token
       ? {
           Authorization: `Bearer ${token}`,
         }
-      : {},
-  });
+      : {}),
+  },
+});
 
   const text = await response.text();
 
@@ -948,9 +952,11 @@ if (currentBalance < requiredBalance) {
 
     try {
       const order = await apiFetch(
-        `/order/${selectedService.id}?categoryName=${encodeURIComponent(selectedCategory?.name || "")}&countryName=${encodeURIComponent(selectedService?.name || "")}`
-      );
-
+  `/order/${selectedService.id}?categoryName=${encodeURIComponent(selectedCategory?.name || "")}&countryName=${encodeURIComponent(selectedService?.name || "")}`,
+  {
+    method: "POST",
+  }
+);
       if (!order.success || !order.number) {
         throw new Error(
           order.message ||
