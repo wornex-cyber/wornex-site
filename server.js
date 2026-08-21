@@ -1155,7 +1155,7 @@ app.get(
 // yapacağız.
 // --------------------------------------------------
 
-app.all(
+app.post(
   "/api/order/:serviceId",
   requireAuth,
   requireVerifiedPhone,
