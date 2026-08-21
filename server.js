@@ -71,10 +71,15 @@ const db = new Pool({
 // Middleware
 // --------------------------------------------------
 
-app.use(express.json());
+app.use(
+  express.json({
+    limit: "32kb",
+  })
+);
 app.use(
   express.urlencoded({
     extended: false,
+    limit: "32kb",
   })
 );
 app.use(
@@ -82,6 +87,16 @@ app.use(
     contentSecurityPolicy: false,
   })
 );
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api/")) {
+    res.setHeader(
+      "Cache-Control",
+      "no-store"
+    );
+  }
+
+  next();
+});
 const PUBLIC_FILES = new Set([
   "/",
   "/index.html",
