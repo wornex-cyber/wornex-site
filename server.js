@@ -341,6 +341,16 @@ const otpStartRateLimiter =
     message:
       "Çok fazla doğrulama kodu istediniz. 1 saat sonra tekrar deneyin.",
   });
+const otpCheckRateLimiter =
+  createRateLimiter({
+    windowMs: 10 * 60 * 1000,
+    maxRequests: 5,
+    keyGenerator:
+      (req) => req.userId,
+    message:
+      "Çok fazla doğrulama kodu denediniz. 10 dakika bekleyin.",
+  });
+
 const paymentRateLimiter =
   createRateLimiter({
     windowMs: 10 * 60 * 1000,
@@ -2241,7 +2251,11 @@ app.post(
 
 
 // OTP KONTROL
-app.post("/api/verify/check", requireAuth, async (req, res) => {
+app.post(
+  "/api/verify/check",
+  requireAuth,
+  otpCheckRateLimiter,
+  async (req, res) => {
   try {
     const phone =
       normalizePhone(req.body?.phone);
