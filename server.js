@@ -225,6 +225,14 @@ initDatabase().catch((error) => {
 function validId(value) {
   return /^[0-9]+$/.test(String(value));
 }
+function validEmail(value) {
+  const email = String(value);
+
+  return (
+    email.length <= 254 &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  );
+}
 const activeOrderUsers = new Set();
 function createRateLimiter({
   windowMs,
@@ -761,13 +769,21 @@ app.post(
             "E-posta ve şifre gerekli.",
         });
       }
-
-      if (password.length < 6) {
-        return res.status(400).json({
-          error:
-            "Şifre en az 6 karakter olmalı.",
-        });
-      }
+if (!validEmail(email)) {
+  return res.status(400).json({
+    error:
+      "Geçerli bir e-posta adresi girin.",
+  });
+}
+     if (
+  password.length < 6 ||
+  password.length > 128
+) {
+  return res.status(400).json({
+    error:
+      "Şifre 6–128 karakter arasında olmalı.",
+  });
+}
 
       const existing =
         await db.query(
@@ -847,7 +863,15 @@ app.post(
             "E-posta ve şifre gerekli.",
         });
       }
-
+if (
+  !validEmail(email) ||
+  password.length > 128
+) {
+  return res.status(401).json({
+    error:
+      "E-posta veya şifre hatalı.",
+  });
+}
       const result =
         await db.query(
           `
