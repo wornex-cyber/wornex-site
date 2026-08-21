@@ -1383,7 +1383,17 @@ function openAuthModal(mode) {
           "E-posta ve şifre gerekli.";
         return;
       }
-
+if (
+  !isLogin &&
+  (
+    password.length < 8 ||
+    password.length > 128
+  )
+) {
+  message.textContent =
+    "Şifre 8–128 karakter arasında olmalı.";
+  return;
+}
       submit.disabled = true;
       submit.textContent = "Bekleyin...";
 
