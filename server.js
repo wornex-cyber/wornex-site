@@ -1570,7 +1570,7 @@ app.get(
 // Cancel number
 // --------------------------------------------------
 
-app.get(
+app.post(
   "/api/cancel/:numberId",
   requireAuth,
   cancelRateLimiter,
