@@ -359,6 +359,15 @@ const messagePollRateLimiter =
     message:
       "Çok fazla SMS sorgusu gönderdiniz. 1 dakika bekleyin.",
   });
+const cancelRateLimiter =
+  createRateLimiter({
+    windowMs: 10 * 60 * 1000,
+    maxRequests: 10,
+    keyGenerator:
+      (req) => req.userId,
+    message:
+      "Çok fazla iptal isteği gönderdiniz. 10 dakika bekleyin.",
+  });
 const paymentRateLimiter =
   createRateLimiter({
     windowMs: 10 * 60 * 1000,
@@ -1563,7 +1572,8 @@ app.get(
 
 app.get(
   "/api/cancel/:numberId",
-    requireAuth,
+  requireAuth,
+  cancelRateLimiter,
   async (req, res) => {
     if (!API_KEY) {
       return res.status(500).json({
