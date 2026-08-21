@@ -384,6 +384,15 @@ const catalogRateLimiter =
     message:
       "Çok fazla servis sorgusu gönderdiniz. 1 dakika bekleyin.",
   });
+const accountReadRateLimiter =
+  createRateLimiter({
+    windowMs: 60 * 1000,
+    maxRequests: 120,
+    keyGenerator:
+      (req) => req.userId,
+    message:
+      "Çok fazla hesap sorgusu gönderdiniz. 1 dakika bekleyin.",
+  });
 // --------------------------------------------------
 // Auth token
 // --------------------------------------------------
@@ -1000,6 +1009,7 @@ if (
 app.get(
   "/api/me",
   requireAuth,
+  accountReadRateLimiter,
   async (req, res) => {
     try {
       const result =
@@ -1386,6 +1396,7 @@ const countryName = String(
 app.get(
   "/api/orders",
   requireAuth,
+  accountReadRateLimiter,
   async (req, res) => {
     try {
       const result = await db.query(
@@ -2077,6 +2088,7 @@ app.post(
 app.get(
   "/api/payments",
   requireAuth,
+  accountReadRateLimiter,
   async (req, res) => {
     try {
            await db.query(
