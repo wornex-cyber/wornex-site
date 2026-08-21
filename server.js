@@ -350,7 +350,15 @@ const otpCheckRateLimiter =
     message:
       "Çok fazla doğrulama kodu denediniz. 10 dakika bekleyin.",
   });
-
+const messagePollRateLimiter =
+  createRateLimiter({
+    windowMs: 60 * 1000,
+    maxRequests: 30,
+    keyGenerator:
+      (req) => req.userId,
+    message:
+      "Çok fazla SMS sorgusu gönderdiniz. 1 dakika bekleyin.",
+  });
 const paymentRateLimiter =
   createRateLimiter({
     windowMs: 10 * 60 * 1000,
@@ -1440,8 +1448,9 @@ app.get(
 
 app.get(
   "/api/message/:numberId",
-  requireAuth,
-  async (req, res) => {
+ requireAuth,
+ messagePollRateLimiter,
+ async (req, res) => {
     if (!API_KEY) {
       return res.status(500).json({
         success: false,
