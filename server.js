@@ -711,6 +711,7 @@ app.get("/api/health", (req, res) => {
 
 app.get(
   "/api/config-status",
+  requireAuth,
   (req, res) => {
     res.json({
       apiConfigured: Boolean(API_KEY),
