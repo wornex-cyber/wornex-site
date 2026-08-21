@@ -256,7 +256,20 @@ function createRateLimiter({
   message,
 }) {
   const buckets = new Map();
+  const cleanupTimer = setInterval(() => {
+    const now = Date.now();
 
+    for (const [key, bucket] of buckets) {
+      if (now >= bucket.resetAt) {
+        buckets.delete(key);
+      }
+    }
+  }, Math.min(
+    windowMs,
+    15 * 60 * 1000
+  ));
+
+  cleanupTimer.unref();
   return (req, res, next) => {
     const now = Date.now();
 
