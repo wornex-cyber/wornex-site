@@ -2346,6 +2346,13 @@ return res.status(400).json({
 // --------------------------------------------------
 // Start
 // --------------------------------------------------
+app.use("/api", (req, res) => {
+  return res.status(404).json({
+    success: false,
+    message:
+      "API adresi bulunamadı.",
+  });
+});
 app.use((error, req, res, next) => {
   if (error?.type === "entity.too.large") {
     return res.status(413).json({
