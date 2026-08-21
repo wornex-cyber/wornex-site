@@ -2346,7 +2346,38 @@ return res.status(400).json({
 // --------------------------------------------------
 // Start
 // --------------------------------------------------
+app.use((error, req, res, next) => {
+  if (error?.type === "entity.too.large") {
+    return res.status(413).json({
+      success: false,
+      message:
+        "İstek boyutu çok büyük.",
+    });
+  }
 
+  if (
+    error instanceof SyntaxError &&
+    error?.status === 400 &&
+    "body" in error
+  ) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Geçersiz JSON verisi gönderildi.",
+    });
+  }
+
+  console.error(
+    "Beklenmeyen sunucu hatası:",
+    error
+  );
+
+  return res.status(500).json({
+    success: false,
+    message:
+      "Sunucu hatası oluştu.",
+  });
+});
 app.listen(
   PORT,
   "0.0.0.0",
