@@ -128,6 +128,7 @@ const PUBLIC_FILES = new Set([
   "/topup.js",
   "/panel.js",
   "/styles.css",
+  "/favicon.svg",
   "/panel.html",
   "/privacy.html",
   "/topup.html",
