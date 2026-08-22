@@ -102,6 +102,7 @@ const PUBLIC_FILES = new Set([
   "/index.html",
   "/app.js",
   "/topup.js",
+  "/panel.js",
   "/styles.css",
   "/panel.html",
   "/privacy.html",
