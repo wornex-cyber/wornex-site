@@ -6002,3 +6002,89 @@ body {
 .panel-order-waiting {
   color: #f0b94d;
 }
+/* AUTH MODAL - CSP UYUMLU */
+
+.vornex-auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.vornex-auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 28px;
+  color: #fff;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 18px;
+}
+
+.vornex-auth-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.vornex-auth-title {
+  margin: 0;
+}
+
+.vornex-auth-close {
+  color: #aaa;
+  font-size: 24px;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.vornex-auth-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 13px;
+  color: #fff;
+  background: #181818;
+  border: 1px solid #333;
+  border-radius: 10px;
+}
+
+#authEmail {
+  margin-bottom: 12px;
+}
+
+#authPassword {
+  margin-bottom: 16px;
+}
+
+.vornex-auth-submit {
+  width: 100%;
+  padding: 13px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  background: #2684ff;
+  border: 0;
+  border-radius: 10px;
+}
+
+.vornex-auth-message {
+  min-height: 20px;
+  margin: 14px 0 0;
+  color: #aaa;
+  text-align: center;
+}
+
+.vornex-auth-switch {
+  width: 100%;
+  margin-top: 10px;
+  color: #aaa;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
