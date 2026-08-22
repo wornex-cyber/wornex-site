@@ -164,7 +164,7 @@ document
                     </td>
 
                     <td>
-                      <span style="color:#f0b94d">
+                      <span class="panel-order-waiting">
                         ● SMS bekleniyor
                       </span>
                     </td>
