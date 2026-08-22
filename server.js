@@ -84,7 +84,31 @@ app.use(
 );
 app.use(
   helmet({
-    contentSecurityPolicy: false,
+    contentSecurityPolicy: {
+  reportOnly: true,
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'"],
+    scriptSrcAttr: ["'none'"],
+    styleSrc: [
+      "'self'",
+      "https://cdnjs.cloudflare.com",
+    ],
+    fontSrc: [
+      "'self'",
+      "https://cdnjs.cloudflare.com",
+      "data:",
+    ],
+    imgSrc: ["'self'", "data:", "https:"],
+    connectSrc: [
+      "'self'",
+      BACKEND_ORIGIN,
+    ],
+    objectSrc: ["'none'"],
+    baseUri: ["'self'"],
+    frameAncestors: ["'self'"],
+  },
+},
   })
 );
 app.use((req, res, next) => {
