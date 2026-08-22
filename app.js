@@ -1078,7 +1078,7 @@ function startMessagePolling(numberId) {
 
           if (statusCell) {
             statusCell.innerHTML = `
-              <span style="color:#4be28b">
+              <span class="status-text-completed">
                 ✓ Kod: <strong>
                   ${result.code}
                 </strong>
