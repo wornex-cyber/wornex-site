@@ -1226,121 +1226,56 @@ function openAuthModal(mode) {
 
   modal.id = "authModal";
 
-  modal.style.cssText = `
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.75);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    padding: 20px;
-  `;
+   modal.className = "vornex-auth-overlay";
 
   modal.innerHTML = `
-    <div style="
-      width:100%;
-      max-width:420px;
-      background:#111;
-      border:1px solid #333;
-      border-radius:18px;
-      padding:28px;
-      color:white;
-    ">
+    <div class="vornex-auth-card">
 
-      <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        margin-bottom:20px;
-      ">
-        <h2 style="margin:0">
+      <div class="vornex-auth-header">
+        <h2 class="vornex-auth-title">
           ${isLogin ? "Giriş Yap" : "Kayıt Ol"}
         </h2>
 
         <button
           id="authClose"
+          class="vornex-auth-close"
           type="button"
-          style="
-            background:none;
-            border:0;
-            color:#aaa;
-            font-size:24px;
-            cursor:pointer;
-          "
         >×</button>
       </div>
 
       <input
         id="authEmail"
+        class="vornex-auth-input"
         type="email"
         placeholder="E-posta"
         autocomplete="email"
-        style="
-          width:100%;
-          box-sizing:border-box;
-          margin-bottom:12px;
-          padding:13px;
-          border-radius:10px;
-          border:1px solid #333;
-          background:#181818;
-          color:white;
-        "
       >
 
       <input
         id="authPassword"
+        class="vornex-auth-input"
         type="password"
         placeholder="Şifre"
         autocomplete="${isLogin ? "current-password" : "new-password"}"
-        style="
-          width:100%;
-          box-sizing:border-box;
-          margin-bottom:16px;
-          padding:13px;
-          border-radius:10px;
-          border:1px solid #333;
-          background:#181818;
-          color:white;
-        "
       >
 
       <button
         id="authSubmit"
+        class="vornex-auth-submit"
         type="button"
-        style="
-          width:100%;
-          padding:13px;
-          border:0;
-          border-radius:10px;
-          cursor:pointer;
-          font-weight:600;
-        "
       >
         ${isLogin ? "Giriş Yap" : "Hesap Oluştur"}
       </button>
 
       <p
         id="authMessage"
-        style="
-          margin:14px 0 0;
-          text-align:center;
-          min-height:20px;
-          color:#aaa;
-        "
+        class="vornex-auth-message"
       ></p>
 
       <button
         id="authSwitch"
+        class="vornex-auth-switch"
         type="button"
-        style="
-          width:100%;
-          margin-top:10px;
-          background:none;
-          border:0;
-          color:#aaa;
-          cursor:pointer;
-        "
       >
         ${
           isLogin
@@ -1351,7 +1286,6 @@ function openAuthModal(mode) {
 
     </div>
   `;
-
   document.body.appendChild(modal);
 
   document.querySelector("#authClose").onclick = () => {
