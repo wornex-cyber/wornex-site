@@ -6091,3 +6091,18 @@ body {
 .service-price-clickable {
   cursor: pointer;
 }
+.status-text-pending {
+  color: #f0b94d;
+}
+
+.status-text-completed {
+  color: #4be28b;
+}
+
+.status-text-cancelled {
+  color: #ff5577;
+}
+
+.status-text-muted {
+  color: #aaa;
+}
