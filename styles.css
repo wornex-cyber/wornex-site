@@ -6088,3 +6088,6 @@ body {
   background: none;
   border: 0;
 }
+.service-price-clickable {
+  cursor: pointer;
+}
