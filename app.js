@@ -814,7 +814,7 @@ setBuyStep(4);
 // karttan seçildikten sonra kullanıcı tekrar seçebilsin.
 // Modal açmak için fiyat bölümüne tıklamayı da destekliyoruz.
 
-priceEl.style.cursor = "pointer";
+priceEl.classList.add("service-price-clickable");
 
 priceEl.addEventListener(
   "click",
