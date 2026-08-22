@@ -1039,7 +1039,7 @@ function addOrderToTable(order) {
     </td>
 
     <td class="order-status">
-      <span style="color:#f0b94d">
+      <span class="status-text-pending">
         ● SMS bekleniyor
       </span>
     </td>
@@ -1099,7 +1099,7 @@ function startMessagePolling(numberId) {
 
           if (statusCell) {
             statusCell.innerHTML = `
-              <span style="color:#ff5577">
+              <span class="status-text-cancelled">
                 ● İptal edildi
               </span>
             `;
@@ -1110,7 +1110,7 @@ function startMessagePolling(numberId) {
 
         if (statusCell) {
           statusCell.innerHTML = `
-            <span style="color:#f0b94d">
+            <span class="status-text-pending">
               ● SMS bekleniyor
             </span>
           `;
@@ -1122,7 +1122,7 @@ function startMessagePolling(numberId) {
 
           if (statusCell) {
             statusCell.innerHTML = `
-              <span style="color:#aaa">
+              <span class="status-text-muted">
                 ● Bekleme süresi doldu
               </span>
             `;
