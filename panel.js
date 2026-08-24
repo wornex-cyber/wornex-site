@@ -1,5 +1,16 @@
 const API_BASE = "https://wornex-api.onrender.com/api";
-
+function escapeHtml(value) {
+  return String(value ?? "-").replace(
+    /[&<>"']/g,
+    (character) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[character]
+  );
+}
   async function loadPanel() {
     const token =
       sessionStorage.getItem("vornexToken");
@@ -150,16 +161,16 @@ document
                 (order) => `
                   <tr>
                     <td>
-                      ${order.service_name || "-"}
+                      ${escapeHtml(order.service_name)}
                     </td>
 
                     <td>
-                      ${order.country_name || "-"}
+                      ${escapeHtml(order.country_name)}
                     </td>
 
                     <td>
                       <strong>
-                        ${order.phone_number || "-"}
+                        ${escapeHtml(order.phone_number)}
                       </strong>
                     </td>
 
