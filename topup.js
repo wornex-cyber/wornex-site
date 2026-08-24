@@ -239,46 +239,7 @@ const API_BASE = "https://wornex-api.onrender.com/api";
             document.querySelector("#topupAmount").value
           );
 
-        const buyer = {
-          name:
-            document.querySelector("#buyerName").value.trim(),
-
-          surname:
-            document.querySelector("#buyerSurname").value.trim(),
-
-          identityNumber:
-            document
-              .querySelector("#buyerIdentityNumber")
-              .value
-              .trim(),
-
-          city:
-            document.querySelector("#buyerCity").value.trim(),
-
-          zipCode:
-            document.querySelector("#buyerZipCode").value.trim(),
-
-          address:
-            document.querySelector("#buyerAddress").value.trim()
-        };
-
-        if (
-          !buyer.name ||
-          !buyer.surname ||
-          !buyer.identityNumber ||
-          !buyer.city ||
-          !buyer.zipCode ||
-          !buyer.address
-        ) {
-          alert("Lütfen ödeme bilgilerini eksiksiz doldurun.");
-          return;
-        }
-
-        if (!/^\d{11}$/.test(buyer.identityNumber)) {
-          alert("T.C. kimlik numarası 11 rakam olmalıdır.");
-          return;
-        }
-
+       
         const originalButtonText = button.textContent;
 
         button.disabled = true;
@@ -295,10 +256,7 @@ const API_BASE = "https://wornex-api.onrender.com/api";
                 Authorization: `Bearer ${token}`
               },
 
-              body: JSON.stringify({
-                amount,
-                ...buyer
-              })
+              body: JSON.stringify({ amount })
             }
           );
 
