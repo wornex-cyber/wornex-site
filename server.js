@@ -1734,61 +1734,22 @@ app.post(
         });
       }
 
+           if (!IYZICO_IS_SANDBOX) {
+        return res.status(503).json({
+          success: false,
+          message:
+            "Canlı ödeme için müşteri bilgileri henüz hazır değil.",
+        });
+      }
+
       const buyer = {
-        name: normalizePaymentField(
-          req.body?.name,
-          50
-        ),
-        surname: normalizePaymentField(
-          req.body?.surname,
-          50
-        ),
-        identityNumber:
-          normalizePaymentField(
-            req.body?.identityNumber,
-            30
-          ),
-        city: normalizePaymentField(
-          req.body?.city,
-          50
-        ),
-        address: normalizePaymentField(
-          req.body?.address,
-          200
-        ),
-        zipCode: normalizePaymentField(
-          req.body?.zipCode,
-          12
-        ),
+        name: "Vornex",
+        surname: "Test",
+        identityNumber: "74300864791",
+        city: "Istanbul",
+        address: "Vornex Sandbox Test Adresi",
+        zipCode: "34000",
       };
-
-      if (
-        buyer.name.length < 2 ||
-        buyer.surname.length < 2 ||
-        buyer.identityNumber.length < 5 ||
-        buyer.city.length < 2 ||
-        buyer.address.length < 5 ||
-        buyer.zipCode.length < 3
-      ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "Ödeme bilgilerini eksiksiz gir.",
-        });
-      }
-
-      if (
-        !/^[0-9A-Za-z]+$/.test(
-          buyer.identityNumber
-        )
-      ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "Kimlik numarası geçersiz.",
-        });
-      }
-
       const userResult =
         await db.query(
           `
