@@ -1515,10 +1515,10 @@ app.get(
         message:
           "Geçersiz numberId.",
       });
-    }
-
-    try {
-            const ownedOrder =
+    } 
+   
+     try {
+       const ownedOrder =
         await db.query(
           `
             SELECT id
@@ -1631,6 +1631,7 @@ app.post(
           "Geçersiz numberId.",
       });
     }
+    try {
     const ownedOrder =
       await db.query(
         `
@@ -1653,7 +1654,7 @@ app.post(
           "Sipariş bulunamadı."
       });
     }
-    try {
+    
       const data =
         await smsRequest(
           `/${encodeURIComponent(
