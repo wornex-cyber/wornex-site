@@ -1,4 +1,16 @@
 const API_BASE = "https://wornex-api.onrender.com/api";
+function escapeHtml(value) {
+  return String(value ?? "-").replace(
+    /[&<>"']/g,
+    (character) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[character]
+  );
+}
 const ALLOWED_SERVICES = [
   "WhatsApp",
   "Telegram",
@@ -463,16 +475,16 @@ phoneVerifyModal?.addEventListener(
   }
 );
 function setLoading(element, text = "Yükleniyor...") {
-  element.innerHTML = `<option value="">${text}</option>`;
+  element.innerHTML = `<option value="">${escapeHtml(text)}</option>`;
   element.disabled = true;
 }
 
 function formatPrice(value) {
   const number = Number(value);
 
-  if (Number.isNaN(number)) {
-    return `${value} TL`;
-  }
+ if (!Number.isFinite(number)) {
+  return "Fiyat yok";
+}
 
   return new Intl.NumberFormat("tr-TR", {
     style: "currency",
@@ -517,7 +529,9 @@ async function loadCategories() {
       categories
         .map(
           (item) =>
-            `<option value="${item.id}">${item.name}</option>`
+            <option value="${escapeHtml(item.id)}">
+  ${escapeHtml(item.name)}
+</option>
         )
         .join("");
 
@@ -542,7 +556,7 @@ renderServiceChoices();
   <div class="premium-empty-selection">
     <div>⚠️</div>
     <strong>Servisler yüklenemedi</strong>
-    <span>${error.message}</span>
+    <span>${escapeHtml(error.message)}</span>
   </div>
 `;
   }
@@ -584,7 +598,7 @@ countrySelect.addEventListener("change", async () => {
 
   try {
     currentServices = await apiFetch(
-      `/services/${categoryId}`
+     `/services/${encodeURIComponent(categoryId)}`
     );
 
     serviceSelect.innerHTML =
@@ -592,7 +606,7 @@ countrySelect.addEventListener("change", async () => {
       currentServices
         .map(
           (item) =>
-            `<option value="${item.id}">${item.name}</option>`
+            `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`
         )
         .join("");
 
@@ -609,7 +623,7 @@ countrySelect.addEventListener("change", async () => {
   <div class="premium-empty-selection">
     <div>⚠️</div>
     <strong>Ülkeler yüklenemedi</strong>
-    <span>${error.message}</span>
+    <span>${escapeHtml(error.message)}</span>
   </div>
 `;
   }
@@ -643,16 +657,16 @@ if (list.length === 0) {
 
     card.innerHTML = `
       <b>🌍</b>
-      <h3>${item.name}</h3>
+      <h3>${escapeHtml(item.name)}</h3>
       <p>
         ${getServiceIcon(selectedCategory?.name || "")}
-${selectedCategory?.name || "Servis"}
+${escapeHtml(selectedCategory?.name || "Servis")}
         için stok ve fiyatı görüntüle
       </p>
 
       <button
         type="button"
-        data-service-id="${item.id}"
+        data-service-id="${escapeHtml(item.id)}"
       >
         Seç
       </button>
@@ -714,7 +728,7 @@ if (orderPlaceholderEl && selectedCategory && selectedService) {
     </div>
 
     <strong>
-      ${selectedCategory.name} • ${selectedService.name}
+      ${escapeHtml(selectedCategory.name)} • ${escapeHtml(selectedService.name)}
     </strong>
 
     <p>
@@ -728,7 +742,7 @@ if (orderPlaceholderEl && selectedCategory && selectedService) {
 
   try {
     currentDetails = await apiFetch(
-      `/service/${serviceId}`
+    `/service/${encodeURIComponent(serviceId)}`
     );
 
     stockEl.textContent =
@@ -788,18 +802,18 @@ function openOrderModal() {
       <span>Servis</span>
       <strong>
   ${getServiceIcon(selectedCategory.name)}
-  ${selectedCategory.name}
+  ${escapeHtml(selectedCategory.name)}
 </strong>
     </div>
 
     <div>
       <span>Ülke</span>
-      <strong>${selectedService.name}</strong>
+<strong>${escapeHtml(selectedService.name)}</strong>
     </div>
 
     <div>
       <span>Stok</span>
-      <strong>${currentDetails.stock}</strong>
+      <strong>${escapeHtml(currentDetails.stock)}</strong>
     </div>
 
     <div>
@@ -952,7 +966,7 @@ if (currentBalance < requiredBalance) {
 
     try {
       const order = await apiFetch(
-  `/order/${selectedService.id}?categoryName=${encodeURIComponent(selectedCategory?.name || "")}&countryName=${encodeURIComponent(selectedService?.name || "")}`,
+  `/order/${encodeURIComponent(selectedService.id)}?categoryName=${encodeURIComponent(selectedCategory?.name || "")}&countryName=${encodeURIComponent(selectedService?.name || "")}`,
   {
     method: "POST",
   }
@@ -1025,17 +1039,17 @@ function addOrderToTable(order) {
 
   row.innerHTML = `
     <td>
-      VNX-${order.numberId}
+      VNX-${escapeHtml(order.numberId)}
     </td>
 
     <td>
-      ${order.category}
+      ${escapeHtml(order.category)}
       <br>
-      <small>${order.country}</small>
+      <small>${escapeHtml(order.country)}</small>
     </td>
 
     <td>
-      <strong>${order.number}</strong>
+      <strong>${escapeHtml(order.number)}</strong>
     </td>
 
     <td class="order-status">
@@ -1061,12 +1075,12 @@ function startMessagePolling(numberId) {
 
       try {
         const result = await apiFetch(
-          `/message/${numberId}`
+          `/message/${encodeURIComponent(numberId)}`
         );
 
         const row =
           ordersBody.querySelector(
-            `tr[data-number-id="${numberId}"]`
+            `tr[data-number-id="${CSS.escape(String(numberId))}"]`
           );
 
         const statusCell =
@@ -1080,7 +1094,7 @@ function startMessagePolling(numberId) {
             statusCell.innerHTML = `
               <span class="status-text-completed">
                 ✓ Kod: <strong>
-                  ${result.code}
+                  ${escapeHtml(result.code)}
                 </strong>
               </span>
             `;
@@ -1164,14 +1178,14 @@ function renderServiceChoices(list = categories) {
       <button
         type="button"
         class="vornex-service-choice ${String(item.id) === String(countrySelect.value) ? "active" : ""}"
-        data-category-id="${item.id}"
+        data-category-id="${escapeHtml(item.id)}"
       >
         <span class="vornex-service-choice-icon">
           ${getServiceIcon(item.name)}
         </span>
 
         <span class="vornex-service-choice-name">
-          ${item.name}
+          ${escapeHtml(item.name)}
         </span>
       </button>
     `)
@@ -1434,7 +1448,7 @@ async function renderAccountPanel() {
           <h2>Hesabım</h2>
 
           <p>
-            ${user.email}
+             ${escapeHtml(user.email)}
           </p>
         </div>
 
@@ -1519,10 +1533,12 @@ async function renderAccountPanel() {
 
           <p>
             ${
-              user.phone_verified
-                ? user.phone ||
-                  "Telefon numaran doğrulandı."
-                : "Sipariş verebilmek için telefonunu doğrula."
+             user.phone_verified
+  ? escapeHtml(
+      user.phone ||
+        "Telefon numaran doğrulandı."
+    )
+  : "Sipariş verebilmek için telefonunu doğrula."
             }
           </p>
 
@@ -1589,13 +1605,10 @@ async function renderAccountPanel() {
       });
 
     document
-      .querySelector("#panelTopupBtn")
-      ?.addEventListener("click", () => {
-        alert(
-          "Bakiye yükleme ekranını birazdan ekleyeceğiz."
-        );
-      });
-
+  .querySelector("#panelTopupBtn")
+  ?.addEventListener("click", () => {
+    location.href = "topup.html";
+  });
     document
       .querySelector("#panelLogoutBtn")
       ?.addEventListener("click", () => {
