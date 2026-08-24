@@ -524,14 +524,15 @@ async function loadCategories() {
   )
 );
 
-    countrySelect.innerHTML =
+       countrySelect.innerHTML =
       `<option value="">Servis seçin</option>` +
       categories
         .map(
-          (item) =>
+          (item) => `
             <option value="${escapeHtml(item.id)}">
-  ${escapeHtml(item.name)}
-</option>
+              ${escapeHtml(item.name)}
+            </option>
+          `
         )
         .join("");
 
