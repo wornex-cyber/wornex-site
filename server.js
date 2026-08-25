@@ -1199,7 +1199,12 @@ app.post(
   requireVerifiedPhone,
   orderRateLimiter,
   async (req, res) => {
-  
+      if (process.env.ORDERS_ENABLED !== "true") {
+      return res.status(403).json({
+        success: false,
+        message: "Sipariş sistemi şu anda test modunda kapalı."
+      });
+    }
     if (!API_KEY) {
       return res.status(500).json({
         success: false,
