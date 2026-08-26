@@ -683,6 +683,42 @@ async function getProviderBalance() {
 
   return balance;
 }
+async function finalizeCancellationAndRefund(
+  numberId,
+  userId
+) {
+  const result = await db.query(
+    `
+      WITH cancelled_order AS (
+        UPDATE orders
+        SET
+          status = 'cancelled',
+          updated_at = NOW()
+        WHERE provider_number_id = $1
+          AND user_id = $2
+          AND status IN ('pending', 'cancelling')
+        RETURNING user_id, price
+      ),
+      refunded_user AS (
+        UPDATE users
+        SET balance =
+          users.balance + cancelled_order.price
+        FROM cancelled_order
+        WHERE users.id =
+          cancelled_order.user_id
+        RETURNING users.id
+      )
+      SELECT COUNT(*)::int AS refunded_count
+      FROM refunded_user
+    `,
+    [
+      String(numberId),
+      userId
+    ]
+  );
+
+  return result.rows[0]?.refunded_count === 1;
+}
 // --------------------------------------------------
 // Iyzico helpers
 // --------------------------------------------------
@@ -1593,31 +1629,11 @@ app.get(
           ]
         );
       }
-                 if (Number(data.status) === -1) {
-        await db.query(
-          `
-            WITH cancelled_order AS (
-              UPDATE orders
-              SET
-                status = 'cancelled',
-                updated_at = NOW()
-              WHERE provider_number_id = $1
-                AND user_id = $2
-                AND status = 'pending'
-              RETURNING user_id, price
-            )
-            UPDATE users
-            SET balance =
-              users.balance + cancelled_order.price
-            FROM cancelled_order
-            WHERE users.id =
-              cancelled_order.user_id
-          `,
-          [
-            String(numberId),
-            req.userId
-          ]
-        );
+    if (Number(data.status) === -1) {
+       await finalizeCancellationAndRefund(
+  numberId,
+  req.userId
+);
       }
       res.json(data);
     } catch (error) {
@@ -1682,7 +1698,30 @@ app.post(
           "Sipariş bulunamadı."
       });
     }
-    
+    const cancelClaim = await db.query(
+  `
+    UPDATE orders
+    SET
+      status = 'cancelling',
+      updated_at = NOW()
+    WHERE provider_number_id = $1
+      AND user_id = $2
+      AND status = 'pending'
+    RETURNING id
+  `,
+  [
+    String(numberId),
+    req.userId
+  ]
+);
+
+if (cancelClaim.rows.length === 0) {
+  return res.status(409).json({
+    success: false,
+    message:
+      "Bu sipariş iptal edilemez veya iptal işlemi zaten devam ediyor."
+  });
+}
       const data =
         await smsRequest(
           `/${encodeURIComponent(
@@ -1690,30 +1729,10 @@ app.post(
           )}/cancelNumber/${numberId}`
         );
            if (data.success) {
-        await db.query(
-          `
-            WITH cancelled_order AS (
-              UPDATE orders
-              SET
-                status = 'cancelled',
-                updated_at = NOW()
-              WHERE provider_number_id = $1
-                AND user_id = $2
-                AND status = 'pending'
-              RETURNING user_id, price
-            )
-            UPDATE users
-            SET balance =
-              users.balance + cancelled_order.price
-            FROM cancelled_order
-            WHERE users.id =
-              cancelled_order.user_id
-          `,
-          [
-            String(numberId),
-            req.userId
-          ]
-        );
+       await finalizeCancellationAndRefund(
+  numberId,
+  req.userId
+);
       }
       res.json(data);
     } catch (error) {
