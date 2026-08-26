@@ -1012,9 +1012,26 @@ if (currentBalance < requiredBalance) {
 
         return;
       }
-      alert(
-        `Sipariş oluşturulamadı:\n${error.message}`
-      );
+       modal
+    .querySelector(".order-error-message")
+    ?.remove();
+
+  const orderErrorMessage =
+    document.createElement("p");
+
+  orderErrorMessage.className =
+    "order-error-message";
+
+  orderErrorMessage.setAttribute(
+    "role",
+    "alert"
+  );
+
+  orderErrorMessage.textContent =
+    error.message ||
+    "Sipariş şu anda oluşturulamıyor.";
+
+  confirmBtn.before(orderErrorMessage);
     } finally {
       confirmBtn.disabled = false;
       confirmBtn.textContent = oldText;
