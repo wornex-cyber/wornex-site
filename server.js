@@ -719,6 +719,74 @@ async function finalizeCancellationAndRefund(
 
   return result.rows[0]?.refunded_count === 1;
 }
+let cancellationReconciliationRunning = false;
+
+async function reconcileCancellingOrders() {
+  if (cancellationReconciliationRunning || !API_KEY) {
+    return;
+  }
+
+  cancellationReconciliationRunning = true;
+
+  try {
+    const result = await db.query(
+      `
+        SELECT provider_number_id, user_id
+        FROM orders
+        WHERE status = 'cancelling'
+          AND updated_at <
+            NOW() - INTERVAL '30 seconds'
+        ORDER BY updated_at ASC
+        LIMIT 20
+      `
+    );
+
+    for (const order of result.rows) {
+      try {
+        const data = await smsRequest(
+          `/${encodeURIComponent(
+            API_KEY
+          )}/getMessage/${order.provider_number_id}`
+        );
+
+        if (Number(data.status) === -1) {
+          await finalizeCancellationAndRefund(
+            order.provider_number_id,
+            order.user_id
+          );
+          continue;
+        }
+
+        if (Number(data.status) === 1) {
+          await db.query(
+            `
+              UPDATE orders
+              SET
+                status = 'completed',
+                sms_code = $1,
+                updated_at = NOW()
+              WHERE provider_number_id = $2
+                AND user_id = $3
+                AND status = 'cancelling'
+            `,
+            [
+              String(data.code || ""),
+              String(order.provider_number_id),
+              order.user_id
+            ]
+          );
+        }
+      } catch (error) {
+        console.error(
+          "İptal toparlama hatası:",
+          error
+        );
+      }
+    }
+  } finally {
+    cancellationReconciliationRunning = false;
+  }
+}
 // --------------------------------------------------
 // Iyzico helpers
 // --------------------------------------------------
@@ -2479,6 +2547,16 @@ app.use((error, req, res, next) => {
       "Sunucu hatası oluştu.",
   });
 });
+setInterval(() => {
+  reconcileCancellingOrders().catch(
+    (error) => {
+      console.error(
+        "İptal toparlama görevi hatası:",
+        error
+      );
+    }
+  );
+}, 60_000);
 app.listen(
   PORT,
   "0.0.0.0",
