@@ -643,6 +643,7 @@ function verifyPassword(
 // --------------------------------------------------
 
 async function smsRequest(path) {
+
   const response = await fetch(
     `${SMS_BASE}${path}`,
     {
@@ -668,6 +669,19 @@ async function smsRequest(path) {
       `Geçersiz API cevabı: ${text}`
     );
   }
+}
+async function getProviderBalance() {
+  const data = await smsRequest(
+    `/${encodeURIComponent(API_KEY)}/getBalance`
+  );
+
+  const balance = Number(data?.balance);
+
+  if (!Number.isFinite(balance) || balance < 0) {
+    throw new Error("Geçersiz sağlayıcı bakiye cevabı.");
+  }
+
+  return balance;
 }
 // --------------------------------------------------
 // Iyzico helpers
@@ -1258,6 +1272,14 @@ const countryName = String(
             "Geçersiz servis fiyatı."
         });
       }
+     const providerBalance = await getProviderBalance();
+
+if (providerBalance < supplierPrice) {
+  return res.status(503).json({
+    success: false,
+    message: "SMS sağlayıcısında bu sipariş için yeterli bakiye yok."
+  });
+}
       const salePrice =
         Math.ceil(
           Math.max(
