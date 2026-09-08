@@ -1116,6 +1116,7 @@ function shopierMoneyMatches(
 // --------------------------------------------------
 const ALLOWED_TOPUP_AMOUNTS =
   new Set([
+    10, 
     100,
     250,
     500,
