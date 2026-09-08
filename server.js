@@ -293,6 +293,7 @@ async function initDatabase() {
         amount NUMERIC(12, 2) NOT NULL
           CHECK (
             amount IN (
+              10,
               100,
               250,
               500,
