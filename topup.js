@@ -247,7 +247,7 @@ const API_BASE = "https://wornex-api.onrender.com/api";
 
         try {
           const response = await fetch(
-            `${API_BASE}/payments/start`,
+            `${API_BASE}/shopier/start`,
             {
               method: "POST",
 
