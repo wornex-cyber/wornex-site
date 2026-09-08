@@ -154,6 +154,7 @@ const PUBLIC_FILES = new Set([
   "/panel.js",
   "/styles.css",
   "/favicon.svg",
+  "/shopier-product.png",
   "/panel.html",
   "/privacy.html",
   "/topup.html",
