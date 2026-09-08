@@ -28,7 +28,22 @@ const IYZICO_IS_SANDBOX =
   IYZICO_BASE_URL.includes(
     "sandbox-api.iyzipay.com"
   );
+const SHOPIER_API_BASE_URL =
+  "https://api.shopier.com/v1";
 
+const SHOPIER_PAT =
+  process.env.SHOPIER_PAT;
+
+const SHOPIER_WEBHOOK_TOKEN =
+  process.env.SHOPIER_WEBHOOK_TOKEN;
+
+const SHOPIER_ACCOUNT_ID =
+  process.env.SHOPIER_ACCOUNT_ID;
+const SHOPIER_PRODUCT_IMAGE_URL =
+  process.env.SHOPIER_PRODUCT_IMAGE_URL;
+const SHOPIER_PAYMENTS_ENABLED =
+  process.env.SHOPIER_PAYMENTS_ENABLED ===
+  "true";
 const PAYMENT_TEST_EMAILS =
   new Set(
     String(
@@ -74,6 +89,15 @@ const db = new Pool({
 app.use(
   express.json({
     limit: "32kb",
+    verify: (req, res, buffer) => {
+      if (
+        req.originalUrl ===
+        "/api/shopier/webhook"
+      ) {
+        req.rawBody =
+          Buffer.from(buffer);
+      }
+    },
   })
 );
 app.use(
@@ -253,7 +277,48 @@ async function initDatabase() {
       created_at DESC
     );
   `);
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS
+      shopier_topups (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL
+          REFERENCES users(id)
+          ON DELETE CASCADE,
+        reference_code TEXT UNIQUE NOT NULL,
+        product_id TEXT UNIQUE,
+        product_url TEXT,
+        order_id TEXT UNIQUE,
+        webhook_id TEXT UNIQUE,
+        amount NUMERIC(12, 2) NOT NULL
+          CHECK (
+            amount IN (
+              100,
+              250,
+              500,
+              1000,
+              2500
+            )
+          ),
+        status TEXT NOT NULL
+          DEFAULT 'pending',
+        error_message TEXT,
+        credited_at TIMESTAMPTZ,
+        expires_at TIMESTAMPTZ NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL
+          DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL
+          DEFAULT NOW()
+      );
+  `);
 
+  await db.query(`
+    CREATE INDEX IF NOT EXISTS
+      shopier_topups_user_created_idx
+    ON shopier_topups (
+      user_id,
+      created_at DESC
+    );
+  `);
   console.log("Veritabanı hazır.");
 }
 
@@ -786,6 +851,263 @@ async function reconcileCancellingOrders() {
   } finally {
     cancellationReconciliationRunning = false;
   }
+}
+// --------------------------------------------------
+// Shopier helpers
+// --------------------------------------------------
+
+async function shopierRequest(
+  path,
+  {
+    method = "GET",
+    body,
+  } = {}
+) {
+  if (!SHOPIER_PAT) {
+    throw new Error(
+      "Shopier erişim anahtarı eksik."
+    );
+  }
+
+  if (
+    typeof path !== "string" ||
+    !path.startsWith("/")
+  ) {
+    throw new Error(
+      "Geçersiz Shopier API yolu."
+    );
+  }
+
+  const controller =
+    new AbortController();
+
+  const timeout = setTimeout(
+    () => controller.abort(),
+    10000
+  );
+
+  try {
+    const headers = {
+      Accept: "application/json",
+      Authorization:
+        `Bearer ${SHOPIER_PAT}`,
+    };
+
+    if (body !== undefined) {
+      headers["Content-Type"] =
+        "application/json";
+    }
+
+    const response = await fetch(
+      `${SHOPIER_API_BASE_URL}${path}`,
+      {
+        method,
+        headers,
+        body:
+          body === undefined
+            ? undefined
+            : JSON.stringify(body),
+        signal: controller.signal,
+      }
+    );
+
+    const responseText =
+      await response.text();
+
+    let data = null;
+
+    if (responseText) {
+      try {
+        data =
+          JSON.parse(responseText);
+      } catch {
+        data = {
+          message:
+            "Shopier geçersiz JSON cevabı döndürdü.",
+        };
+      }
+    }
+
+    if (!response.ok) {
+      const error = new Error(
+        data?.message ||
+        `Shopier API hatası: ${response.status}`
+      );
+
+      error.status = response.status;
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error(
+        "Shopier API isteği zaman aşımına uğradı."
+      );
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+async function createShopierTopupProduct({
+  amount,
+  referenceCode,
+}) {
+  if (!isAllowedTopupAmount(amount)) {
+    throw new Error(
+      "Geçersiz Shopier yükleme tutarı."
+    );
+  }
+
+  if (!SHOPIER_PRODUCT_IMAGE_URL) {
+    throw new Error(
+      "Shopier ürün görseli ayarı eksik."
+    );
+  }
+
+  const product =
+    await shopierRequest(
+      "/products",
+      {
+        method: "POST",
+        body: {
+          title:
+            `VORNEX ${amount} TL Bakiye Paketi`,
+          description:
+            `VORNEX dijital bakiye paketi. Referans: ${referenceCode}`,
+          type: "digital",
+          media: [
+            {
+              type: "image",
+              url:
+                SHOPIER_PRODUCT_IMAGE_URL,
+              placement: 1,
+            },
+          ],
+          priceData: {
+            currency: "TRY",
+            price:
+              Number(amount).toFixed(2),
+          },
+          stockQuantity: 1,
+          shippingPayer: "sellerPays",
+          customListing: true,
+        },
+      }
+    );
+
+  const productId =
+    normalizePaymentField(
+      product?.id,
+      120
+    );
+
+  const productUrl =
+    normalizePaymentField(
+      product?.url,
+      500
+    );
+
+  let parsedProductUrl;
+
+  try {
+    parsedProductUrl =
+      new URL(productUrl);
+  } catch {
+    throw new Error(
+      "Shopier geçersiz ürün bağlantısı döndürdü."
+    );
+  }
+
+  const allowedHost =
+    parsedProductUrl.hostname ===
+      "shopier.com" ||
+    parsedProductUrl.hostname ===
+      "www.shopier.com";
+
+  if (
+    !productId ||
+    parsedProductUrl.protocol !==
+      "https:" ||
+    !allowedHost
+  ) {
+    throw new Error(
+      "Shopier ürün cevabı doğrulanamadı."
+    );
+  }
+
+  return {
+    productId,
+    productUrl:
+      parsedProductUrl.toString(),
+  };
+}
+function verifyShopierSignature(
+  payload,
+  receivedSignature
+) {
+  if (!SHOPIER_WEBHOOK_TOKEN) {
+    return false;
+  }
+
+  const signature =
+    normalizePaymentField(
+      receivedSignature,
+      128
+    ).toLowerCase();
+
+  if (!/^[a-f0-9]{64}$/.test(signature)) {
+    return false;
+  }
+
+  const calculatedSignature =
+    crypto
+      .createHmac(
+        "sha256",
+        SHOPIER_WEBHOOK_TOKEN
+      )
+      .update(JSON.stringify(payload))
+      .digest("hex");
+
+  const receivedBuffer =
+    Buffer.from(signature, "hex");
+
+  const calculatedBuffer =
+    Buffer.from(
+      calculatedSignature,
+      "hex"
+    );
+
+  return (
+    receivedBuffer.length ===
+      calculatedBuffer.length &&
+    crypto.timingSafeEqual(
+      receivedBuffer,
+      calculatedBuffer
+    )
+  );
+}
+
+function shopierMoneyMatches(
+  value,
+  expected
+) {
+  const receivedAmount =
+    Number(value);
+
+  const expectedAmount =
+    Number(expected);
+
+  return (
+    Number.isFinite(receivedAmount) &&
+    Number.isFinite(expectedAmount) &&
+    Math.abs(
+      receivedAmount -
+      expectedAmount
+    ) < 0.001
+  );
 }
 // --------------------------------------------------
 // Iyzico helpers
@@ -1810,6 +2132,489 @@ if (cancelClaim.rows.length === 0) {
         success: false,
         message:
           "Numara iptal edilemedi.",
+      });
+    }
+  }
+);
+// --------------------------------------------------
+// SHOPIER WEBHOOK
+// --------------------------------------------------
+
+app.post(
+  "/api/shopier/webhook",
+  async (req, res) => {
+    const webhookId =
+      normalizePaymentField(
+        req.get("Shopier-Webhook-Id"),
+        120
+      );
+
+    const accountId =
+      normalizePaymentField(
+        req.get("Shopier-Account-Id"),
+        120
+      );
+
+    const eventName =
+      normalizePaymentField(
+        req.get("Shopier-Event"),
+        120
+      );
+
+    const signature =
+      normalizePaymentField(
+        req.get("Shopier-Signature"),
+        128
+      );
+
+    const timestamp =
+      normalizePaymentField(
+        req.get("Shopier-Timestamp"),
+        40
+      );
+
+    if (
+      !SHOPIER_PAT ||
+      !SHOPIER_WEBHOOK_TOKEN ||
+      !SHOPIER_ACCOUNT_ID
+    ) {
+      console.error(
+        "Shopier webhook ayarları eksik."
+      );
+
+      return res.sendStatus(503);
+    }
+
+    if (
+      !webhookId ||
+      !accountId ||
+      !eventName ||
+      !signature ||
+      !timestamp
+    ) {
+      return res.sendStatus(400);
+    }
+
+    if (accountId !== SHOPIER_ACCOUNT_ID) {
+      return res.sendStatus(403);
+    }
+
+    if (
+      !verifyShopierSignature(
+        req.body,
+        signature
+      )
+    ) {
+      return res.sendStatus(401);
+    }
+
+    if (eventName !== "order.created") {
+      return res.status(200).json({
+        received: true,
+        ignored: true,
+      });
+    }
+
+    const orderId =
+      normalizePaymentField(
+        req.body?.id,
+        120
+      );
+
+    if (!orderId) {
+      return res.sendStatus(400);
+    }
+
+    let client = null;
+
+    try {
+      const verifiedOrder =
+        await shopierRequest(
+          `/orders/${encodeURIComponent(
+            orderId
+          )}`
+        );
+
+      const verifiedOrderId =
+        normalizePaymentField(
+          verifiedOrder?.id,
+          120
+        );
+
+      const paymentStatus =
+        normalizePaymentField(
+          verifiedOrder?.paymentStatus,
+          40
+        ).toLowerCase();
+
+      const currency =
+        normalizePaymentField(
+          verifiedOrder?.currency,
+          10
+        ).toUpperCase();
+
+      const lineItems =
+        Array.isArray(
+          verifiedOrder?.lineItems
+        )
+          ? verifiedOrder.lineItems
+          : [];
+
+      if (
+        verifiedOrderId !== orderId ||
+        paymentStatus !== "paid" ||
+        currency !== "TRY" ||
+        lineItems.length !== 1
+      ) {
+        console.error(
+          "Shopier siparişi doğrulanamadı:",
+          orderId
+        );
+
+        return res.status(200).json({
+          received: true,
+          credited: false,
+        });
+      }
+
+      const item =
+        lineItems[0];
+
+      const productId =
+        normalizePaymentField(
+          item?.productId,
+          120
+        );
+
+      const quantity =
+        Number(item?.quantity);
+
+      if (
+        !productId ||
+        !Number.isInteger(quantity) ||
+        quantity !== 1
+      ) {
+        return res.status(200).json({
+          received: true,
+          credited: false,
+        });
+      }
+
+      client =
+        await db.connect();
+
+      await client.query("BEGIN");
+
+      const topupResult =
+        await client.query(
+          `
+            SELECT
+              id,
+              user_id,
+              amount,
+              status,
+              order_id,
+              credited_at
+            FROM shopier_topups
+            WHERE product_id = $1
+            LIMIT 1
+            FOR UPDATE
+          `,
+          [productId]
+        );
+
+      if (topupResult.rows.length === 0) {
+        await client.query("COMMIT");
+
+        return res.status(200).json({
+          received: true,
+          ignored: true,
+        });
+      }
+
+      const topup =
+        topupResult.rows[0];
+
+      if (topup.credited_at) {
+        await client.query("COMMIT");
+
+        return res.status(200).json({
+          received: true,
+          credited: true,
+          duplicate: true,
+        });
+      }
+
+      const orderTotal =
+        verifiedOrder?.totals?.total;
+
+      const validMoney =
+        shopierMoneyMatches(
+          orderTotal,
+          topup.amount
+        ) &&
+        shopierMoneyMatches(
+          item?.price,
+          topup.amount
+        ) &&
+        shopierMoneyMatches(
+          item?.total,
+          topup.amount
+        );
+
+      if (!validMoney) {
+        await client.query(
+          `
+            UPDATE shopier_topups
+            SET
+              status = 'failed',
+              error_message =
+                'Shopier sipariş tutarı eşleşmedi.',
+              updated_at = NOW()
+            WHERE id = $1
+          `,
+          [topup.id]
+        );
+
+        await client.query("COMMIT");
+
+        return res.status(200).json({
+          received: true,
+          credited: false,
+        });
+      }
+
+      const creditResult =
+        await client.query(
+          `
+            UPDATE shopier_topups
+            SET
+              order_id = $1,
+              webhook_id = $2,
+              status = 'completed',
+              error_message = NULL,
+              credited_at = NOW(),
+              updated_at = NOW()
+            WHERE id = $3
+              AND credited_at IS NULL
+            RETURNING
+              user_id,
+              amount
+          `,
+          [
+            orderId,
+            webhookId,
+            topup.id,
+          ]
+        );
+
+      if (creditResult.rows.length === 0) {
+        await client.query("ROLLBACK");
+
+        return res.status(200).json({
+          received: true,
+          credited: false,
+          duplicate: true,
+        });
+      }
+
+      const creditedTopup =
+        creditResult.rows[0];
+
+      await client.query(
+        `
+          UPDATE users
+          SET balance =
+            balance + $1
+          WHERE id = $2
+        `,
+        [
+          creditedTopup.amount,
+          creditedTopup.user_id,
+        ]
+      );
+
+      await client.query("COMMIT");
+
+      return res.status(200).json({
+        received: true,
+        credited: true,
+      });
+    } catch (error) {
+      if (client) {
+        await client
+          .query("ROLLBACK")
+          .catch(() => {});
+      }
+
+      if (error?.code === "23505") {
+        return res.status(200).json({
+          received: true,
+          duplicate: true,
+        });
+      }
+
+      console.error(
+        "Shopier webhook hatası:",
+        error
+      );
+
+      return res.sendStatus(500);
+    } finally {
+      client?.release();
+    }
+  }
+);
+// --------------------------------------------------
+// SHOPIER ÖDEME BAŞLAT
+// --------------------------------------------------
+
+app.post(
+  "/api/shopier/start",
+  requireAuth,
+  requireVerifiedPhone,
+  paymentRateLimiter,
+  async (req, res) => {
+    let topupId = null;
+
+    try {
+      if (!SHOPIER_PAYMENTS_ENABLED) {
+        return res.status(503).json({
+          success: false,
+          message:
+            "Shopier ödemeleri şu anda test modunda kapalı.",
+        });
+      }
+
+      if (
+        !SHOPIER_PAT ||
+        !SHOPIER_PRODUCT_IMAGE_URL
+      ) {
+        return res.status(500).json({
+          success: false,
+          message:
+            "Shopier ödeme ayarları eksik.",
+        });
+      }
+
+      const amount =
+        Number(req.body?.amount);
+
+      if (!isAllowedTopupAmount(amount)) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Geçersiz bakiye yükleme tutarı.",
+        });
+      }
+
+      const referenceCode =
+        crypto.randomUUID();
+
+      const insertResult =
+        await db.query(
+          `
+            INSERT INTO shopier_topups (
+              user_id,
+              reference_code,
+              amount,
+              status,
+              expires_at
+            )
+            VALUES (
+              $1,
+              $2,
+              $3,
+              'creating',
+              NOW() + INTERVAL '24 hours'
+            )
+            RETURNING id
+          `,
+          [
+            req.userId,
+            referenceCode,
+            amount,
+          ]
+        );
+
+      topupId =
+        insertResult.rows[0].id;
+
+      const product =
+        await createShopierTopupProduct({
+          amount,
+          referenceCode,
+        });
+
+      const updateResult =
+        await db.query(
+          `
+            UPDATE shopier_topups
+            SET
+              product_id = $1,
+              product_url = $2,
+              status = 'pending',
+              updated_at = NOW()
+            WHERE id = $3
+              AND status = 'creating'
+            RETURNING id
+          `,
+          [
+            product.productId,
+            product.productUrl,
+            topupId,
+          ]
+        );
+
+      if (updateResult.rows.length === 0) {
+        throw new Error(
+          "Shopier ödeme kaydı güncellenemedi."
+        );
+      }
+
+      return res.json({
+        success: true,
+        provider: "shopier",
+        paymentId: topupId,
+        paymentPageUrl:
+          product.productUrl,
+      });
+    } catch (error) {
+      console.error(
+        "Shopier ödeme başlatma hatası:",
+        error
+      );
+
+      if (topupId !== null) {
+        await db.query(
+          `
+            UPDATE shopier_topups
+            SET
+              status = 'failed',
+              error_message = $1,
+              updated_at = NOW()
+            WHERE id = $2
+              AND credited_at IS NULL
+          `,
+          [
+            String(
+              error?.message ||
+              "Shopier ödeme bağlantısı oluşturulamadı."
+            ).slice(0, 500),
+            topupId,
+          ]
+        ).catch((databaseError) => {
+          console.error(
+            "Shopier hata kaydı güncellenemedi:",
+            databaseError
+          );
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Shopier ödeme bağlantısı oluşturulamadı.",
       });
     }
   }
