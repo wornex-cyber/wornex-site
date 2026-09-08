@@ -312,7 +312,27 @@ async function initDatabase() {
           DEFAULT NOW()
       );
   `);
+  await db.query(`
+    ALTER TABLE shopier_topups
+    DROP CONSTRAINT IF EXISTS
+      shopier_topups_amount_check;
+  `);
 
+  await db.query(`
+    ALTER TABLE shopier_topups
+    ADD CONSTRAINT
+      shopier_topups_amount_check
+    CHECK (
+      amount IN (
+        10,
+        100,
+        250,
+        500,
+        1000,
+        2500
+      )
+    );
+  `);
   await db.query(`
     CREATE INDEX IF NOT EXISTS
       shopier_topups_user_created_idx
