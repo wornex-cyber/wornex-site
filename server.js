@@ -293,7 +293,7 @@ async function initDatabase() {
         amount NUMERIC(12, 2) NOT NULL
           CHECK (
             amount IN (
-              10,
+              
               100,
               250,
               500,
@@ -324,7 +324,7 @@ async function initDatabase() {
       shopier_topups_amount_check
     CHECK (
       amount IN (
-        10,
+        
         100,
         250,
         500,
@@ -1136,7 +1136,7 @@ function shopierMoneyMatches(
 // --------------------------------------------------
 const ALLOWED_TOPUP_AMOUNTS =
   new Set([
-    10, 
+    
     100,
     250,
     500,
