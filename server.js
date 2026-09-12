@@ -1454,7 +1454,8 @@ if (
             id,
             email,
             password_hash,
-            balance
+            balance,
+            role
           FROM users
           WHERE email = $1
           `,
@@ -1496,6 +1497,7 @@ if (
           id: user.id,
           email: user.email,
           balance: user.balance,
+          role: user.role,
         },
       });
     } catch (error) {
