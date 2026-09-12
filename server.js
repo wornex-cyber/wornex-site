@@ -12,6 +12,9 @@ app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.SMS_ONAY_API_KEY;
 const AUTH_SECRET = process.env.AUTH_SECRET;
+const ADMIN_EMAIL = String(
+  process.env.ADMIN_EMAIL || ""
+).trim().toLowerCase();
 const SMS_BASE = "https://www.smsonayim.com/api";
 const VONAGE_APPLICATION_ID = process.env.VONAGE_APPLICATION_ID;
 const VONAGE_PRIVATE_KEY = process.env.VONAGE_PRIVATE_KEY;
@@ -225,6 +228,19 @@ async function initDatabase() {
     ADD COLUMN IF NOT EXISTS role TEXT
     NOT NULL DEFAULT 'customer';
   `);
+    if (ADMIN_EMAIL) {
+    await db.query(
+      `
+        UPDATE users
+        SET role = CASE
+          WHEN LOWER(email) = $1
+            THEN 'admin'
+          ELSE 'customer'
+        END;
+      `,
+      [ADMIN_EMAIL]
+    );
+  }
   await db.query(`
     ALTER TABLE users
     ADD COLUMN IF NOT EXISTS phone_verified BOOLEAN NOT NULL DEFAULT FALSE;
