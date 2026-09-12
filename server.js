@@ -220,7 +220,11 @@ async function initDatabase() {
     ALTER TABLE users
     ADD COLUMN IF NOT EXISTS phone TEXT;
   `);
-
+  await db.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS role TEXT
+    NOT NULL DEFAULT 'customer';
+  `);
   await db.query(`
     ALTER TABLE users
     ADD COLUMN IF NOT EXISTS phone_verified BOOLEAN NOT NULL DEFAULT FALSE;
