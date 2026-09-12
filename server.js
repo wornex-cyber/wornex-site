@@ -3391,6 +3391,55 @@ return res.status(400).json({
   }
 });
 // --------------------------------------------------
+// Admin
+// --------------------------------------------------
+
+app.get(
+  "/api/admin/me",
+  requireAuth,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await db.query(
+        `
+          SELECT
+            id,
+            email,
+            role,
+            balance,
+            created_at
+          FROM users
+          WHERE id = $1
+          LIMIT 1
+        `,
+        [req.userId]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: "Yönetici hesabı bulunamadı.",
+        });
+      }
+
+      res.json({
+        success: true,
+        admin: result.rows[0],
+      });
+    } catch (error) {
+      console.error(
+        "Admin bilgisi alınamadı:",
+        error
+      );
+
+      res.status(500).json({
+        success: false,
+        error: "Yönetici bilgisi alınamadı.",
+      });
+    }
+  }
+);
+// --------------------------------------------------
 // Start
 // --------------------------------------------------
 app.use("/api", (req, res) => {
