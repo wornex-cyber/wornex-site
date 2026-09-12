@@ -647,6 +647,41 @@ function requireAuth(req, res, next) {
 
   next();
 }
+async function requireAdmin(req, res, next) {
+  try {
+    const result = await db.query(
+      `
+        SELECT role
+        FROM users
+        WHERE id = $1
+        LIMIT 1
+      `,
+      [req.userId]
+    );
+
+    if (
+      result.rows.length === 0 ||
+      result.rows[0].role !== "admin"
+    ) {
+      return res.status(403).json({
+        success: false,
+        error: "Bu işlem için yönetici yetkisi gerekiyor.",
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error(
+      "Admin yetki kontrolü hatası:",
+      error
+    );
+
+    res.status(500).json({
+      success: false,
+      error: "Yönetici yetkisi kontrol edilemedi.",
+    });
+  }
+}
 async function requireVerifiedPhone(
   req,
   res,
