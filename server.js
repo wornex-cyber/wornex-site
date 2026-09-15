@@ -159,6 +159,9 @@ const PUBLIC_FILES = new Set([
   "/favicon.svg",
   "/shopier-product.png",
   "/panel.html",
+  "/admin.html",
+  "/admin.js",
+  "/admin.css",
   "/privacy.html",
   "/topup.html",
 ]);
