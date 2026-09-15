@@ -1391,6 +1391,15 @@ if (
           JSON.stringify(data.user)
         );
         sessionStorage.setItem("vornexToken", data.token);
+                if (
+          isLogin &&
+          data.user?.role === "admin"
+        ) {
+          window.location.replace(
+            "/admin.html"
+          );
+          return;
+        }
         await renderAccountPanel();
         message.textContent =
           isLogin
