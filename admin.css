@@ -257,3 +257,104 @@ h1 {
     text-align: left;
   }
 }
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.section-heading h2 {
+  margin-bottom: 6px;
+}
+
+.section-heading p {
+  margin: 0;
+}
+
+#refreshUsers {
+  padding: 10px 18px;
+  border: 1px solid rgba(22, 140, 255, 0.4);
+  border-radius: 9px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#refreshUsers:hover {
+  background: rgba(22, 140, 255, 0.22);
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+table {
+  width: 100%;
+  min-width: 780px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+td {
+  color: var(--text);
+  font-size: 14px;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover {
+  background: rgba(22, 140, 255, 0.05);
+}
+
+.role-badge,
+.phone-badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.role-badge.admin,
+.phone-badge.verified {
+  color: var(--success);
+  background: rgba(53, 211, 154, 0.12);
+}
+
+.role-badge.customer {
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.phone-badge.unverified {
+  color: var(--danger);
+  background: rgba(255, 95, 112, 0.1);
+}
+
+@media (max-width: 760px) {
+  .section-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
