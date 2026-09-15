@@ -151,5 +151,135 @@ document.getElementById(
     redirectToHome();
   }
 );
+function addTextCell(row, value) {
+  const cell =
+    document.createElement("td");
 
+  cell.textContent =
+    String(value ?? "—");
+
+  row.appendChild(cell);
+}
+
+function addBadgeCell(
+  row,
+  text,
+  className
+) {
+  const cell =
+    document.createElement("td");
+
+  const badge =
+    document.createElement("span");
+
+  badge.className = className;
+  badge.textContent = text;
+
+  cell.appendChild(badge);
+  row.appendChild(cell);
+}
+
+function formatDate(value) {
+  if (!value) {
+    return "—";
+  }
+
+  return new Intl.DateTimeFormat(
+    "tr-TR",
+    {
+      dateStyle: "short",
+      timeStyle: "short",
+    }
+  ).format(new Date(value));
+}
+
+async function loadUsers() {
+  const tableBody =
+    document.getElementById(
+      "usersTableBody"
+    );
+
+  tableBody.textContent = "";
+
+  try {
+    const data =
+      await adminRequest("/admin/users");
+
+    if (data.users.length === 0) {
+      const row =
+        document.createElement("tr");
+
+      const cell =
+        document.createElement("td");
+
+      cell.colSpan = 6;
+      cell.textContent =
+        "Henüz kayıtlı kullanıcı yok.";
+
+      row.appendChild(cell);
+      tableBody.appendChild(row);
+      return;
+    }
+
+    data.users.forEach((user) => {
+      const row =
+        document.createElement("tr");
+
+      addTextCell(row, user.id);
+      addTextCell(row, user.email);
+
+      addBadgeCell(
+        row,
+        user.role === "admin"
+          ? "Yönetici"
+          : "Müşteri",
+        `role-badge ${user.role}`
+      );
+
+      addTextCell(
+        row,
+        formatMoney(user.balance)
+      );
+
+      addBadgeCell(
+        row,
+        user.phone_verified
+          ? "Doğrulandı"
+          : "Doğrulanmadı",
+        user.phone_verified
+          ? "phone-badge verified"
+          : "phone-badge unverified"
+      );
+
+      addTextCell(
+        row,
+        formatDate(user.created_at)
+      );
+
+      tableBody.appendChild(row);
+    });
+  } catch (error) {
+    const row =
+      document.createElement("tr");
+
+    const cell =
+      document.createElement("td");
+
+    cell.colSpan = 6;
+    cell.textContent =
+      error.message ||
+      "Kullanıcılar yüklenemedi.";
+
+    row.appendChild(cell);
+    tableBody.appendChild(row);
+  }
+}
+
+document.getElementById(
+  "refreshUsers"
+).addEventListener(
+  "click",
+  loadUsers
+);
 loadAdminPanel();
+loadUsers();
