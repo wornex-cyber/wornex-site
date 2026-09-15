@@ -382,6 +382,102 @@ document.getElementById(
   "click",
   loadPayments
 );
+function orderStatusText(status) {
+  const statusNames = {
+    pending: "Bekliyor",
+    completed: "Tamamlandı",
+    cancelling: "İptal ediliyor",
+    cancelled: "İptal edildi",
+    failed: "Başarısız",
+  };
+
+  return statusNames[status] || status;
+}
+
+async function loadOrders() {
+  const tableBody =
+    document.getElementById(
+      "ordersTableBody"
+    );
+
+  tableBody.textContent = "";
+
+  try {
+    const data =
+      await adminRequest("/admin/orders");
+
+    if (data.orders.length === 0) {
+      const row =
+        document.createElement("tr");
+
+      const cell =
+        document.createElement("td");
+
+      cell.colSpan = 9;
+      cell.textContent =
+        "Henüz sipariş kaydı yok.";
+
+      row.appendChild(cell);
+      tableBody.appendChild(row);
+      return;
+    }
+
+    data.orders.forEach((order) => {
+      const row =
+        document.createElement("tr");
+
+      addTextCell(row, order.id);
+      addTextCell(row, order.email);
+      addTextCell(row, order.service_name);
+      addTextCell(row, order.country_name);
+      addTextCell(row, order.phone_number);
+      addTextCell(
+        row,
+        formatMoney(order.price)
+      );
+
+      addBadgeCell(
+        row,
+        orderStatusText(order.status),
+        `order-badge ${order.status}`
+      );
+
+      addTextCell(
+        row,
+        order.sms_code || "—"
+      );
+
+      addTextCell(
+        row,
+        formatDate(order.created_at)
+      );
+
+      tableBody.appendChild(row);
+    });
+  } catch (error) {
+    const row =
+      document.createElement("tr");
+
+    const cell =
+      document.createElement("td");
+
+    cell.colSpan = 9;
+    cell.textContent =
+      error.message ||
+      "Siparişler yüklenemedi.";
+
+    row.appendChild(cell);
+    tableBody.appendChild(row);
+  }
+}
+
+document.getElementById(
+  "refreshOrders"
+).addEventListener(
+  "click",
+  loadOrders
+);
 loadAdminPanel();
 loadUsers();
 loadPayments();
+loadOrders();
