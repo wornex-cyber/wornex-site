@@ -178,13 +178,50 @@
       </div>
     </section>
 
-    <section class="panel" id="orders">
+   <section class="panel" id="orders">
+  <div class="section-heading">
+    <div>
       <h2>Sipariş Yönetimi</h2>
       <p>
-        Sipariş kayıtları bir sonraki adımda
-        buraya bağlanacak.
+        Müşterilerin sanal numara siparişlerini görüntüle.
       </p>
-    </section>
+    </div>
+
+    <button
+      id="refreshOrders"
+      class="refresh-button"
+      type="button"
+    >
+      Yenile
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Kullanıcı</th>
+          <th>Servis</th>
+          <th>Ülke</th>
+          <th>Numara</th>
+          <th>Tutar</th>
+          <th>Durum</th>
+          <th>SMS Kodu</th>
+          <th>Tarih</th>
+        </tr>
+      </thead>
+
+      <tbody id="ordersTableBody">
+        <tr>
+          <td colspan="9">
+            Siparişler yükleniyor...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
   </main>
 
   <script src="/admin.js"></script>
