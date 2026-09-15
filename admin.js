@@ -281,5 +281,107 @@ document.getElementById(
   "click",
   loadUsers
 );
+function paymentStatusText(status) {
+  const statusNames = {
+    completed: "Tamamlandı",
+    pending: "Bekliyor",
+    creating: "Oluşturuluyor",
+    failed: "Başarısız",
+  };
+
+  return statusNames[status] || status;
+}
+
+async function loadPayments() {
+  const tableBody =
+    document.getElementById(
+      "paymentsTableBody"
+    );
+
+  tableBody.textContent = "";
+
+  try {
+    const data =
+      await adminRequest(
+        "/admin/payments"
+      );
+
+    if (data.payments.length === 0) {
+      const row =
+        document.createElement("tr");
+
+      const cell =
+        document.createElement("td");
+
+      cell.colSpan = 6;
+      cell.textContent =
+        "Henüz ödeme kaydı yok.";
+
+      row.appendChild(cell);
+      tableBody.appendChild(row);
+      return;
+    }
+
+    data.payments.forEach(
+      (payment) => {
+        const row =
+          document.createElement("tr");
+
+        addTextCell(row, payment.id);
+        addTextCell(row, payment.email);
+
+        addTextCell(
+          row,
+          formatMoney(payment.amount)
+        );
+
+        addBadgeCell(
+          row,
+          paymentStatusText(
+            payment.status
+          ),
+          `payment-badge ${payment.status}`
+        );
+
+        addTextCell(
+          row,
+          payment.order_id || "—"
+        );
+
+        addTextCell(
+          row,
+          formatDate(
+            payment.credited_at ||
+            payment.created_at
+          )
+        );
+
+        tableBody.appendChild(row);
+      }
+    );
+  } catch (error) {
+    const row =
+      document.createElement("tr");
+
+    const cell =
+      document.createElement("td");
+
+    cell.colSpan = 6;
+    cell.textContent =
+      error.message ||
+      "Ödemeler yüklenemedi.";
+
+    row.appendChild(cell);
+    tableBody.appendChild(row);
+  }
+}
+
+document.getElementById(
+  "refreshPayments"
+).addEventListener(
+  "click",
+  loadPayments
+);
 loadAdminPanel();
 loadUsers();
+loadPayments();
