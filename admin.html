@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <meta
+    name="robots"
+    content="noindex, nofollow"
+  >
+  <title>VORNEX Yönetici Paneli</title>
+  <link
+    rel="icon"
+    href="/favicon.svg"
+    type="image/svg+xml"
+  >
+  <link
+    rel="stylesheet"
+    href="/admin.css"
+  >
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="brand">VORNEX</div>
+    <div class="admin-label">
+      Yönetici Paneli
+    </div>
+
+    <nav>
+      <a class="active" href="/admin.html">
+        Genel Bakış
+      </a>
+
+      <a href="#users">
+        Kullanıcılar
+      </a>
+
+      <a href="#payments">
+        Ödemeler
+      </a>
+
+      <a href="#orders">
+        Siparişler
+      </a>
+    </nav>
+
+    <button id="logoutButton" type="button">
+      Çıkış Yap
+    </button>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">VORNEX YÖNETİM</p>
+        <h1>Genel Bakış</h1>
+      </div>
+
+      <div class="admin-account">
+        <span id="adminEmail">
+          Yönetici doğrulanıyor...
+        </span>
+        <strong>Yönetici</strong>
+      </div>
+    </header>
+
+    <p id="statusMessage" class="status">
+      Veriler yükleniyor...
+    </p>
+
+    <section class="stats">
+      <article class="stat-card">
+        <span>Toplam müşteri</span>
+        <strong id="totalUsers">—</strong>
+      </article>
+
+      <article class="stat-card">
+        <span>Müşteri bakiyeleri</span>
+        <strong id="totalBalance">—</strong>
+      </article>
+
+      <article class="stat-card">
+        <span>Toplam sipariş</span>
+        <strong id="totalOrders">—</strong>
+      </article>
+
+      <article class="stat-card">
+        <span>Tamamlanan ödeme</span>
+        <strong id="completedPayments">—</strong>
+      </article>
+
+      <article class="stat-card">
+        <span>Ödeme toplamı</span>
+        <strong id="totalPaymentAmount">—</strong>
+      </article>
+    </section>
+
+    <section class="panel" id="users">
+      <h2>Kullanıcı Yönetimi</h2>
+      <p>
+        Kullanıcı listesi bir sonraki adımda
+        buraya bağlanacak.
+      </p>
+    </section>
+
+    <section class="panel" id="payments">
+      <h2>Shopier Ödemeleri</h2>
+      <p>
+        Ödeme kayıtları bir sonraki adımda
+        buraya bağlanacak.
+      </p>
+    </section>
+
+    <section class="panel" id="orders">
+      <h2>Sipariş Yönetimi</h2>
+      <p>
+        Sipariş kayıtları bir sonraki adımda
+        buraya bağlanacak.
+      </p>
+    </section>
+  </main>
+
+  <script src="/admin.js"></script>
+</body>
+</html>
