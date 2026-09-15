@@ -347,7 +347,7 @@ async function initDatabase() {
       shopier_topups_amount_check
     CHECK (
       amount IN (
-        
+        10,
         100,
         250,
         500,
