@@ -98,12 +98,42 @@
       </article>
     </section>
 
-    <section class="panel" id="users">
-      <h2>Kullanıcı Yönetimi</h2>
-      <p>
-        Kullanıcı listesi bir sonraki adımda
-        buraya bağlanacak.
-      </p>
+       <section class="panel" id="users">
+      <div class="section-heading">
+        <div>
+          <h2>Kullanıcı Yönetimi</h2>
+          <p>
+            Kayıtlı hesapları ve bakiyelerini görüntüle.
+          </p>
+        </div>
+
+        <button id="refreshUsers" type="button">
+          Yenile
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>E-posta</th>
+              <th>Yetki</th>
+              <th>Bakiye</th>
+              <th>Telefon</th>
+              <th>Kayıt tarihi</th>
+            </tr>
+          </thead>
+
+          <tbody id="usersTableBody">
+            <tr>
+              <td colspan="6">
+                Kullanıcılar yükleniyor...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section class="panel" id="payments">
