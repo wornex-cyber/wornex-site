@@ -3572,6 +3572,48 @@ app.get(
     }
   }
 );
+app.get(
+  "/api/admin/orders",
+  requireAuth,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await db.query(`
+        SELECT
+          o.id,
+          o.service_name,
+          o.country_name,
+          o.phone_number,
+          o.status,
+          o.price,
+          o.sms_code,
+          o.created_at,
+          o.updated_at,
+          u.email
+        FROM orders AS o
+        JOIN users AS u
+          ON u.id = o.user_id
+        ORDER BY o.created_at DESC
+        LIMIT 100
+      `);
+
+      res.json({
+        success: true,
+        orders: result.rows,
+      });
+    } catch (error) {
+      console.error(
+        "Admin sipariş listesi hatası:",
+        error
+      );
+
+      res.status(500).json({
+        success: false,
+        error: "Sipariş listesi alınamadı.",
+      });
+    }
+  }
+);
 // --------------------------------------------------
 // Start
 // --------------------------------------------------
