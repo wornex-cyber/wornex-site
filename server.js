@@ -3496,6 +3496,42 @@ app.get(
     }
   }
 );
+app.get(
+  "/api/admin/users",
+  requireAuth,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await db.query(`
+        SELECT
+          id,
+          email,
+          role,
+          balance,
+          phone_verified,
+          created_at
+        FROM users
+        ORDER BY created_at DESC
+        LIMIT 100
+      `);
+
+      res.json({
+        success: true,
+        users: result.rows,
+      });
+    } catch (error) {
+      console.error(
+        "Admin kullanıcı listesi hatası:",
+        error
+      );
+
+      res.status(500).json({
+        success: false,
+        error: "Kullanıcı listesi alınamadı.",
+      });
+    }
+  }
+);
 // --------------------------------------------------
 // Start
 // --------------------------------------------------
