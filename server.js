@@ -3532,6 +3532,46 @@ app.get(
     }
   }
 );
+app.get(
+  "/api/admin/payments",
+  requireAuth,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await db.query(`
+        SELECT
+          st.id,
+          st.reference_code,
+          st.order_id,
+          st.amount,
+          st.status,
+          st.created_at,
+          st.credited_at,
+          u.email
+        FROM shopier_topups AS st
+        JOIN users AS u
+          ON u.id = st.user_id
+        ORDER BY st.created_at DESC
+        LIMIT 100
+      `);
+
+      res.json({
+        success: true,
+        payments: result.rows,
+      });
+    } catch (error) {
+      console.error(
+        "Admin ödeme listesi hatası:",
+        error
+      );
+
+      res.status(500).json({
+        success: false,
+        error: "Ödeme listesi alınamadı.",
+      });
+    }
+  }
+);
 // --------------------------------------------------
 // Start
 // --------------------------------------------------
