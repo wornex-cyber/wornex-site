@@ -3439,6 +3439,60 @@ app.get(
     }
   }
 );
+app.get(
+  "/api/admin/summary",
+  requireAuth,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await db.query(`
+        SELECT
+          (
+            SELECT COUNT(*)::INTEGER
+            FROM users
+            WHERE role = 'customer'
+          ) AS total_users,
+
+          (
+            SELECT COALESCE(SUM(balance), 0)
+            FROM users
+          ) AS total_balance,
+
+          (
+            SELECT COUNT(*)::INTEGER
+            FROM orders
+          ) AS total_orders,
+
+          (
+            SELECT COUNT(*)::INTEGER
+            FROM shopier_topups
+            WHERE status = 'completed'
+          ) AS completed_payments,
+
+          (
+            SELECT COALESCE(SUM(amount), 0)
+            FROM shopier_topups
+            WHERE status = 'completed'
+          ) AS total_payment_amount
+      `);
+
+      res.json({
+        success: true,
+        summary: result.rows[0],
+      });
+    } catch (error) {
+      console.error(
+        "Admin özet bilgileri alınamadı:",
+        error
+      );
+
+      res.status(500).json({
+        success: false,
+        error: "Admin özet bilgileri alınamadı.",
+      });
+    }
+  }
+);
 // --------------------------------------------------
 // Start
 // --------------------------------------------------
