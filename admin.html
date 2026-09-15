@@ -136,12 +136,46 @@
       </div>
     </section>
 
-    <section class="panel" id="payments">
-      <h2>Shopier Ödemeleri</h2>
-      <p>
-        Ödeme kayıtları bir sonraki adımda
-        buraya bağlanacak.
-      </p>
+       <section class="panel" id="payments">
+      <div class="section-heading">
+        <div>
+          <h2>Shopier Ödemeleri</h2>
+          <p>
+            Bakiye yükleme işlemlerini görüntüle.
+          </p>
+        </div>
+
+        <button
+          id="refreshPayments"
+          class="refresh-button"
+          type="button"
+        >
+          Yenile
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Kullanıcı</th>
+              <th>Tutar</th>
+              <th>Durum</th>
+              <th>Sipariş No</th>
+              <th>Tarih</th>
+            </tr>
+          </thead>
+
+          <tbody id="paymentsTableBody">
+            <tr>
+              <td colspan="6">
+                Ödemeler yükleniyor...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section class="panel" id="orders">
